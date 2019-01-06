@@ -1,6 +1,6 @@
 <template>
-    <div>
-
+    <div class="block register">
+        <h3>注册</h3>
     </div>
 </template>
 
@@ -11,5 +11,7 @@
 </script>
 
 <style scoped>
-
+.register{
+    height: 1000px;
+}
 </style>
