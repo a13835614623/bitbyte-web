@@ -106,7 +106,7 @@
 export default {
   name: "user-register",
   data() {
-    //校验用户名
+    // 校验用户名
     let validateName = (rule, value, callback) => {
       console.log("name:" + value);
       if (!value) {
@@ -116,6 +116,7 @@ export default {
       }
       callback();
     };
+    // 校验性别
     let validateSex = (rule, value, callback) => {
       console.log("sex:" + value);
       if (!value) {
@@ -123,10 +124,12 @@ export default {
       }
       callback();
     };
+    // 校验生日
     let validateBirthday = (rule, value, callback) => {
       console.log("birthday:" + value);
       callback();
     };
+    // 校验地址
     let validateAddress = (rule, value, callback) => {
       console.log("address:" + value);
       if (!value) {
@@ -134,17 +137,19 @@ export default {
       }
       callback();
     };
+    // 校验邮箱
     let validateEmail = (rule, value, callback) => {
       console.log("email:" + value);
       if (!value) {
         return callback(new Error("邮箱不能为空"));
       }
-      let reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+      let reg = /^([a-zA-Z]|[0-9])(\w)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
       if(!reg.test(value)){
         return callback(new Error('邮箱格式不正确'));
       }
       callback();
     };
+    // 校验手机号
     let validateMobile = (rule, value, callback) => {
       console.log("mobile:" + value);
       if (!value) {

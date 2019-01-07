@@ -40,11 +40,13 @@
             <i slot="suffix" class="el-input__icon el-icon-search"></i>
           </el-input>
         </el-menu-item>
-        <el-menu-item index="/login" style="padding-left:30px;">
-          <el-button type="text">登录</el-button>
+        <el-menu-item index="/login">
+          <el-button type="text">
+            登&nbsp;录
+          </el-button>
         </el-menu-item>
-        <el-menu-item index="/register" style="padding-left:30px;">
-          <el-button type="text">注册</el-button>
+        <el-menu-item index="/register" style="padding-left:20px;">
+          <el-button type="text">注&nbsp;册</el-button>
         </el-menu-item>
       </el-menu>
     </el-col>

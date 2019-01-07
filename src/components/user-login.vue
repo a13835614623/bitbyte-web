@@ -1,11 +1,16 @@
 <template>
   <div class="block login">
-    <el-form :model="user" ref="user" label-width="70px" hide-required-asterisk>
-      <el-form-item label="用户名" :rules="[{required:true,message: '年龄不能为空'}]" prop="username">
-        <el-input v-model="user.username" placeholder="请输入您的用户名"></el-input>
+    <el-form :model="user" ref="user" label-width="0" hide-required-asterisk>
+      <el-form-item label="" :rules="[{required:true,message: '年龄不能为空'}]" prop="username">
+        <el-input v-model="user.username" placeholder="请输入您的用户名">
+					<font-awesome-icon slot="prefix" :icon="['fas','user']" size="lg"/>
+				</el-input>
       </el-form-item>
-      <el-form-item label="密码" :rules="[{required:true,message: '密码不能为空'}]"  prop="password">
-        <el-input v-model="user.password" placeholder="请输入密码"></el-input>
+      <el-form-item label="" :rules="[{required:true,message: '密码不能为空'}]"  prop="password">
+        <el-input v-model="user.password" placeholder="请输入密码">
+					<i class="fa"></i>
+					<font-awesome-icon slot="prefix" :icon="['fas','unlock-alt']" size="lg"/>
+				</el-input>
       </el-form-item>
 			<el-form-item>
 				<el-button type="primary" @click="onLogin" style="width:100%;">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</el-button>
@@ -58,6 +63,6 @@ a{
 	margin-top: 150px;
 	border: 1px solid #ebebeb;
 	border-radius: 3px;
-	padding: 20px 20px 0px 10px;
+	padding: 30px 20px 0px 20px;
 }
 </style>
