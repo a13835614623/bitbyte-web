@@ -1,16 +1,17 @@
 <template>
   <div class="block register">
     <!-- 步骤 -->
-    <el-steps :active="activeStep" finish-status="success" align-center :space="500">
+    <el-steps
+      :active="activeStep"
+      finish-status="success"
+      align-center
+      style="width:100%;"
+      :space="450"
+    >
       <el-step v-for="step in steps" :key="step.key" :title="step.title"></el-step>
     </el-steps>
     <!-- 注册表单，第一步，基本信息 -->
-    <el-form 
-      v-if="activeStep===0" 
-      :model="user" 
-      ref="user" 
-      :rules="userRules" 
-      label-width="80px">
+    <el-form v-if="activeStep===0" :model="user" ref="user" :rules="userRules" label-width="80px">
       <el-form-item label="昵称" prop="name">
         <el-input v-model="user.name"></el-input>
       </el-form-item>
@@ -144,8 +145,8 @@ export default {
         return callback(new Error("邮箱不能为空"));
       }
       let reg = /^([a-zA-Z]|[0-9])(\w)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
-      if(!reg.test(value)){
-        return callback(new Error('邮箱格式不正确'));
+      if (!reg.test(value)) {
+        return callback(new Error("邮箱格式不正确"));
       }
       callback();
     };
@@ -155,9 +156,10 @@ export default {
       if (!value) {
         return callback(new Error("手机号不能为空"));
       }
-      let phoneReg = /^1[3-578]\d{9}$/;0
-      if(!phoneReg.test(value)){
-        return callback(new Error('手机号格式不正确'));
+      let phoneReg = /^1[3-578]\d{9}$/;
+      0;
+      if (!phoneReg.test(value)) {
+        return callback(new Error("手机号格式不正确"));
       }
       callback();
     };
@@ -173,7 +175,7 @@ export default {
       if (!value) {
         return callback(new Error("确认密码不能为空"));
       } else if (value != this.user.password) {
-        console.log(this.user.password)
+        console.log(this.user.password);
         return callback(new Error("两次密码不一致"));
       }
       callback();
@@ -257,18 +259,17 @@ export default {
     },
     //下一步
     nextStep() {
-      this.$refs['user'].validate((valid)=>{
-        if(valid)this.activeStep++;
+      this.$refs["user"].validate(valid => {
+        if (valid) this.activeStep++;
       });
     },
     previousStep() {
       this.activeStep--;
     },
     //完成注册
-    finishRegister(){
-      this.$refs['user'].validate((valid)=>{
-        if(valid)
-          this.$router.push('/login')
+    finishRegister() {
+      this.$refs["user"].validate(valid => {
+        if (valid) this.$router.push("/login");
       });
     }
   }
@@ -277,8 +278,7 @@ export default {
 
 <style scoped>
 .register {
-  height: 1000px;
-  width: 100%;
+  height: 500px;
   border: 1px solid #ebebeb;
   border-radius: 3px;
   padding: 20px;

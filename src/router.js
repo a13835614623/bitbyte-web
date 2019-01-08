@@ -4,6 +4,7 @@ import home from '@/views/home'
 import login from '@/components/user-login'
 import register from '@/components/user-register'
 import bilibiliRead from '@/components/projects/bilibili-read'
+import mainArticle from '@/components/main-article'
 Vue.use(Router)
 
 export default new Router({
@@ -31,6 +32,10 @@ export default new Router({
           component:bilibiliRead
         }
       ]
+    },{
+      path:'/article',
+      name:'article',
+      component:mainArticle
     }
   ]
 })

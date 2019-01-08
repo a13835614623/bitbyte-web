@@ -16,7 +16,7 @@
 				<el-button type="primary" @click="onLogin" style="width:100%;">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</el-button>
 			</el-form-item>
 			<el-form-item style="margin-bottom:0px;">
-				<el-button type="text" @click="$route.push('/register')" style="float:left;">现在注册</el-button>
+				<el-button type="text" @click="onRegister" style="float:left;">现在注册</el-button>
 				<el-button type="text" @click="onForgetPwd" style="float:right;">忘记密码?</el-button>
 			</el-form-item>
     </el-form>
@@ -25,7 +25,7 @@
 
 <script>
 export default {
-  name: "user-login",
+	name: "user-login",
   data() {
     return {
       user: {
@@ -40,6 +40,10 @@ export default {
 		},
 		onForgetPwd(){
 			console.log('忘记密码')
+		},
+		onRegister(){
+			console.log('现在注册')
+			this.$router.push('/register')
 		},
 		//验证登录
 		checkUser(){
