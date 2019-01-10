@@ -1,9 +1,7 @@
 <template>
   <el-container>
     <!-- 主体 -->
-		<el-main>
-			<main-content/>
-		</el-main>
+    <main-content></main-content>
   </el-container>
 </template>
 

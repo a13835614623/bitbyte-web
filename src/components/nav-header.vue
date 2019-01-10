@@ -2,10 +2,10 @@
   <div class="nav-header">
     <el-row>
       <!-- logo -->
-      <el-col :span="5">
+      <el-col :span="5" :offset="2">
         <div class="logo">
-          <router-link to="/" style="color:#409EFF;">
-            <span>BitBytes比特之家</span>
+          <router-link to="/">
+            <img src="../assets/logo.png" alt="BitByte" height="36"/>
           </router-link>
         </div>
       </el-col>
@@ -15,7 +15,7 @@
           mode="horizontal"
           @select="handleSelect"
           :router="true"
-          :default-active="activeIndex()"
+          :default-active="activeIndex"
           :unique-opened="true"
         >
           <el-submenu index="/language">
@@ -58,12 +58,9 @@
           <el-submenu index="/projects">
             <template slot="title">项目相关</template>
             <el-menu-item index="/projects/bilibiliRead">bilibili-read</el-menu-item>
-            <el-submenu index="/projects">
-              <template slot="title">其他项目</template>
-              <el-menu-item index="/projects/project1">项目1</el-menu-item>
-              <el-menu-item index="/projects/project2">项目2</el-menu-item>
-              <el-menu-item index="/projects/project3">项目3</el-menu-item>
-            </el-submenu>
+            <el-menu-item index="/projects/project1">项目1</el-menu-item>
+            <el-menu-item index="/projects/project2">项目2</el-menu-item>
+            <el-menu-item index="/projects/project3">项目3</el-menu-item>
           </el-submenu>
           <!-- 算法相关 -->
           <el-menu-item index="/algorithm">
@@ -101,7 +98,9 @@ export default {
     //处理
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
-    },
+    }
+  },
+  computed: {
     activeIndex() {
       return this.$route.path;
     }
@@ -114,20 +113,17 @@ export default {
   right: 0;
   left: 0;
   z-index: 100;
-  border-bottom: 1px solid #DCDFE6;
+  background-color: white;
+  border-bottom: 1px solid #dcdfe6;
 }
 .nav-header a {
   text-decoration: none;
 }
-.nav-header .el-menu{
+.nav-header .el-menu {
   border: 0;
 }
 .nav-header .logo {
-  font-size: 1.5em;
-  font-weight: bold;
-  height: 60px;
-  /* float: left; */
-  line-height: 60px;
+  padding: 10px 0;
 }
 .logo a:hover {
   text-decoration: none;

@@ -14,7 +14,7 @@ import MarkDown from 'vue-meditor'
     },
     methods:{
       onSave(md){
-        console.log(a)
+        console.log(md)
       }
     }
   }

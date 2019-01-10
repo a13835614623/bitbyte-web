@@ -11,9 +11,19 @@ export default new Router({
   routes: [
     {
       path:'/',
+      redirect:'/home'
+    },
+    {
+      path:'/home',
       name:'home',
       component:home,
-      alias:'/index'
+      redirect:'/home/lastetArticle',
+      children:[
+        {
+          path:'*',
+          // component:home
+        }
+      ]
     },{
       path:'/login',
       name:'user-login',

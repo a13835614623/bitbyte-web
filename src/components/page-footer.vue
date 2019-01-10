@@ -1,6 +1,6 @@
 <template>
     <div class="foot">
-        <h1>这是底部</h1>
+        <!-- <h1>这是底部</h1> -->
     </div>
 </template>
 
