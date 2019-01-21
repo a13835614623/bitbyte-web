@@ -2,15 +2,15 @@
   <div class="nav-header">
     <el-row>
       <!-- logo -->
-      <el-col :span="5" :offset="2">
+      <el-col :span="3" :offset="2">
         <div class="logo">
           <router-link to="/">
-            <img src="../assets/logo.png" alt="BitByte" height="36"/>
+            <img src="../assets/logo.png" alt="BitByte" height="36">
           </router-link>
         </div>
       </el-col>
       <!-- 导航 -->
-      <el-col :span="17" style="float:right;">
+      <el-col :span="19" style="float:right;">
         <el-menu
           mode="horizontal"
           @select="handleSelect"
@@ -73,12 +73,43 @@
             </el-input>
           </el-menu-item>
           <!-- 登录 -->
-          <el-menu-item index="/login">
+          <el-menu-item v-if="!isLogin" index="/login">
             <el-button type="text">登&nbsp;录</el-button>
           </el-menu-item>
           <!-- 注册 -->
-          <el-menu-item index="/register" style="padding-left:20px;">
+          <el-menu-item v-if="!isLogin" index="/register" style="padding-left:20px;">
             <el-button type="text">注&nbsp;册</el-button>
+          </el-menu-item>
+          <!-- 用户下拉菜单 -->
+          <el-menu-item v-if="isLogin" index>
+            <el-dropdown trigger="hover" @command="handleCommand">
+              <span>
+                {{user.userName||'未知用户'}}
+                <i class="el-icon-arrow-down el-icon--right"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="userCenter">
+                  <span>个人中心</span>
+                </el-dropdown-item>
+                <el-dropdown-item command="userSubscribe">
+                  <span>我的关注</span>
+                </el-dropdown-item>
+                <el-dropdown-item command="userArticle">
+                  <span>我的文章</span>
+                </el-dropdown-item>
+                <el-dropdown-item command="write">
+                  <span>写文章</span>
+                </el-dropdown-item>
+                <el-dropdown-item command="logout">
+                  <span>退出</span>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </el-menu-item>
+          <el-menu-item index="/article/write">
+            <el-button type="primary">写文章
+              <font-awesome-icon :icon="['fas','edit']"/>
+            </el-button>
           </el-menu-item>
         </el-menu>
       </el-col>
@@ -87,22 +118,77 @@
 </template>
 
 <script>
+import Cookies from "js-cookie";
+import axios from "axios";
+axios.defaults.baseURL = "/api";
 export default {
   name: "nav-header",
   data() {
     return {
-      searchText: "" //搜索内容
+      searchText: "" // 搜索内容
     };
   },
+  created() {
+    let token = Cookies.get("token");
+    let user = Cookies.get("user");
+    if (token && user) {
+      axios
+        .get("/user/" + user)
+        .then(res => {
+          // 保存用户
+          this.$store.commit("saveUser", {
+            user:res.data.data,
+            token
+          });
+          this.$message({
+            showClose: false,
+            message: "登录成功!",
+            type: "success"
+          });
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  },
   methods: {
-    //处理
+    // 处理路由选择
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
+    },
+    // 处理用户登录后的下拉菜单命令
+    handleCommand(command) {
+      console.log(command)
+      let vm = this;
+      let handle = {
+        write() {
+          vm.$router.push("/article/write");
+        },
+        logout(){
+          vm.$store.commit('saveUser',{});
+          vm.$message({
+            showClose: false,
+            message: "退出成功!",
+            type: "success"
+          });
+          vm.$router.push('/home');
+        }
+      };
+      handle[command]();
     }
   },
   computed: {
+    // 当前路由
     activeIndex() {
       return this.$route.path;
+    },
+    //登录的用户名
+    user() {
+      return this.$store.getters.getUser;
+    },
+    // 是否登录
+    isLogin() {
+      return this.$store.getters.isLogin;
     }
   }
 };

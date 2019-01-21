@@ -80,7 +80,7 @@
         </el-col>
       </el-form-item>
     </el-form>
-    <div>
+    <div class="step">
       <el-button v-if="activeStep==1||activeStep==2" type="infor" @click="previousStep">
         <span>
           上一步
@@ -104,12 +104,18 @@
 </template>
 
 <script>
+import axios from "axios";
+axios.defaults.baseURL = "/api";
+import md5 from 'crypto-js/md5';
+// 邮箱正则表达式
+let emailReg = /^([a-zA-Z]|[0-9])(\w)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+// 手机号正则表达式
+let phoneReg = /^1[3-578]\d{9}$/;
 export default {
   name: "user-register",
   data() {
     // 校验用户名
     let validateName = (rule, value, callback) => {
-      console.log("name:" + value);
       if (!value) {
         return callback(new Error("用户名不能为空"));
       } else if (value.length > 16) {
@@ -119,7 +125,6 @@ export default {
     };
     // 校验性别
     let validateSex = (rule, value, callback) => {
-      console.log("sex:" + value);
       if (!value) {
         return callback(new Error("性别不能为空"));
       }
@@ -127,12 +132,10 @@ export default {
     };
     // 校验生日
     let validateBirthday = (rule, value, callback) => {
-      console.log("birthday:" + value);
       callback();
     };
     // 校验地址
     let validateAddress = (rule, value, callback) => {
-      console.log("address:" + value);
       if (!value) {
         return callback(new Error("地址不能为空"));
       }
@@ -140,38 +143,33 @@ export default {
     };
     // 校验邮箱
     let validateEmail = (rule, value, callback) => {
-      console.log("email:" + value);
       if (!value) {
         return callback(new Error("邮箱不能为空"));
       }
-      let reg = /^([a-zA-Z]|[0-9])(\w)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
-      if (!reg.test(value)) {
+      if (!emailReg.test(value)) {
         return callback(new Error("邮箱格式不正确"));
       }
       callback();
     };
     // 校验手机号
     let validateMobile = (rule, value, callback) => {
-      console.log("mobile:" + value);
       if (!value) {
         return callback(new Error("手机号不能为空"));
       }
-      let phoneReg = /^1[3-578]\d{9}$/;
-      0;
       if (!phoneReg.test(value)) {
         return callback(new Error("手机号格式不正确"));
       }
       callback();
     };
     let validatePassword = (rule, value, callback) => {
-      console.log("passowrd:" + value);
       if (!value) {
         return callback(new Error("密码不能为空"));
+      }else if(value.length<7){
+        return callback(new Error("密码不能小于7个字符"));
       }
       callback();
     };
     let validateCheckPwd = (rule, value, callback) => {
-      console.log("checkPwd:" + value);
       if (!value) {
         return callback(new Error("确认密码不能为空"));
       } else if (value != this.user.password) {
@@ -247,6 +245,7 @@ export default {
     };
   },
   methods: {
+    // 邮箱输入提示
     querySearch(queryString, cb) {
       this.loadMailboxOption(queryString);
       cb(this.emailOption);
@@ -257,19 +256,52 @@ export default {
       this.emailOption.push({ value: value + "@126.com" });
       this.emailOption.push({ value: value + "@163.com" });
     },
-    //下一步
+    // 下一步
     nextStep() {
       this.$refs["user"].validate(valid => {
         if (valid) this.activeStep++;
       });
     },
+    // 上一步
     previousStep() {
       this.activeStep--;
     },
-    //完成注册
+    // 完成注册
     finishRegister() {
+      let u = this.user;
+      let url = "/user/add";
+      let postData = {
+        userName: u.name,
+        userSex: u.sex,
+        userBirthday: u.birthday,
+        userAddress: u.address,
+        userEmail: u.email,
+        userMobile: u.mobile,
+        userPassword: md5(u.password).toString()
+      };
+      let config = {
+        headers: {}
+      };
       this.$refs["user"].validate(valid => {
-        if (valid) this.$router.push("/login");
+        // if (valid) this.$router.push("/login");
+        if (valid) {
+          axios
+            .post(url, postData, config)
+            .then(res => {
+              this.$message({
+                showClose:true,
+                message:res.data.message,
+                type:res.data.status
+              });
+            })
+            .catch(error => {
+              this.$message({
+                showClose:true,
+                message:'注册失败!',
+                type:'error'
+              });
+            });
+        }
       });
     }
   }
@@ -282,9 +314,14 @@ export default {
   border: 1px solid #ebebeb;
   border-radius: 3px;
   padding: 20px;
+  text-align: center;
 }
 .el-form {
   width: 300px;
   margin: 80px auto 50px;
+}
+.step {
+  display: inline;
+  margin: 0 auto;
 }
 </style>
