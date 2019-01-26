@@ -2,22 +2,25 @@
   <div class="nav-header">
     <el-row>
       <!-- logo -->
-      <el-col :span="3" :offset="2">
+      <el-col :span="3"
+              :offset="2">
         <div class="logo">
           <router-link to="/">
-            <img src="../assets/logo.png" alt="BitByte" height="36">
+            <img src="../assets/logo.png"
+                 alt="BitByte"
+                 height="36">
           </router-link>
         </div>
       </el-col>
       <!-- 导航 -->
-      <el-col :span="19" style="float:right;">
-        <el-menu
-          mode="horizontal"
-          @select="handleSelect"
-          :router="true"
-          :default-active="activeIndex"
-          :unique-opened="true"
-        >
+      <el-col :span="19"
+              style="float:right;">
+        <el-menu mode="horizontal"
+                 @select="handleSelect"
+                 :router="true"
+                 active-text-color="#409EFF"
+                 :default-active="activeIndex"
+                 :unique-opened="true">
           <el-submenu index="/language">
             <template slot="title">编程语言</template>
             <el-submenu index="/frontDev">
@@ -64,29 +67,42 @@
           </el-submenu>
           <!-- 算法相关 -->
           <el-menu-item index="/algorithm">
-            <a href="#" target="_blank">算法与数据结构</a>
+            <a href="#"
+               target="_blank">算法与数据结构</a>
           </el-menu-item>
           <!-- 搜索框 -->
           <el-menu-item index="/search">
-            <el-input v-model="searchText" placeholder="搜索" clearable>
-              <i slot="suffix" class="el-input__icon el-icon-search"></i>
+            <el-input v-model="searchText"
+                      placeholder="搜索"
+                      clearable>
+              <i slot="suffix"
+                 class="el-input__icon el-icon-search"></i>
             </el-input>
           </el-menu-item>
           <!-- 登录 -->
-          <el-menu-item v-if="!isLogin" index="/login">
+          <el-menu-item v-if="!isLogin"
+                        index="/login">
             <el-button type="text">登&nbsp;录</el-button>
           </el-menu-item>
           <!-- 注册 -->
-          <el-menu-item v-if="!isLogin" index="/register" style="padding-left:20px;">
+          <el-menu-item v-if="!isLogin"
+                        index="/register"
+                        style="padding-left:20px;">
             <el-button type="text">注&nbsp;册</el-button>
           </el-menu-item>
           <!-- 用户下拉菜单 -->
-          <el-menu-item v-if="isLogin" index>
-            <el-dropdown trigger="hover" @command="handleCommand">
+          <el-menu-item v-if="isLogin"
+                        index="/user">
+            <el-dropdown trigger="hover"
+                         @command="handleCommand"
+                         :show-timeout="0">
+              <!-- 头像 -->
               <span>
-                {{user.userName||'未知用户'}}
-                <i class="el-icon-arrow-down el-icon--right"></i>
+                <img :src="userPicPath"
+                     style="width:30px;height:30px;border-radius:15px;">
+                {{user.userName||''}}
               </span>
+              <!-- 下拉区 -->
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="userCenter">
                   <span>个人中心</span>
@@ -108,7 +124,7 @@
           </el-menu-item>
           <el-menu-item index="/article/write">
             <el-button type="primary">写文章
-              <font-awesome-icon :icon="['fas','edit']"/>
+              <font-awesome-icon :icon="['fas','edit']" />
             </el-button>
           </el-menu-item>
         </el-menu>
@@ -118,7 +134,6 @@
 </template>
 
 <script>
-import Cookies from "js-cookie";
 import axios from "axios";
 axios.defaults.baseURL = "/api";
 export default {
@@ -129,49 +144,43 @@ export default {
     };
   },
   created() {
-    let token = Cookies.get("token");
-    let user = Cookies.get("user");
-    if (token && user) {
-      axios
-        .get("/user/" + user)
-        .then(res => {
-          // 保存用户
-          this.$store.commit("saveUser", {
-            user:res.data.data,
-            token
-          });
-          this.$message({
-            showClose: false,
-            message: "登录成功!",
-            type: "success"
-          });
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }
+    // 根据cookie登录并更新用户信息
+    this.$store.dispatch("UPDATE_USER");
   },
   methods: {
+    // 路由
+    dispatch(path) {
+      this.$router.push(path);
+    },
     // 处理路由选择
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
     },
     // 处理用户登录后的下拉菜单命令
     handleCommand(command) {
-      console.log(command)
       let vm = this;
       let handle = {
         write() {
-          vm.$router.push("/article/write");
+          vm.dispatch("/article/write");
         },
-        logout(){
-          vm.$store.commit('saveUser',{});
+        logout() {
+          // 清空用户记录并清除cookie
+          vm.$store.commit('clearUser');
           vm.$message({
             showClose: false,
             message: "退出成功!",
             type: "success"
           });
-          vm.$router.push('/home');
+          vm.$router.push("/home");
+        },
+        userCenter() {
+          vm.dispatch("/user");
+        },
+        userSubscribe() {
+          vm.dispatch("/user/subscribe");
+        },
+        userArticle() {
+          vm.dispatch("/user/article");
         }
       };
       handle[command]();
@@ -182,13 +191,17 @@ export default {
     activeIndex() {
       return this.$route.path;
     },
-    //登录的用户名
+    //登录的用户
     user() {
-      return this.$store.getters.getUser;
+      return this.$store.state.user;
     },
     // 是否登录
     isLogin() {
       return this.$store.getters.isLogin;
+    },
+    // 用户头像路径
+    userPicPath() {
+      return this.$store.getters.userPicPath;
     }
   }
 };

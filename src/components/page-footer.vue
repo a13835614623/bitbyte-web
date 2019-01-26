@@ -12,6 +12,6 @@
 
 <style scoped>
 .foot{
-    background-color:aliceblue;
+    background-color:beige;
 }
 </style>

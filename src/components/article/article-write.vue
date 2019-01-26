@@ -54,7 +54,6 @@
 <script>
 import baseMarkdown from "@/components/article/base-markdown";
 import axios from "axios";
-import Cookies from "js-cookie";
 axios.defaults.baseURL = "/api";
 export default {
   name: "article-write",
@@ -136,19 +135,15 @@ export default {
     },
     // 正式提交
     commitArticle() {
-      let vm = this;
-      let user = vm.$store.state.user;
       let article = {
         articleTitle: this.article.title,
         articleContent: this.article.content,
-        articleUser: user.userName,
         articleLike: 0,
         articleRead: 0,
         articleTags: this.article.tags.reduce((pre, cur, curIndex, array) => {
           return pre + "-" + cur;
         })
       };
-      let token = vm.$store.state.token;
       const loading = this.$loading({
         lock: true,
         text: "正在提交",
@@ -156,18 +151,14 @@ export default {
         background: "rgba(0, 0, 0, 0.7)"
       });
       axios
-        .post("/article/add", {
-          article,
-          user,
-          token
-        })
+        .post(`/article/add?userId=${this.$store.state.user.userId}`, article)
         .then(res => {
           loading.close();
           this.showMessage(res.data.message, res.data.status, false);
         })
         .catch(error => {
           loading.close();
-          this.showMessage(error, "error", false);
+          this.showMessage("提交失败!", "error", false);
         });
     },
     // 显示提示消息
@@ -209,8 +200,7 @@ export default {
 </script>
 
 <style scoped>
-.article-write {
-  margin: 0 auto;
-  width: 60%;
-}
+/* .article-write {
+
+} */
 </style>

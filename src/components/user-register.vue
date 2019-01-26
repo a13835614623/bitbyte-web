@@ -1,99 +1,112 @@
 <template>
   <div class="block register">
     <!-- 步骤 -->
-    <el-steps
-      :active="activeStep"
-      finish-status="success"
-      align-center
-      style="width:100%;"
-      :space="450"
-    >
-      <el-step v-for="step in steps" :key="step.key" :title="step.title"></el-step>
+    <el-steps :active="activeStep"
+              finish-status="success"
+              align-center
+              style="width:100%;"
+              :space="450">
+      <el-step v-for="step in steps"
+               :key="step.key"
+               :title="step.title"></el-step>
     </el-steps>
     <!-- 注册表单，第一步，基本信息 -->
-    <el-form v-if="activeStep===0" :model="user" ref="user" :rules="userRules" label-width="80px">
-      <el-form-item label="昵称" prop="name">
+    <el-form v-if="activeStep===0"
+             :model="user"
+             ref="user"
+             :rules="userRules"
+             label-width="80px">
+      <el-form-item label="昵称"
+                    prop="name">
         <el-input v-model="user.name"></el-input>
       </el-form-item>
-      <el-form-item label="性别" prop="sex">
+      <el-form-item label="性别"
+                    prop="sex">
         <el-radio-group v-model="user.sex">
           <el-radio label="男"></el-radio>
           <el-radio label="女"></el-radio>
           <el-radio label="保密"></el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="出生日期" prop="birthday">
-        <el-date-picker
-          v-model="user.birthday"
-          :clearable="true"
-          align="right"
-          placeholder="请选择日期"
-          type="date"
-          format="yyyy年MM月dd日"
-          :picker-options="pickerOption"
-        ></el-date-picker>
+      <el-form-item label="出生日期"
+                    prop="birthday">
+        <el-date-picker v-model="user.birthday"
+                        :clearable="true"
+                        align="right"
+                        placeholder="请选择日期"
+                        type="date"
+                        format="yyyy年MM月dd日"
+                        :picker-options="pickerOption"></el-date-picker>
       </el-form-item>
-      <el-form-item label="家乡" prop="address">
+      <el-form-item label="家乡"
+                    prop="address">
         <el-input v-model="user.address"></el-input>
       </el-form-item>
     </el-form>
     <!-- 注册表单，第二步，设置密码 -->
-    <el-form
-      v-else-if="activeStep===1"
-      :model="user"
-      ref="user"
-      :rules="userRules"
-      label-width="80px"
-    >
-      <el-form-item label="密码" prop="password">
-        <el-input type="password" v-model="user.password"></el-input>
+    <el-form v-else-if="activeStep===1"
+             :model="user"
+             ref="user"
+             :rules="userRules"
+             label-width="80px">
+      <el-form-item label="密码"
+                    prop="password">
+        <el-input type="password"
+                  v-model="user.password"></el-input>
       </el-form-item>
-      <el-form-item label="确认密码" prop="checkPwd">
-        <el-input type="password" v-model="user.checkPwd"></el-input>
+      <el-form-item label="确认密码"
+                    prop="checkPwd">
+        <el-input type="password"
+                  v-model="user.checkPwd"></el-input>
       </el-form-item>
     </el-form>
     <!-- 注册表单，第三步，验证信息 -->
-    <el-form
-      v-else-if="activeStep===2"
-      ref="user"
-      :model="user"
-      :rules="userRules"
-      label-width="80px"
-      style="width:400px;"
-    >
-      <el-form-item label="手机号码" prop="mobile">
+    <el-form v-else-if="activeStep===2"
+             ref="user"
+             :model="user"
+             :rules="userRules"
+             label-width="80px"
+             style="width:400px;">
+      <el-form-item label="手机号码"
+                    prop="mobile">
         <el-col :span="16">
-          <el-input v-model="user.mobile" placeholder="请输入您的手机号"></el-input>
+          <el-input v-model="user.mobile"
+                    placeholder="请输入您的手机号"></el-input>
         </el-col>
         <el-col :span="8">
           <el-button type="primary">获取验证码</el-button>
         </el-col>
       </el-form-item>
-      <el-form-item label="邮箱" prop="email">
+      <el-form-item label="邮箱"
+                    prop="email">
         <el-col :span="16">
-          <el-autocomplete
-            style="display: block;"
-            v-model="user.email"
-            :fetch-suggestions="querySearch"
-            :trigger-on-focus="false"
-          ></el-autocomplete>
+          <el-autocomplete style="display: block;"
+                           v-model="user.email"
+                           :fetch-suggestions="querySearch"
+                           :trigger-on-focus="false"></el-autocomplete>
         </el-col>
       </el-form-item>
     </el-form>
     <div class="step">
-      <el-button v-if="activeStep==1||activeStep==2" type="infor" @click="previousStep">
+      <el-button v-if="activeStep==1||activeStep==2"
+                 type="infor"
+                 @click="previousStep">
         <span>
           上一步
           <i class="el-icon-arrow-left"></i>
         </span>
       </el-button>
-      <el-button v-if="activeStep<=1" type="primary" @click="nextStep">
+      <el-button v-if="activeStep<=1"
+                 type="primary"
+                 @click="nextStep">
         <span>
           下一步
           <i class="el-icon-arrow-right"></i>
         </span>
       </el-button>
-      <el-button v-else-if="activeStep==2" type="primary" @click="finishRegister">
+      <el-button v-else-if="activeStep==2"
+                 type="primary"
+                 @click="finishRegister">
         <span>
           完成注册
           <i class="el-icon-arrow-right"></i>
@@ -106,7 +119,7 @@
 <script>
 import axios from "axios";
 axios.defaults.baseURL = "/api";
-import md5 from 'crypto-js/md5';
+import md5 from "crypto-js/md5";
 // 邮箱正则表达式
 let emailReg = /^([a-zA-Z]|[0-9])(\w)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
 // 手机号正则表达式
@@ -164,8 +177,8 @@ export default {
     let validatePassword = (rule, value, callback) => {
       if (!value) {
         return callback(new Error("密码不能为空"));
-      }else if(value.length<7){
-        return callback(new Error("密码不能小于7个字符"));
+      } else if (value.length < 8) {
+        return callback(new Error("密码不能小于8个字符"));
       }
       callback();
     };
@@ -289,16 +302,17 @@ export default {
             .post(url, postData, config)
             .then(res => {
               this.$message({
-                showClose:true,
-                message:res.data.message,
-                type:res.data.status
+                showClose: true,
+                message: res.data.message,
+                type: res.data.status
               });
+              this.$router.push("/login");
             })
             .catch(error => {
               this.$message({
-                showClose:true,
-                message:'注册失败!',
-                type:'error'
+                showClose: true,
+                message: "注册失败!",
+                type: "error"
               });
             });
         }
