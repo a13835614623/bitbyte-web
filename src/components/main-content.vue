@@ -2,53 +2,51 @@
   <div class="main-content">
     <!-- 侧边栏 -->
     <div class="main-left-nav">
-      <el-menu
-        mode="vertical"
-        :default-active="activeIndex()"
-        :router="true"
-        active-text-color="#fff"
-        text-color="#909399"
-        @select="onSelect"
-      >
-        <el-menu-item v-for="(item,index) in menus" :key="index" :index="item.index">{{item.title}}</el-menu-item>
+      <el-menu mode="vertical"
+               :default-active="activeIndex()"
+               :router="true"
+               active-text-color="#fff"
+               text-color="#909399"
+               @select="onSelect">
+        <el-menu-item v-for="(item,index) in menus"
+                      :key="index"
+                      :index="item.index">{{item.title}}</el-menu-item>
       </el-menu>
     </div>
     <div class="main-center">
-      <!-- <router-view></router-view> -->
-      <el-card
-        :body-style="cardBodyStyle"
-        class="article"
-        v-for="article in articles"
-        :key="article.id"
-      >
+      <el-card :body-style="cardBodyStyle"
+               class="article"
+               v-for="article in articles"
+               :key="article.id">
+        <!-- 文章标题 -->
         <div slot="header">
-          <router-link to=''>
-            <b>{{article.title}}</b>
+          <router-link :to="'/article/view/'+article.articleId">
+            <b>{{article.articleTitle}}</b>
           </router-link>
-          <el-button
-            style="float: right; padding: 3px 0"
-            type="text"
-            @click="onCardClose"
-            icon="el-icon-close"
-          ></el-button>
+          <el-button style="float: right; padding: 3px 0"
+                     type="text"
+                     @click="onCardClose"
+                     icon="el-icon-close"></el-button>
         </div>
-        <el-row class="article-introduce">{{article.introduce}}</el-row>
-        <el-row :gutter="5" class="article-info">
-          <el-col :span="3">
-            <router-link to="">
-              <img src="../assets/logo.png" height="24" style="vertical-align: middle;">
-            </router-link>
-          </el-col>
-          <el-col :span="6">
-            <router-link to="" class="title">
-              {{article.author}}
-            </router-link>
-          </el-col>
-          <el-col :span="3" :offset="10">
-            <span>{{article.read}}&nbsp;阅读</span>
-          </el-col>
+        <!-- 文章介绍 -->
+        <el-row class="article-introduce">这是文章的介绍...</el-row>
+        <!-- 文章简要信息 -->
+        <el-row class="article-info">
+          <!-- 作者头像 -->
           <el-col :span="2">
-            <span>{{article.comment}}&nbsp;评论</span>
+            <router-link to="">
+              <img :src="'/api/user/pic?userPic='+article.userPic"
+                   class="user-pic">
+            </router-link>
+          </el-col>
+          <!-- 作者昵称 -->
+          <el-col :span="22">
+            <el-row style="height:42px;padding:10px 0px;">
+              <router-link to="">
+                <span class="article-username">{{article.userName}}</span>
+              </router-link>
+            <span class="article-readCount">{{article.articleRead}}&nbsp;阅读</span>
+            </el-row>
           </el-col>
         </el-row>
       </el-card>
@@ -109,53 +107,7 @@ export default {
     return {
       // 导航菜单内容
       menus: leftmenus,
-      articles: [
-        {
-          id: "1001",
-          title: "这是一篇文章的标题",
-          read: 100,
-          comment: 99,
-          author: "作者",
-          img: "../assets/logo.png",
-          introduce: "这是一段文章摘要......."
-        },
-        {
-          id: "1002",
-          title: "这是一篇文章的标题",
-          read: 100,
-          comment: 99,
-          author: "作者",
-          img: "../assets/logo.png",
-          introduce: "这是一段文章摘要......."
-        },
-        {
-          id: "1003",
-          title: "这是一篇文章的标题",
-          read: 100,
-          comment: 99,
-          author: "作者",
-          img: "../assets/logo.png",
-          introduce: "这是一段文章摘要......."
-        },
-        {
-          id: "1004",
-          title: "这是一篇文章的标题",
-          read: 100,
-          comment: 99,
-          author: "作者",
-          img: "../assets/logo.png",
-          introduce: "这是一段文章摘要......."
-        },
-        {
-          id: "1005",
-          title: "这是一篇文章的标题",
-          read: 100,
-          comment: 99,
-          author: "作者",
-          img: "../assets/logo.png",
-          introduce: "这是一段文章摘要......."
-        }
-      ],
+      articles: [],
       cardBodyStyle: {
         paddingLeft: "20px",
         paddingRight: "20px",
@@ -164,9 +116,18 @@ export default {
       }
     };
   },
+  created() {
+    this.getArticles();
+  },
   methods: {
     onSelect() {
       console.log();
+    },
+    // 获取文章列表
+    getArticles() {
+      this.$store.dispatch("GET_ALL_ARTICLES").then(articles => {
+        this.articles = articles;
+      });
     },
     //当前导航索引
     activeIndex() {
@@ -174,23 +135,22 @@ export default {
     },
     //关闭卡片事件
     onCardClose() {}
-  }
+  },
+  computed: {}
 };
 </script>
 
 <style scoped>
-
-.router-link-active{
+a {
   text-decoration: none;
   color: #303133;
 }
-.router-link-active:hover{
- color: #409eff;
+a:hover {
+  color: #409eff;
 }
 .main-content {
   height: 1000px;
   width: 90%;
-  /* 居中 */
   margin: 0 auto;
 }
 .main-left-nav {
@@ -202,7 +162,6 @@ export default {
 .main-center {
   width: 800px;
   height: 1000px;
-  /* 水平居中 */
   margin: 0 auto;
 }
 .article {
@@ -210,20 +169,30 @@ export default {
 }
 .article-introduce {
   margin-bottom: 10px;
-}
-.article-introduce,
-.article-info {
   color: #909399;
 }
-.article-info .title {
-  color: #303133;
-  vertical-align: middle;
-  font-size: 1.1em;
-}
-.title:hover{
+
+.article-title:hover {
   color: #409eff;
 }
 .is-active {
   background: #409eff;
+}
+
+.user-pic {
+  display: inline-block;
+  vertical-align: middle;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #409eff;
+  border-radius: 20px;
+}
+.article-username {
+  font: bold 0.9em;
+}
+.article-readCount{
+  font: 0.8em;
+  float: right;
+  color: #909399;
 }
 </style>

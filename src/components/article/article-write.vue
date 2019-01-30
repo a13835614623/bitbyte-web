@@ -4,47 +4,52 @@
       <div slot="header">
         <span>文章投稿</span>
       </div>
-      <el-form :model="article" ref="article" :rules="articleRules" label-width="80px">
-        <el-form-item label="标题" prop="title">
-          <el-input v-model="article.title" placeholder="请输入标题(3到30个字符)" maxlength="30">
+      <el-form :model="article"
+               ref="article"
+               :rules="articleRules"
+               label-width="80px">
+        <el-form-item label="标题"
+                      prop="title">
+          <el-input v-model="article.title"
+                    placeholder="请输入标题(3到30个字符)"
+                    maxlength="30">
             <template slot="append">{{article.title.length}}/30</template>
           </el-input>
         </el-form-item>
         <el-form-item label="内容">
           <base-markdown @save="article.content=$event"></base-markdown>
         </el-form-item>
-        <el-form-item label="标签" prop="tags">
-          <el-card shadow="hover" :body-style="{ padding: '5px' }">
-            <el-tag
-              v-for="tag in article.tags"
-              :key="tag"
-              closable
-              @close="onRemoveTag(tag)"
-              type="primary"
-            >{{tag}}</el-tag>
-            <el-button
-              v-if="!inputVisiable&&!tagsIsFull"
-              ref="newTagBtn"
-              type="button"
-              size="small"
-              @click="onShowTagInput"
-              icon="el-icon-plus"
-            >标签</el-button>
-            <el-input
-              v-else-if="!tagsIsFull"
-              v-model="newTag"
-              ref="newTagInput"
-              size="small"
-              @blur="onAddTag"
-              @keyup.enter.native="$event.target.blur"
-              style="width:80px;"
-            ></el-input>
+        <el-form-item label="标签"
+                      prop="tags">
+          <el-card shadow="hover"
+                   :body-style="{ padding: '5px' }">
+            <el-tag v-for="tag in article.tags"
+                    :key="tag"
+                    closable
+                    @close="onRemoveTag(tag)"
+                    type="primary">{{tag}}</el-tag>
+            <el-button v-if="!inputVisiable&&!tagsIsFull"
+                       ref="newTagBtn"
+                       type="button"
+                       size="small"
+                       @click="onShowTagInput"
+                       icon="el-icon-plus">标签</el-button>
+            <el-input v-else-if="!tagsIsFull"
+                      v-model="newTag"
+                      ref="newTagInput"
+                      size="small"
+                      @blur="onAddTag"
+                      @keyup.enter.native="$event.target.blur"
+                      style="width:80px;"></el-input>
             <span style="color:#909399;padding:3px;float:right;">{{article.tags.length}}/10</span>
           </el-card>
         </el-form-item>
-        <el-form-item label style="text-align:center;">
-          <el-button type="primary" @click="onArticleCommit">发布文章</el-button>
-          <el-button type="button" @click="onArticleTempSave">暂存草稿</el-button>
+        <el-form-item label
+                      style="text-align:center;">
+          <el-button type="primary"
+                     @click="onArticleCommit">发布文章</el-button>
+          <el-button type="button"
+                     @click="onArticleTempSave">暂存草稿</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -53,8 +58,6 @@
 
 <script>
 import baseMarkdown from "@/components/article/base-markdown";
-import axios from "axios";
-axios.defaults.baseURL = "/api";
 export default {
   name: "article-write",
   data() {
@@ -133,28 +136,26 @@ export default {
     onRemoveTag(tag) {
       this.article.tags.splice(this.article.tags.indexOf(tag), 1);
     },
-    // 正式提交
+    // 正式提交文章
     commitArticle() {
       let article = {
         articleTitle: this.article.title,
         articleContent: this.article.content,
-        articleLike: 0,
-        articleRead: 0,
         articleTags: this.article.tags.reduce((pre, cur, curIndex, array) => {
           return pre + "-" + cur;
         })
       };
       const loading = this.$loading({
         lock: true,
-        text: "正在提交",
+        text: "loading...",
         spinner: "el-icon-loading",
         background: "rgba(0, 0, 0, 0.7)"
       });
-      axios
-        .post(`/article/add?userId=${this.$store.state.user.userId}`, article)
-        .then(res => {
+      this.$store
+        .dispatch("DO_PUBLISH_ARTICLE",article)
+        .then(data => {
           loading.close();
-          this.showMessage(res.data.message, res.data.status, false);
+          this.showMessage(data.message, data.status, false);
         })
         .catch(error => {
           loading.close();

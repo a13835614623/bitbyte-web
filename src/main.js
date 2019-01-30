@@ -16,7 +16,7 @@ fontawesome.library.add(brands)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.config.productionTip = false
 
-new Vue({
+export default new Vue({
   router,
   store,
   render: h => h(App)

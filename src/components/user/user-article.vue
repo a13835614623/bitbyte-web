@@ -49,18 +49,13 @@ export default {
   methods: {
     // 获取文章列表
     getArticles() {
-      this.$store
-        .dispatch("GET_ARTICLES")
-        .then(length => {})
-        .catch(err => {
-          this.$message.error("文章列表获取失败!" + err.message);
-        });
+      this.$store.dispatch("GET_USER_ARTICLES");
     },
     // 编辑文章
     onEditArticle(article) {},
     // 显示文章
     onShowArticle(article) {
-      this.$router.push(`/article/view/${article.articleId}`)
+      this.$router.push(`/article/view/${article.articleId}`);
     }
   },
   computed: {
@@ -123,7 +118,7 @@ h3 {
   overflow-x: hidden;
   overflow-y: auto;
 }
-.el-tag{
+.el-tag {
   margin: 0px 10px;
 }
 .line {

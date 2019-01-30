@@ -35,9 +35,6 @@
 <script>
 export default {
   name: "base-user",
-  created() {
-    this.$router.push("/user/info");
-  },
   data() {
     return {
       user: {},

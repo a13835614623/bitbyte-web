@@ -30,7 +30,7 @@ export default {
   methods: {
     // 获得关注列表
     getSubscribers() {
-      const result = this.$store.dispatch("GET_SUBSCRIBERS");
+      const result = this.$store.dispatch("GET_USER_SUBSCRIBERS");
       result
         .then(length => {})
         .catch(err => {
@@ -51,7 +51,7 @@ export default {
           background: "rgba(0, 0, 0, 0.7)"
         });
         this.$store
-          .dispatch("REMOVE_SUBSCRIBE", subscriber)
+          .dispatch("DO_REMOVE_SUBSCRIBE", subscriber.userId)
           .then(() => {
             loading.close();
             this.$message({

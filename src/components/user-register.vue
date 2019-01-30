@@ -117,8 +117,6 @@
 </template>
 
 <script>
-import axios from "axios";
-axios.defaults.baseURL = "/api";
 import md5 from "crypto-js/md5";
 // 邮箱正则表达式
 let emailReg = /^([a-zA-Z]|[0-9])(\w)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
@@ -282,8 +280,7 @@ export default {
     // 完成注册
     finishRegister() {
       let u = this.user;
-      let url = "/user/add";
-      let postData = {
+      let user = {
         userName: u.name,
         userSex: u.sex,
         userBirthday: u.birthday,
@@ -292,26 +289,22 @@ export default {
         userMobile: u.mobile,
         userPassword: md5(u.password).toString()
       };
-      let config = {
-        headers: {}
-      };
       this.$refs["user"].validate(valid => {
-        // if (valid) this.$router.push("/login");
         if (valid) {
-          axios
-            .post(url, postData, config)
-            .then(res => {
+          this.$store
+            .dispatch("DO_USER_REGISTER")
+            .then(data => {
               this.$message({
                 showClose: true,
-                message: res.data.message,
-                type: res.data.status
+                message: data.message,
+                type: data.status
               });
               this.$router.push("/login");
             })
             .catch(error => {
               this.$message({
                 showClose: true,
-                message: "注册失败!",
+                message: "注册失败!\r\n"+error.message,
                 type: "error"
               });
             });

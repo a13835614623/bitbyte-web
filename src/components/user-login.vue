@@ -42,9 +42,6 @@
 
 <script>
 import md5 from "crypto-js/md5";
-import axios from "axios";
-import Cookies from "js-cookie";
-axios.defaults.baseURL = "/api";
 export default {
   name: "user-login",
   data() {
@@ -94,29 +91,21 @@ export default {
       let vm = this;
       this.$refs["user"].validate(valid => {
         if (valid) {
-          let url = "/user/login";
-          let postData = {
+          let userInfo = {
             userMobile: vm.usernameIsMobile ? vm.user.username : "",
             userEmail: vm.usernameIsEmail ? vm.user.username : "",
             userPassword: md5(vm.user.password).toString()
           };
-          axios
-            .post(url, postData)
-            .then(res => {
+          this.$store
+            .dispatch("DO_USER_LOGIN", userInfo)
+            .then(data => {
               vm.$message({
                 showClose: true,
-                message: res.data.message,
-                type: res.data.status
+                message: data.message,
+                type: data.status
               });
-              if (res.data.status == "success") {
+              if (data.status == "success") {
                 event.target.disabled = true; // 设置不可点击
-                //设置cookie
-                let cookieConfig={ expires: 7 };
-                Cookies.set("token", res.data.token, cookieConfig);
-                Cookies.set("userId", res.data.data.userId, cookieConfig);
-                Cookies.set("userName", res.data.data.userName, cookieConfig);
-                // 存储用户状态
-                vm.$store.commit('saveUser',{user:res.data.data,token:res.data.token})
                 setTimeout(() => {
                   this.$router.push("/home");
                 }, 100);
@@ -125,16 +114,14 @@ export default {
             .catch(error => {
               this.$message({
                 showClose: true,
-                message: "登录失败!",
+                message: "登录失败!\r\n"+error.message,
                 type: "error"
               });
             });
         }
       });
     },
-    setCookies(){
-
-    },
+    setCookies() {},
     onForgetPwd() {
       console.log("忘记密码");
     },

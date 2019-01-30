@@ -48,9 +48,6 @@
 </template>
 
 <script>
-import axios from "axios";
-import { async } from "q";
-axios.defaults.baseURL = "/api";
 export default {
   name: "user-info",
   data() {
@@ -121,36 +118,34 @@ export default {
   methods: {
     // 保存并提交用户信息
     onSaveUserInfo() {
-      let url = "/user/info/update";
-      let postData = {
+      let userInfo = {
         userId: this.oldUser.userId,
         userName: this.oldUser.userName,
         userSex: this.oldUser.userSex,
         userAddress: this.oldUser.userAddress,
         userBirthday: this.oldUser.userBirthday
       };
-      axios
-        .post(url, postData)
-        .then(res => {
+      this.$store
+        .dispatch("DO_USER_UPDATE", userInfo)
+        .then(data => {
           this.$message({
-            message: res.data.message,
-            type: res.data.status
+            message: data.message,
+            type: data.status
           });
         })
         .catch(err => {
-          this.$message.error("更新出错！\r\n" + err);
+          this.$message.error("更新异常！\r\n" + err);
         });
-      console.log(this.postData);
     },
     // 获取用户信息
     getOldUser() {
       this.$store
-        .dispatch("UPDATE_USER")
-        .then((data) => {
+        .dispatch("GET_USER_INFO")
+        .then(data => {
           this.oldUser = data;
         })
         .catch(err => {
-          this.$message.error('状态异常:'+err.message);
+          this.$message.error("状态异常:" + err.message);
         });
     }
   },

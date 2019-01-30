@@ -34,8 +34,6 @@
 </template>
 
 <script>
-import axios from "axios";
-axios.defaults.baseURL = "/api";
 import md5 from "crypto-js/md5";
 export default {
   data() {
@@ -46,14 +44,13 @@ export default {
         userMobile: this.$store.state.user.userMobile,
         userPassword: md5(value).toString()
       };
-      axios
-        .post("/user/password/validate", postData)
-        .then(res => {
-          if (res.data.status == "warning") {
+      this.$store
+        .dispatch("DO_USER_PASSWORD_VALIDATE", postData)
+        .then(data => {
+          if (data.status == "warning") {
             callback("原密码错误");
-          } else if (res.data.status == "error") {
-            vm.showMessage(res.data.message, "error");
-            callback();
+          } else if (data.status == "error") {
+            vm.showMessage(data.message, "error");
           }
           callback();
         })
@@ -102,7 +99,6 @@ export default {
       let vm = this;
       this.$refs["password"].validate(valid => {
         if (valid) {
-          let url = "/user/password/update";
           let postData = {
             userId: this.$store.state.user.userId,
             userPassword: md5(vm.password.new).toString()
@@ -113,14 +109,14 @@ export default {
             spinner: "el-icon-loading",
             background: "rgba(0, 0, 0, 0.7)"
           });
-          axios
-            .post(url, postData)
-            .then(res => {
-              vm.showMessage(res.data.message, res.data.status);
+          this.$store
+            .dispatch("DO_USER_PASSWORD_UPDATE", postData)
+            .then(data => {
+              vm.showMessage(data.message, data.status);
               loading.close();
             })
             .catch(error => {
-              vm.showMessage("未知异常", "error");
+              vm.showMessage("更新异常!\r\n" + error.message, "error");
               loading.close();
             });
         }

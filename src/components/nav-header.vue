@@ -92,7 +92,7 @@
           </el-menu-item>
           <!-- 用户下拉菜单 -->
           <el-menu-item v-if="isLogin"
-                        index="/user">
+                        index="">
             <el-dropdown trigger="hover"
                          @command="handleCommand"
                          :show-timeout="0">
@@ -134,8 +134,6 @@
 </template>
 
 <script>
-import axios from "axios";
-axios.defaults.baseURL = "/api";
 export default {
   name: "nav-header",
   data() {
@@ -144,8 +142,8 @@ export default {
     };
   },
   created() {
-    // 根据cookie登录并更新用户信息
-    this.$store.dispatch("UPDATE_USER");
+    // 根据cookie登录并获取用户信息
+    this.$store.dispatch("GET_USER_INFO");
   },
   methods: {
     // 路由
@@ -165,7 +163,7 @@ export default {
         },
         logout() {
           // 清空用户记录并清除cookie
-          vm.$store.commit('clearUser');
+          vm.$store.commit("clearUser");
           vm.$message({
             showClose: false,
             message: "退出成功!",
@@ -174,7 +172,7 @@ export default {
           vm.$router.push("/home");
         },
         userCenter() {
-          vm.dispatch("/user");
+          vm.dispatch("/user/info");
         },
         userSubscribe() {
           vm.dispatch("/user/subscribe");
@@ -184,6 +182,7 @@ export default {
         }
       };
       handle[command]();
+      console.log("this.$route.path:"+vm.$route.path)
     }
   },
   computed: {

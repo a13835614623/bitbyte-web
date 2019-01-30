@@ -38,21 +38,25 @@
           <span class="article-userinfo">作者简介...</span>
         </el-col>
         <el-col :span="4">
-          <el-button type="success"
-                     :disabled="this.article.articleUser==this.$store.state.user.userId"
-                     style="margin:10px"
-                     @click="onSubscribe"
-                     icon="el-icon-plus">
-            关注
+          <el-button :type="isSubscribe?'info':'success'"
+                     :disabled="!isEnableSubscribe()"
+                     style="float:right;margin:10px 0;"
+                     @click="onToggleSubscribe"
+                     :icon="isEnableSubscribe()?'el-icon-plus':''">
+            {{isSubscribe?'已关注':'关注'}}
           </el-button>
         </el-col>
       </el-row>
+      <div>
+        <article-comment :article-id="articleId"></article-comment>
+      </div>
     </el-card>
   </div>
 </template>
 
 <script>
 import { mapActions } from "vuex";
+import articleComment from "./article-comment";
 export default {
   name: "article-view",
   props: {
@@ -62,50 +66,65 @@ export default {
       required: true
     }
   },
-  created() {
+  components: {
+    "article-comment": articleComment
+  },
+  async created() {
+    const loading = this.$loading({
+      lock: true,
+      text: "loading...",
+      spinner: "el-icon-loading",
+      background: "rgba(0, 0, 0, 0.7)"
+    });
+    // 获取用户信息
+    await this.GET_USER_INFO();
     // 获取文章
-    this.GET_ARTICLE(this.articleId)
-      .then(article => {
-        this.article = article;
-        this.article.articleRead += 1;
-      })
-      .catch(err => {
-        this.$message.error("发生异常!\r\n" + err.message);
-      });
+    await this.GET_ARTICLE(this.articleId).then(article => {
+      this.article = article;
+      this.article.articleRead += 1;
+    });
     // 获取文章点赞数量
-    this.GET_ARTICLE_LIKE_COUNT(this.articleId)
-      .then(count => {
-        this.articleLikeCount = count;
-      })
-      .catch(err => {
-        this.$message.error("发生异常!\r\n" + err.message);
-      });
-    //获取文章该登录用户是否点赞
-    this.GET_ARTICLE_LIKE(this.articleId)
-      .then(isLike => {
-        this.isLike = isLike;
-      })
-      .catch(err => {
-        this.$message.error("发生异常!\r\n" + err.message);
-      });
+    await this.GET_ARTICLE_LIKE_COUNT(this.articleId).then(count => {
+      this.articleLikeCount = count;
+    });
+    //获取文章该登录用户是否已经点赞
+    await this.GET_ARTICLE_ISLIKE(this.articleId).then(isLike => {
+      this.isLike = isLike;
+    });
+    // 获取该文章作者用户是否已经关注
+    await this.GET_IS_SUBSCRIBE(this.article.articleUser).then(isSubscribe => {
+      this.isSubscribe = isSubscribe;
+      loading.close();
+    });
   },
   data() {
     return {
-      // 是否点赞
+      // 是否已点赞
       isLike: false,
+      // 是否已经关注
+      isSubscribe: false,
       // 文章对象
       article: {},
+      // 文章点赞数
       articleLikeCount: 0
     };
   },
   methods: {
     ...mapActions([
+      "GET_USER_INFO",
       "GET_ARTICLE",
-      "LIKE_ARTICLE",
-      "DISLIKE_ARTICLE",
-      "GET_ARTICLE_LIKE",
-      "GET_ARTICLE_LIKE_COUNT"
+      "DO_LIKE_ARTICLE",
+      "DO_DISLIKE_ARTICLE",
+      "GET_ARTICLE_ISLIKE",
+      "GET_ARTICLE_LIKE_COUNT",
+      "DO_SUBSCRIBE_USER",
+      "DO_REMOVE_SUBSCRIBE",
+      "GET_IS_SUBSCRIBE"
     ]),
+    // 是否允许关注
+    isEnableSubscribe(){
+      return !this.isSubscribe&&this.article.articleUser!=this.$store.state.user.userId
+    },
     // 点赞
     onToggleLike() {
       if (!this.isLike) {
@@ -121,7 +140,19 @@ export default {
       this.isLike = !this.isLike;
     },
     // 关注
-    onSubscribe() {}
+    onToggleSubscribe() {
+      if (!this.isSubscribe) {
+        // 之前是未点赞状态
+        this.DO_SUBSCRIBE_USER(this.article.articleUser).then(data => {
+          this.$message.success("关注成功!");
+        });
+      } else {
+        this.DO_REMOVE_SUBSCRIBE(this.article.articleUser).then(data => {
+          this.$message.success("取消关注成功!");
+        });
+      }
+      this.isSubscribe = !this.isSubscribe;
+    }
   },
   computed: {
     // 点赞图标class
@@ -162,7 +193,7 @@ export default {
   margin-top: 20px;
   padding: 20px;
   background-color: #f2f6fc;
-  border-radius: 20px;
+  border-radius: 5px;
   border: 1px solid #e4e7ed;
 }
 .article-username {
