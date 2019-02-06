@@ -12,7 +12,6 @@
 
   </div>
 </template>
-
 <script>
 export default {
   name: "user-record",
@@ -35,14 +34,42 @@ export default {
           width: ""
         }
       ],
-      record: [
-        {
-          id: "1",
-          time: new Date().toLocaleString(),
-          action: "登录"
-        }
-      ]
+      record: []
     };
+  },
+  methods:{
+    dataFormat(date = new Date()) {
+      let year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      let day = date.getDate();
+      let hour = date.getHours();
+      let min = date.getMinutes();
+      let second = date.getSeconds();
+      let format = (value = 0) => {
+        if (value < 10) value = "0" + value;
+        return value;
+      };
+      return `${year}-${format(month)}-${format(day)} ${format(hour)}:${format(
+        min
+      )}:${format(second)}`;
+    }
+  },
+  created() {
+    this.$store
+      .dispatch("GET_USER_RECORD")
+      .then(({ data, status, message }) => {
+        let id=1
+        this.record =data.map((record,index,arr)=>{
+          return {
+            id:id++,
+            time:this.dataFormat(new Date(record.recordTime)),
+            action:record.recordContent
+          }
+        });
+      })
+      .catch(err => {
+        this.$message.error("用户记录获取失败!");
+      });
   }
 };
 </script>

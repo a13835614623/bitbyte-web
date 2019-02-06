@@ -3,8 +3,7 @@
     <!-- 用户头像以及评论输入框 -->
     <el-row>
       <el-col :span="2">
-        <img v-if="isLogin"
-             class="user-pic"
+        <img class="user-pic"
              :src="userPicPath">
       </el-col>
       <el-col :span="22">
@@ -33,7 +32,7 @@
     <!-- 分割线 -->
     <div class="line"></div>
     <!-- 评论区 -->
-    <div v-if="commentList&&commentList[0]">
+    <div v-if="commentList">
       <!-- 评论列表 -->
       <div style="margin:30px 0;"
            v-for="(comment,index) in commentList"
@@ -182,13 +181,19 @@ export default {
     };
   },
   async created() {
-    await this.flushComments();
+    try {
+      await this.GET_USER_SUBSCRIBERS();
+      await this.flushComments();
+    } catch (error) {
+      this.$message.error(error.message);
+    }
   },
   methods: {
     ...mapActions([
       "DO_ARTICLE_COMMENT",
       "DO_ARTICLE_COMMENT_REPLY",
-      "GET_ARTICLE_COMMENTS"
+      "GET_ARTICLE_COMMENTS",
+      "GET_USER_SUBSCRIBERS"
     ]),
     // 刷新评论
     async flushComments() {
@@ -276,9 +281,6 @@ export default {
     },
     userPicPath() {
       return this.$store.getters.userPicPath;
-    },
-    isLogin() {
-      return this.$store.getters.isLogin;
     }
   }
 };

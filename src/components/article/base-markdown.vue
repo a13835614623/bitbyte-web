@@ -1,6 +1,6 @@
 <template>
   <div>
-    <mark-down @on-save="onSave" :interval="1000" :height="600"></mark-down>
+    <mark-down :initial-value="initValue" @on-save="onSave" :interval="1000" :height="600"></mark-down>
   </div>
 </template>
 
@@ -9,16 +9,10 @@
 import MarkDown from "vue-meditor";
 export default {
   name: "base-markdown",
-  data() {
-    return {};
-  },
-  model: {
-    prop: "value",
-    event: "save"
-  },
-  props: {
-    value: {
-      type: String
+  props:{
+    'initValue':{
+      required:false,
+      type:String
     }
   },
   components: {
@@ -26,7 +20,7 @@ export default {
   },
   methods: {
     onSave(md) {
-      this.$emit("save", md.htmlValue);
+      this.$emit("save", md);
     }
   }
 };

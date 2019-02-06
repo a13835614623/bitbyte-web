@@ -6,7 +6,7 @@
 
 <script>
   export default {
-    name:'user-comment'
+    name:'user-message'
   }
 </script>
 

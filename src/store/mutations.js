@@ -12,7 +12,6 @@ export default {
     state.token = '';
     Cookies.remove('token', { path: '' });
     Cookies.remove('userId', { path: '' });
-    Cookies.remove('userName', { path: '' });
   },
   // 保存关注列表
   saveSubscribers(state, subscribers = []) {

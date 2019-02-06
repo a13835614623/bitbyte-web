@@ -56,8 +56,8 @@ export default {
           path: "/user/article"
         },
         {
-          title: "评论管理",
-          path: "/user/comment"
+          title: "消息管理",
+          path: "/user/message"
         },
         {
           title: "我的足迹",

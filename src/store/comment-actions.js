@@ -1,5 +1,4 @@
-import axios from 'axios';
-axios.defaults.baseURL = '/api';
+import axios from '@/store/axios';
 // 文章评论
 async function DO_ARTICLE_COMMENT(
   { commit, state },

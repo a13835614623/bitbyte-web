@@ -45,7 +45,7 @@
               <router-link to="">
                 <span class="article-username">{{article.userName}}</span>
               </router-link>
-            <span class="article-readCount">{{article.articleRead}}&nbsp;阅读</span>
+              <span class="article-readCount">{{article.articleRead}}&nbsp;阅读</span>
             </el-row>
           </el-col>
         </el-row>
@@ -125,9 +125,14 @@ export default {
     },
     // 获取文章列表
     getArticles() {
-      this.$store.dispatch("GET_ALL_ARTICLES").then(articles => {
-        this.articles = articles;
-      });
+      this.$store
+        .dispatch("GET_ALL_ARTICLES")
+        .then(articles => {
+          this.articles = articles;
+        })
+        .catch(error => {
+          this.$message.error(error.message);
+        });
     },
     //当前导航索引
     activeIndex() {
@@ -159,6 +164,9 @@ a:hover {
   width: 100px;
   left: 150px;
 }
+.is-active {
+  background: #409eff;
+}
 .main-center {
   width: 800px;
   height: 1000px;
@@ -175,9 +183,6 @@ a:hover {
 .article-title:hover {
   color: #409eff;
 }
-.is-active {
-  background: #409eff;
-}
 
 .user-pic {
   display: inline-block;
@@ -190,7 +195,7 @@ a:hover {
 .article-username {
   font: bold 0.9em;
 }
-.article-readCount{
+.article-readCount {
   font: 0.8em;
   float: right;
   color: #909399;

@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import home from '@/views/home';
 import login from '@/components/user-login';
 import register from '@/components/user-register';
+import mainSearch from "@/components/main-search";
 import bilibiliRead from '@/components/projects/bilibili-read';
 import baseArticle from '@/components/article/base-article';
 import articleView from '@/components/article/article-view';
@@ -11,14 +12,16 @@ import baseUser from '@/components/user/base-user';
 import userInfo from '@/components/user/user-info';
 import userPassword from '@/components/user/user-password';
 import userSafe from '@/components/user/user-safe';
-import userComment from '@/components/user/user-comment';
+import userMessage from '@/components/user/user-message';
 import userArtcile from '@/components/user/user-article';
 import userSubscribe from '@/components/user/user-subscribe';
 import userRecord from '@/components/user/user-record';
 import userPicture from '@/components/user/user-picture';
+import Cookies from 'js-cookie';
+import { Message } from 'element-ui';
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   routes: [
     // 主页
     {
@@ -50,6 +53,12 @@ export default new Router({
       name: 'user-register',
       component: register,
     },
+    // 搜索
+    {
+      path: '/search',
+      name: 'main-search',
+      component: mainSearch,
+    },
     // 项目
     {
       path: '/projects',
@@ -68,10 +77,16 @@ export default new Router({
       name: 'article',
       component: baseArticle,
       children: [
-        // 写文章
         {
           path: 'write',
           name: 'article-write',
+          component: articleWrite,
+        },
+        // 写文章
+        {
+          path: 'write/:articleId',
+          name: 'article-write-byid',
+          props: true,
           component: articleWrite,
         },
         // 查看文章
@@ -80,7 +95,7 @@ export default new Router({
           props: true,
           name: 'article-view',
           component: articleView,
-        }
+        },
       ],
     },
     // 用户
@@ -105,9 +120,9 @@ export default new Router({
           component: userSafe,
         },
         {
-          path: 'comment',
-          name: 'user-comment',
-          component: userComment,
+          path: 'message',
+          name: 'user-message',
+          component: userMessage,
         },
         {
           path: 'article',
@@ -130,6 +145,17 @@ export default new Router({
           component: userPicture,
         },
       ],
-    }
+    },
   ],
 });
+router.beforeEach((to, from, next) => {
+  let token = Cookies.get('token');
+  // 如果尚未登录，而且访问的是带user的路径，则跳转到登录界面
+  if (!token && (to.path.startsWith('/user') || to.path == '/article/write')) {
+    Message.warning('您尚未登录，请先登录!');
+    next('/login');
+  } else {
+    next();
+  }
+});
+export default router;

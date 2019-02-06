@@ -1,10 +1,10 @@
 import Cookies from 'js-cookie';
-import axios from 'axios';
-axios.defaults.baseURL = '/api';
+import axios from '@/store/axios';
 // 异步获取用户信息
-let GET_USER_INFO = async ({ commit }) => {
-  let [userId, token] = [Cookies.get('userId'), Cookies.get('token')];
-  if (!token) return;
+let GET_USER_INFO = async ({ commit, state }) => {
+  let userId = Cookies.get('userId');
+  let token = Cookies.get('token');
+  if (!userId || !token) return;
   let { data } = await axios.post('/user/get?userId=' + userId);
   if (!data || data.status != 'success')
     throw new Error('[GET_USER_INFO]服务器状态异常!');
@@ -25,7 +25,6 @@ let DO_USER_LOGIN = async ({ commit }, userInfo) => {
   let cookieConfig = { expires: 7 };
   Cookies.set('token', data.token, cookieConfig);
   Cookies.set('userId', data.data.userId, cookieConfig);
-  Cookies.set('userName', data.data.userName, cookieConfig);
   // 存储用户状态
   commit('saveUser', {
     user: data.data,
@@ -94,16 +93,25 @@ let GET_USER_ARTICLES = async ({ commit, state }) => {
     throw new Error('[GET_USER_ARTICLES]服务器状态异常!');
   // 提交更改，更新用户文章列表
   await commit('saveArticles', data.data);
-  console.log('from store.js:文章列表更新成功!');
+  console.log('from store.js:用户文章列表更新成功!');
   return data.data.length;
+};
+// 获取当前用户的操作记录
+let GET_USER_RECORD = async ({ commit, state }) => {
+  let { data } = await axios.post(`/user/record?userId=${state.user.userId}`);
+  if (!data || data.status != 'success')
+    throw new Error('[GET_USER_RECORD]服务器状态异常!');
+  console.log('from store.js:用户操作记录获取成功!');
+  return data;
 };
 export {
   GET_USER_INFO,
   GET_USER_SUBSCRIBERS,
   GET_USER_ARTICLES,
+  GET_USER_RECORD,
   DO_USER_LOGIN,
   DO_USER_REGISTER,
   DO_USER_UPDATE,
   DO_USER_PASSWORD_UPDATE,
-  DO_USER_PASSWORD_VALIDATE
+  DO_USER_PASSWORD_VALIDATE,
 };

@@ -1,9 +1,8 @@
-import axios from 'axios';
-axios.defaults.baseURL = '/api';
+import axios from '@/store/axios';
 // 关注
 let DO_SUBSCRIBE_USER = async ({ commit, state }, subscriberId) => {
   let { data } = await axios.post(
-    `/subscribe/add?userId=${state.user.userId}&&subscriberId=${subscriberId}`,
+    `/subscribe/add?userId=${state.user.userId}&subscriberId=${subscriberId}`,
   );
   if (!data || data.status != 'success')
     throw new Error('[DO_SUBSCRIBE_USER]服务器状态异常!');
@@ -15,7 +14,7 @@ let DO_REMOVE_SUBSCRIBE = async ({ commit, state }, subscriberId) => {
   let { data } = await axios.get(
     `/subscribe/remove?userId=${
       state.user.userId
-    }&&subscriberId=${subscriberId}`,
+    }&subscriberId=${subscriberId}`,
   );
   if (!data || data.status != 'success')
     throw new Error('[DO_REMOVE_SUBSCRIBE]服务器状态异常!');
@@ -29,7 +28,7 @@ let GET_IS_SUBSCRIBE = async ({ commit, state }, subscriberId) => {
   let { data } = await axios.post(
     `/subscribe/isSubscribe?userId=${
       state.user.userId
-    }&&subscriberId=${subscriberId}`,
+    }&subscriberId=${subscriberId}`,
   );
   if (!data || data.status != 'success')
     throw new Error('[GET_IS_SUBSCRIBE]服务器状态异常!');

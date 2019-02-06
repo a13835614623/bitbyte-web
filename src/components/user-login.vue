@@ -73,6 +73,9 @@ export default {
       }
     };
   },
+  created() {
+    this.$store.commit("clearUser");
+  },
   computed: {
     // 用户名是否符合邮箱格式
     usernameIsEmail() {
@@ -89,6 +92,12 @@ export default {
     // 登录
     onLogin(event) {
       let vm = this;
+      const loading = this.$loading({
+        lock: true,
+        text: "正在登录,请稍候...",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)"
+      });
       this.$refs["user"].validate(valid => {
         if (valid) {
           let userInfo = {
@@ -99,6 +108,7 @@ export default {
           this.$store
             .dispatch("DO_USER_LOGIN", userInfo)
             .then(data => {
+              loading.close();
               vm.$message({
                 showClose: true,
                 message: data.message,
@@ -112,9 +122,10 @@ export default {
               }
             })
             .catch(error => {
+              loading.close();
               this.$message({
                 showClose: true,
-                message: "登录失败!\r\n"+error.message,
+                message: "登录失败!\r\n" + error.message,
                 type: "error"
               });
             });
