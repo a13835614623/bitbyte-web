@@ -1,4 +1,4 @@
-# myFirstVueProject
+# bitbyte-web
 
 这是一个使用vue.js开发的博客网站,实现的功能如下:
 
