@@ -286,47 +286,44 @@ export default {
 };
 </script>
 
-<style scoped>
-a,
-a:link,
-a:hover {
-  text-decoration: none;
-  color: inherit;
-}
-h3 {
-  margin: 0;
-  padding: 0;
-}
+<style lang="scss" scoped>
+@import "@/assets/scss/util.scss";
+// 文章评论根元素
 .article-comment {
   margin-top: 20px;
 }
+a,
+a:hover {
+  text-decoration: none;
+}
+$userPicWidth: 40px;
+// 用户头像
 .user-pic {
   display: inline-block;
   vertical-align: middle;
-  width: 40px;
-  height: 40px;
-  border: 1px solid #409eff;
-  border-radius: 20px;
+  width: $userPicWidth;
+  height: $userPicWidth;
+  border: 1px solid $blue;
+  border-radius: $userPicWidth/2;
 }
-.line {
-  width: 100%;
-  margin: 10px 0;
-  height: 1px;
-  background-color: #dcdfe6;
-}
+// 评论用户名
 .comment-username {
-  font-size: 0.9em;
-  font-weight: bold;
+  font: {
+    size: 0.9em;
+    weight: bold;
+  }
 }
+// 评论内容
 .comment-content {
   margin-top: 5px;
 }
+// 评论相关信息,包括楼层,评论时间等
 .comment-info {
   margin-top: 5px;
   font-size: 0.8em;
-  color: #909399;
-}
-.comment-info span {
-  margin-right: 20px;
+  color: $text3;
+  span {
+    margin-right: 20px;
+  }
 }
 </style>

@@ -82,19 +82,15 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 /* .user-picture {
 
 } */
 .center {
   text-align: center;
 }
-.line {
-  width: 100%;
-  margin: 10px;
-  height: 1px;
-  background-color: #dcdfe6;
-}
+@import "@/assets/scss/util.scss";
+
 .pic-upload {
   height: 250px;
 }

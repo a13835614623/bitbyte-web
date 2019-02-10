@@ -5,6 +5,9 @@
              ref="user"
              label-width="0"
              hide-required-asterisk>
+      <div class="title">
+        <span>用户登录</span>
+      </div>
       <el-form-item prop="username">
         <el-input v-model="user.username"
                   placeholder="手机号/邮箱">
@@ -144,21 +147,27 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "@/assets/scss/util.scss";
+
 a {
   text-decoration: none;
 }
 .login {
-  height: 1000px;
   width: 100%;
 }
 .el-form {
   width: 300px;
-  float: right;
-  margin-top: 150px;
-  border: 1px solid #dcdfe6;
+  border: 1px solid $border3;
   border-radius: 3px;
-  padding: 30px 20px 0px 20px;
+  padding: 10px 20px 0px 20px;
   background-color: white;
+  margin: 170px auto;
+  .title {
+    padding: 10px 0;
+    span {
+      color: $text1;
+    }
+  }
 }
 </style>

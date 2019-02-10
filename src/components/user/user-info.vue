@@ -42,7 +42,7 @@
       </el-form-item>
     </el-form>
     <el-button type="primary"
-               class="center"
+               class="userinfo-save"
                @click="onSaveUserInfo">保存</el-button>
   </div>
 </template>
@@ -160,26 +160,31 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "@/assets/scss/util.scss";
+$user-pic-width: 120px;
+// 用户信息根元素
 .user-info {
   width: 80%;
   margin: 0 auto;
   display: block;
-}
-.el-input {
-  width: 70%;
-}
-.center {
-  display: block;
-  margin: 0 auto;
-}
-.user-info .user-pic {
-  width: 120px;
-  height: 120px;
-  border-radius: 60px;
-  display: block;
-}
-.user-info img {
-  margin: 15px auto;
+  // 用户头像
+  .user-pic {
+    width: $user-pic-width;
+    height: $user-pic-width;
+    border-radius: $user-pic-width/2;
+    border: 1px solid $blue;
+    display: block;
+    margin: 15px auto;
+  }
+  // 保存按钮
+  .userinfo-save {
+    display: block;
+    margin: 0 auto;
+  }
+  // 输入框长度
+  .el-input {
+    width: 70%;
+  }
 }
 </style>

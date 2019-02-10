@@ -53,7 +53,7 @@
             <el-col :span="2">
               <router-link to="">
                 <img :src="'/api/user/pic?userPic='+article.userPic"
-                     class="user-pic">
+                     class="article-user-pic">
               </router-link>
             </el-col>
             <!-- 作者昵称 -->
@@ -62,7 +62,7 @@
                 <router-link to="">
                   <span class="article-username">{{article.userName}}</span>
                 </router-link>
-                <span class="article-readCount">{{article.articleRead}}&nbsp;阅读</span>
+                <span class="article-read">{{article.articleRead}}&nbsp;阅读</span>
               </el-row>
             </el-col>
           </el-row>
@@ -105,52 +105,54 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 a {
   text-decoration: none;
   color: inherit;
 }
+// 根选择器
 .main-search {
   width: 60%;
   margin: 0 auto;
   background: white;
+  .search-result {
+    min-height: 600px;
+  }
 }
-.search-result {
-  min-height: 600px;
-}
+// 文章
 .article {
   margin: 20px 0;
+  // 标题
+  .article-title {
+    font-size: 1.2em;
+    font-weight: bolder;
+  }
+  // 介绍文字
+  .article-introduce {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: #909399;
+  }
+  // 作者头像
+  .article-user-pic {
+    display: inline-block;
+    vertical-align: middle;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #409eff;
+    border-radius: 20px;
+  }
+  // 作者名
+  .article-username {
+    font: bold 0.9em;
+  }
+  // 阅读量
+  .article-read {
+    font: 0.8em;
+    float: right;
+    color: #909399;
+  }
 }
-.article-title {
-  font-size: 1.2em;
-  font-weight: bolder;
-}
-.article-introduce {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  color: #909399;
-}
+@import "@/assets/scss/util.scss";
 
-.user-pic {
-  display: inline-block;
-  vertical-align: middle;
-  width: 40px;
-  height: 40px;
-  border: 1px solid #409eff;
-  border-radius: 20px;
-}
-.article-username {
-  font: bold 0.9em;
-}
-.article-readCount {
-  font: 0.8em;
-  float: right;
-  color: #909399;
-}
-.line {
-  width: 100%;
-  margin: 10px 0;
-  height: 1px;
-  background-color: #dcdfe6;
-}
 </style>

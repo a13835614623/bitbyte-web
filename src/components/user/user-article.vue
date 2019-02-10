@@ -109,9 +109,14 @@ export default {
     },
     // 搜索文章
     onSearchArticle() {
-      this.articles=this.$store.state.articles.filter((article,index,arr)=>{
-        return article.articleTitle.indexOf(this.articleFilterForm.searchText)!=-1;
-      });
+      this.articles = this.$store.state.articles.filter(
+        (article, index, arr) => {
+          return (
+            article.articleTitle.indexOf(this.articleFilterForm.searchText) !=
+            -1
+          );
+        }
+      );
     },
     // 文章筛选条件改变事件
     onCheckChange(checkList) {
@@ -174,7 +179,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "@/assets/scss/util.scss";
+
 ul,
 li,
 h3 {
@@ -183,46 +190,45 @@ h3 {
 }
 .empty-article {
   width: 120px;
-  color: #909399;
+  color: $text1;
   height: 100%;
   line-height: 500px;
   margin: 0 auto;
 }
-
+// 文章列表
 .article-list {
   list-style-type: none;
+  li {
+    cursor: pointer;
+    margin: 10px 1px;
+    padding: 10px;
+    overflow: hidden;
+    border: solid 1px $border1;
+    border-radius: 5px;
+    &:hover {
+      background-color: $border4;
+    }
+  }
 }
-.article-list li {
-  cursor: pointer;
-  margin: 10px 1px;
-  padding: 10px;
-  overflow: hidden;
-  border: #dcdfe6 solid 1px;
-  border-radius: 5px;
-}
-.article-list li:hover {
-  background-color: #f2f6fc;
-}
+// 文章附加信息，包括阅读和时间
 .article-info {
   display: inline-block;
-  color: #909399;
+  color: $text3;
   font-size: 0.8em;
   padding-top: 20px;
+  span {
+    padding-right: 20px;
+  }
 }
-.article-info span {
-  padding-right: 20px;
-}
+// 滚动条
 .el-scrollbar__wrap {
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: {
+    x: hidden;
+    y: auto;
+  }
 }
+// 标签
 .el-tag {
   margin: 0px 10px;
-}
-.line {
-  width: 100%;
-  margin: 10px 0;
-  height: 1px;
-  background-color: #dcdfe6;
 }
 </style>

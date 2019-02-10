@@ -36,7 +36,7 @@
           <el-col :span="2">
             <router-link to="">
               <img :src="'/api/user/pic?userPic='+article.userPic"
-                   class="user-pic">
+                   class="article-userpic">
             </router-link>
           </el-col>
           <!-- 作者昵称 -->
@@ -45,7 +45,7 @@
               <router-link to="">
                 <span class="article-username">{{article.userName}}</span>
               </router-link>
-              <span class="article-readCount">{{article.articleRead}}&nbsp;阅读</span>
+              <span class="article-read">{{article.articleRead}}&nbsp;阅读</span>
             </el-row>
           </el-col>
         </el-row>
@@ -145,59 +145,70 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "@/assets/scss/util.scss";
+
 a {
   text-decoration: none;
-  color: #303133;
+  color: $text1;
+  &:hover {
+    color: $blue;
+  }
 }
-a:hover {
-  color: #409eff;
-}
+// 根元素
 .main-content {
   height: 1000px;
   width: 90%;
   margin: 0 auto;
+  // 侧边导航
+  .main-left-nav {
+    border: 1px solid $border1;
+    position: fixed;
+    width: 100px;
+    left: 150px;
+  }
 }
-.main-left-nav {
-  border: 1px solid #dcdfe6;
-  position: fixed;
-  width: 100px;
-  left: 150px;
-}
-.is-active {
-  background: #409eff;
-}
+// 中间
 .main-center {
-  width: 800px;
+  width: 60%;
   height: 1000px;
   margin: 0 auto;
 }
+// 文章
 .article {
   margin: 5px 0;
-}
-.article-introduce {
-  margin-bottom: 10px;
-  color: #909399;
+  // 文章介绍
+  .article-introduce {
+    margin-bottom: 10px;
+    color: $text3;
+  }
+  // 文章标题
+  .article-title:hover {
+    color: $blue;
+  }
+  // 头像
+  .article-userpic {
+    display: inline-block;
+    vertical-align: middle;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #409eff;
+    border-radius: 20px;
+  }
+  // 用户名
+  .article-username {
+    font: bold 0.9em;
+  }
+  // 阅读量
+  .article-read {
+    font: 0.8em;
+    float: right;
+    color: $text3;
+  }
 }
 
-.article-title:hover {
-  color: #409eff;
-}
-
-.user-pic {
-  display: inline-block;
-  vertical-align: middle;
-  width: 40px;
-  height: 40px;
-  border: 1px solid #409eff;
-  border-radius: 20px;
-}
-.article-username {
-  font: bold 0.9em;
-}
-.article-readCount {
-  font: 0.8em;
-  float: right;
-  color: #909399;
+// 激活路由元素
+.is-active {
+  background: $blue;
 }
 </style>

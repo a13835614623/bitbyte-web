@@ -36,7 +36,7 @@
             <!-- 作者昵称 -->
             <span class="article-username">{{article.userName}}</span><br>
           </router-link>
-          <span class="article-userinfo">作者简介...</span>
+          <span class="article-user-introduce">作者简介...</span>
         </el-col>
         <el-col :span="4">
           <el-button :type="isSubscribe?'info':'success'"
@@ -190,49 +190,51 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "@/assets/scss/util.scss";
 a,
+a:hover,
 a:link {
-  color: #409eff;
+  color: $blue;
 }
+// 文章视图根元素
 .article-view {
   height: 500px;
 }
+// 文章标题
 .article-title span {
   padding: 10px;
-  color: #909399;
+  color: $text3;
 }
+// 文章内容
 .article-content {
-  padding: 20px;
   min-height: 200px;
 }
-.line {
-  width: 100%;
-  margin: 10px 0;
-  height: 1px;
-  background-color: #dcdfe6;
-}
-.el-row img {
-  display: inline-block;
-  vertical-align: middle;
-  width: 60px;
-  height: 60px;
-  border: 1px solid #409eff;
-  border-radius: 30px;
-}
+$picWidth:60px;
+// 文章作者
 .article-user {
   margin-top: 20px;
   padding: 20px;
-  background-color: #f2f6fc;
+  background-color: $border4;
   border-radius: 5px;
-  border: 1px solid #e4e7ed;
+  border: 1px solid $border3;
+  img {
+    display: inline-block;
+    vertical-align: middle;
+    width: $picWidth;
+    height: $picWidth;
+    border: 1px solid $blue;
+    border-radius: $picWidth/2;
+  }
 }
+// 文章作者用户名
 .article-username {
   display: inline-block;
   padding: 5px 10px;
   font-size: 1.1em;
 }
-.article-userinfo {
+// 文章作者简介
+.article-user-introduce {
   display: inline-block;
   padding: 5px 10px;
   font-size: 0.9em;

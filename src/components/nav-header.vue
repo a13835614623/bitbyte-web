@@ -182,7 +182,7 @@ export default {
         }
       };
       handle[command]();
-      console.log("this.$route.path:"+vm.$route.path)
+      console.log("this.$route.path:" + vm.$route.path);
     }
   },
   computed: {
@@ -205,25 +205,25 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style lang="scss" scoped>
+@import "@/assets/scss/util.scss";
+
 .nav-header {
   position: fixed;
   right: 0;
   left: 0;
   z-index: 100;
   background-color: white;
-  border-bottom: 1px solid #dcdfe6;
-}
-.nav-header a {
-  text-decoration: none;
-}
-.nav-header .el-menu {
-  border: 0;
-}
-.nav-header .logo {
-  padding: 10px 0;
-}
-.logo a:hover {
-  text-decoration: none;
+  border-bottom: 1px solid $border3;
+  .el-menu {
+    border: 0;
+  }
+  a,
+  a:hover {
+    text-decoration: none;
+  }
+  .logo {
+    padding: 10px 0;
+  }
 }
 </style>

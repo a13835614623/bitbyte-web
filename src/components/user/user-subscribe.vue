@@ -1,8 +1,10 @@
 <template>
   <div class="user-subscribe">
     <div class="line"></div>
-    <p v-if="subscribers.length==0" class="empty-subscribe">暂无已关注用户</p>
-    <el-scrollbar style="height:100%" v-else>
+    <p v-if="subscribers.length==0"
+       class="empty-subscribe">暂无已关注用户</p>
+    <el-scrollbar style="height:100%"
+                  v-else>
       <ul class="subscribe-list">
         <li v-for="subscriber in subscribers"
             :key="subscriber.userId">
@@ -77,57 +79,60 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "@/assets/scss/util.scss";
+.user-subscribe {
+  width: 100%;
+  height: 100%;
+}
+
 ul,
 li {
   padding: 0;
   margin: 0;
 }
-.empty-subscribe{
+// 空关注
+.empty-subscribe {
   width: 120px;
-  color: #909399;
+  color: $text1;
   height: 100%;
-  line-height:500px;
+  line-height: 500px;
   margin: 0 auto;
 }
+// 滚动条
 .el-scrollbar__wrap {
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: {
+    x: hidden;
+    y: auto;
+  }
 }
-.user-subscribe {
-  width: 100%;
-  height: 100%;
-}
-.line {
-  width: 100%;
-  margin: 10px 0;
-  height: 1px;
-  background-color: #dcdfe6;
-}
+
+$height: 60px;
+// 关注列表
 .subscribe-list {
   list-style-type: none;
   padding: 0px 20px;
-}
-.subscribe-list li {
-  overflow: hidden;
-  height: 60px;
-  width: 100%;
-  margin: 20px 0;
-}
-.subscribe-list li > span {
-  margin-left: 20px;
-  height: 60px;
-  line-height: 60px;
-}
-.subscribe-list li > img {
-  display: inline-block;
-  vertical-align: middle;
-  width: 60px;
-  height: 60px;
-  border-radius: 30px;
-}
-.subscribe-list li > .el-button {
-  float: right;
-  margin: 10px 5px;
+  li {
+    overflow: hidden;
+    height: $height;
+    width: 100%;
+    margin: 20px 0;
+    span {
+      margin-left: 20px;
+      height: $height;
+      line-height: $height;
+    }
+    img {
+      display: inline-block;
+      vertical-align: middle;
+      width: $height;
+      height: $height;
+      border-radius: $height/2;
+    }
+    .el-button {
+      float: right;
+      margin: 10px 5px;
+    }
+  }
 }
 </style>
