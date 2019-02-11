@@ -80,7 +80,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/util.scss";
 .user-subscribe {
   width: 100%;
   height: 100%;

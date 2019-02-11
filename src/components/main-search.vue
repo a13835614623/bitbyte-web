@@ -153,6 +153,5 @@ a {
     color: #909399;
   }
 }
-@import "@/assets/scss/util.scss";
 
 </style>

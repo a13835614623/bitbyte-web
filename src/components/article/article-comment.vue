@@ -287,7 +287,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/util.scss";
 // 文章评论根元素
 .article-comment {
   margin-top: 20px;

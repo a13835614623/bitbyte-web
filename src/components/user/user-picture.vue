@@ -89,7 +89,6 @@ export default {
 .center {
   text-align: center;
 }
-@import "@/assets/scss/util.scss";
 
 .pic-upload {
   height: 250px;

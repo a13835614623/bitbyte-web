@@ -4,8 +4,7 @@
     <el-steps :active="activeStep"
               finish-status="success"
               align-center
-              style="width:100%;"
-              :space="450">
+              style="width:80%;margin:0 auto;">
       <el-step v-for="step in steps"
                :key="step.key"
                :title="step.title"></el-step>

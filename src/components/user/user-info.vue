@@ -161,7 +161,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/util.scss";
 $user-pic-width: 120px;
 // 用户信息根元素
 .user-info {

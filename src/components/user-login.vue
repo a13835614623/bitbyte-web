@@ -148,7 +148,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/util.scss";
 
 a {
   text-decoration: none;
