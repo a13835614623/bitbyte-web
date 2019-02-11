@@ -11,7 +11,7 @@ async function DO_ARTICLE_COMMENT(
     commentUserPic: state.user.userPic,
     commentContent: commentContent,
   });
-  if (!data || data.status != 'success')
+  if (!data || data.status == 'error')
     throw new Error('[DO_ARTICLE_COMMENT]服务器状态异常!');
   console.log(`from store.js:评论成功!`);
   return data.data;
@@ -30,7 +30,7 @@ async function DO_ARTICLE_COMMENT_REPLY(
     toUserName: toUserName,
     replyContent: replyContent,
   });
-  if (!data || data.status != 'success')
+  if (!data || data.status == 'error')
     throw new Error('[DO_ARTICLE_COMMENT_REPLY]服务器状态异常!');
   console.log(`from store.js:评论成功!`);
   return data.data;
@@ -38,7 +38,7 @@ async function DO_ARTICLE_COMMENT_REPLY(
 // 获取文章评论及其回复
 async function GET_ARTICLE_COMMENTS({ commit, state }, articleId) {
   let { data } = await axios.post(`/comment/get?articleId=${articleId}`);
-  if (!data || data.status != 'success')
+  if (!data || data.status == 'error')
     throw new Error('[GET_ARTICLE_COMMENTS]服务器状态异常!');
   console.log(`from store.js:获取文章评论成功!`);
   return data.data;

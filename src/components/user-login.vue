@@ -86,7 +86,7 @@ export default {
       return emailReg.test(this.user.username);
     },
     // 用户名是否符合手机号格式
-    usernameIsMobile(username) {
+    usernameIsMobile() {
       let phoneReg = /^1[3-578]\d{9}$/;
       return phoneReg.test(this.user.username);
     }

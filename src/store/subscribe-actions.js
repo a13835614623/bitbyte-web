@@ -4,7 +4,7 @@ let DO_SUBSCRIBE_USER = async ({ commit, state }, subscriberId) => {
   let { data } = await axios.post(
     `/subscribe/add?userId=${state.user.userId}&subscriberId=${subscriberId}`,
   );
-  if (!data || data.status != 'success')
+  if (!data || data.status == 'error')
     throw new Error('[DO_SUBSCRIBE_USER]服务器状态异常!');
   console.log(`from store.js:关注成功!`);
   return data.data;
@@ -16,7 +16,7 @@ let DO_REMOVE_SUBSCRIBE = async ({ commit, state }, subscriberId) => {
       state.user.userId
     }&subscriberId=${subscriberId}`,
   );
-  if (!data || data.status != 'success')
+  if (!data || data.status == 'error')
     throw new Error('[DO_REMOVE_SUBSCRIBE]服务器状态异常!');
   // 提交更改，更新用户关注列表
   await commit('removeSubscribe', subscriberId);
@@ -30,7 +30,7 @@ let GET_IS_SUBSCRIBE = async ({ commit, state }, subscriberId) => {
       state.user.userId
     }&subscriberId=${subscriberId}`,
   );
-  if (!data || data.status != 'success')
+  if (!data || data.status == 'error')
     throw new Error('[GET_IS_SUBSCRIBE]服务器状态异常!');
   console.log(`from store.js:获取关注状态成功!`);
   return data.data;

@@ -6,7 +6,7 @@ let GET_USER_INFO = async ({ commit, state }) => {
   let token = Cookies.get('token');
   if (!userId || !token) return;
   let { data } = await axios.post('/user/get?userId=' + userId);
-  if (!data || data.status != 'success')
+  if (!data || data.status == 'error')
     throw new Error('[GET_USER_INFO]服务器状态异常!');
   // 提交更改
   commit('saveUser', {
@@ -19,7 +19,7 @@ let GET_USER_INFO = async ({ commit, state }) => {
 // 用户登录
 let DO_USER_LOGIN = async ({ commit }, userInfo) => {
   let { data } = await axios.post('/user/login', userInfo);
-  if (!data || data.status != 'success')
+  if (!data || data.status == 'error')
     throw new Error('[DO_USER_LOGIN]服务器状态异常!');
   //设置cookie
   let cookieConfig = { expires: 7 };
@@ -36,7 +36,7 @@ let DO_USER_LOGIN = async ({ commit }, userInfo) => {
 // 用户注册
 let DO_USER_REGISTER = async ({ commit }, user) => {
   let { data } = await axios.post('/user/register', user);
-  if (!data || data.status != 'success')
+  if (!data || data.status == 'error')
     throw new Error('[DO_USER_REGISTER]服务器状态异常!');
   //设置cookie
   let cookieConfig = { expires: 7 };
@@ -49,7 +49,7 @@ let DO_USER_REGISTER = async ({ commit }, user) => {
 // 更新用户信息
 let DO_USER_UPDATE = async ({ commit }, userInfo) => {
   let { data } = await axios.post('/user/info/update', userInfo);
-  if (!data || data.status != 'success')
+  if (!data || data.status == 'error')
     throw new Error('[DO_USER_UPDATE]服务器状态异常!');
   console.log('from store.js:用户信息更新成功!');
   return data;
@@ -57,7 +57,7 @@ let DO_USER_UPDATE = async ({ commit }, userInfo) => {
 // 更新密码
 let DO_USER_PASSWORD_UPDATE = async ({ commit }, postData) => {
   let { data } = await axios.post('/user/password/update', postData);
-  if (!data || data.status != 'success')
+  if (!data || data.status == 'error')
     throw new Error('[DO_USER_PASSWORD_UPDATE]服务器状态异常!');
   console.log('from store.js:用户密码更新成功!');
   return data;
@@ -65,7 +65,7 @@ let DO_USER_PASSWORD_UPDATE = async ({ commit }, postData) => {
 // 验证密码
 let DO_USER_PASSWORD_VALIDATE = async ({ commit }, postData) => {
   let { data } = await axios.post('/user/password/update', postData);
-  if (!data || data.status != 'success')
+  if (!data || data.status == 'error')
     throw new Error('[DO_USER_PASSWORD_UPDATE]服务器状态异常!');
   console.log('from store.js:用户密码更新成功!');
   return data;
@@ -75,7 +75,7 @@ let GET_USER_SUBSCRIBERS = async ({ commit }) => {
   let { data } = await axios.post(
     '/user/subscribe?userId=' + Cookies.get('userId'),
   );
-  if (!data || data.status != 'success')
+  if (!data || data.status == 'error')
     throw new Error('[GET_USER_SUBSCRIBERS]服务器状态异常！');
   data.data = data.data.map(user => {
     user.userPic = '/api/user/pic?userPic=' + user.userPic;
@@ -89,7 +89,7 @@ let GET_USER_SUBSCRIBERS = async ({ commit }) => {
 // 获取当前用户的文章列表
 let GET_USER_ARTICLES = async ({ commit, state }) => {
   let { data } = await axios.post(`/user/article?userId=${state.user.userId}`);
-  if (!data || data.status != 'success')
+  if (!data || data.status == 'error')
     throw new Error('[GET_USER_ARTICLES]服务器状态异常!');
   // 提交更改，更新用户文章列表
   await commit('saveArticles', data.data);
@@ -99,7 +99,7 @@ let GET_USER_ARTICLES = async ({ commit, state }) => {
 // 获取当前用户的操作记录
 let GET_USER_RECORD = async ({ commit, state }) => {
   let { data } = await axios.post(`/user/record?userId=${state.user.userId}`);
-  if (!data || data.status != 'success')
+  if (!data || data.status == 'error')
     throw new Error('[GET_USER_RECORD]服务器状态异常!');
   console.log('from store.js:用户操作记录获取成功!');
   return data;
