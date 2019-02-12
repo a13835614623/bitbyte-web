@@ -38,7 +38,7 @@
             <el-col :span="18"
                     class="article-info">
               <!-- 时间 -->
-              <span v-if="article.articlePublishTime">{{new Date(article.articlePublishTime)|dataFormat}}</span>
+              <span v-if="article.articlePublishTime">{{new Date(article.articlePublishTime)|dateFormat}}</span>
               <span v-else>未发布</span>
               <!-- 标签 -->
               <!-- <el-tag type="danger"
@@ -160,7 +160,7 @@ export default {
     }
   },
   filters: {
-    dataFormat(date = new Date()) {
+    dateFormat(date = new Date()) {
       let year = date.getFullYear();
       let month = date.getMonth() + 1;
       let day = date.getDate();
