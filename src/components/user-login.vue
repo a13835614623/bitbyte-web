@@ -11,7 +11,7 @@
       <el-form-item prop="username">
         <el-input v-model="user.username"
                   placeholder="手机号/邮箱">
-          <font-awesome-icon slot="prefix"
+          <icon slot="prefix"
                              :icon="['fas','user']"
                              size="lg" />
         </el-input>
@@ -21,7 +21,7 @@
                   v-model="user.password"
                   placeholder="请输入密码">
           <i class="fa"></i>
-          <font-awesome-icon slot="prefix"
+          <icon slot="prefix"
                              :icon="['fas','unlock-alt']"
                              size="lg" />
         </el-input>

@@ -124,7 +124,7 @@
           </el-menu-item>
           <el-menu-item index="/article/write">
             <el-button type="primary">写文章
-              <font-awesome-icon :icon="['fas','edit']" />
+              <icon :icon="['fas','edit']" />
             </el-button>
           </el-menu-item>
         </el-menu>

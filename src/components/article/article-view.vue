@@ -18,7 +18,7 @@
                    :disabled="!isLogin"
                    @click="onToggleLike">
           点赞
-          <font-awesome-icon :icon="likeIcon" />
+          <icon :icon="likeIcon" />
         </el-button>
       </el-row>
       <el-row class="article-user">
