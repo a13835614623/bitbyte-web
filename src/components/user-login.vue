@@ -20,7 +20,6 @@
         <el-input type="password"
                   v-model="user.password"
                   placeholder="请输入密码">
-          <i class="fa"></i>
           <icon slot="prefix"
                              :icon="['fas','unlock-alt']"
                              size="lg" />
