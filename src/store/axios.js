@@ -2,9 +2,9 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import md5 from 'crypto-js/md5';
 import {
-  Toast,
+  Message,
   MessageBox
-} from 'mint-ui';
+} from 'element-ui';
 import router from '@/router';
 axios.defaults.baseURL = '/api';
 // 请求拦截器
@@ -27,7 +27,7 @@ axios.interceptors.request.use(
     return config;
   },
   error => {
-    Toast.error(error.message);
+    MessageBox.error(error.message);
   },
 );
 axios.interceptors.response.use(
@@ -35,29 +35,18 @@ axios.interceptors.response.use(
     switch (res.data.status) {
       case '101': //验证失败
         console.log(res.data.message);
-        Toast({
-          message: '验证失败',
-          iconClass: 'icon icon-error'
-        });
+        Message.error('验证失败');
         break;
       case '102': // 验证信息过期
-        MessageBox({
-          title: '提示',
-          message: '验证信息过期，点击确定重新登录',
-          showCancelButton: false
-        }).then(action=>{
+        MessageBox.confirm('验证信息过期，点击确定重新登录').then(action => {
           router.push('/login');
-        })
-        ;
+        });
         break;
     }
     return res;
   },
   error => {
-    Toast({
-      message: '发生未知错误',
-      iconClass: 'icon icon-error'
-    });
+    Message.error('发生未知错误');
   },
 );
 export default axios;
