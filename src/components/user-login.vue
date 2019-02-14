@@ -12,8 +12,8 @@
         <el-input v-model="user.username"
                   placeholder="手机号/邮箱">
           <icon slot="prefix"
-                             :icon="['fas','user']"
-                             size="lg" />
+                :icon="['fas','user']"
+                size="lg" />
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
@@ -21,8 +21,8 @@
                   v-model="user.password"
                   placeholder="请输入密码">
           <icon slot="prefix"
-                             :icon="['fas','unlock-alt']"
-                             size="lg" />
+                :icon="['fas','unlock-alt']"
+                size="lg" />
         </el-input>
       </el-form-item>
       <el-form-item>
@@ -147,20 +147,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 a {
   text-decoration: none;
 }
 .login {
   width: 100%;
+  height: 78vh;
+  // 垂直居中
+  display: flex;
+  align-items: center;
+  align-content: center;
 }
 .el-form {
+  margin: 0 auto;
   width: 300px;
   border: 1px solid $border3;
   border-radius: 3px;
   padding: 10px 20px 0px 20px;
   background-color: white;
-  margin: 170px auto;
   .title {
     padding: 10px 0;
     span {
