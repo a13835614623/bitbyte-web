@@ -60,7 +60,6 @@
           </el-submenu>
           <el-submenu index="/projects">
             <template slot="title">项目相关</template>
-            <el-menu-item index="/projects/bilibiliRead">bilibili-read</el-menu-item>
             <el-menu-item index="/projects/project1">项目1</el-menu-item>
             <el-menu-item index="/projects/project2">项目2</el-menu-item>
             <el-menu-item index="/projects/project3">项目3</el-menu-item>
