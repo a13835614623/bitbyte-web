@@ -1,3 +1,9 @@
+// 开发环境
+let dev_url = 'http://127.0.0.1:8180';
+// 生产环境
+let prod_url = 'http://127.0.0.1:80';
+// 目标url
+let target = process.env.NODE_ENV=='development'?dev_url:prod_url;
 module.exports = {
   // publicPath: '/',
   outputDir: 'dist',
@@ -12,7 +18,7 @@ module.exports = {
   devServer: {
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:8888/bitbyte',
+        target,
         changeOrigin: true,
         ws: true,
         pathRewrite: {
