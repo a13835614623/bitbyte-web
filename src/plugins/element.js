@@ -26,15 +26,10 @@ import {
   Table,
   TableColumn,
   DatePicker,
-  Tooltip,
   Form,
   FormItem,
-  Tabs,
-  TabPane,
   Tag,
-  Tree,
   Alert,
-  Slider,
   Icon,
   Row,
   Col,
@@ -79,15 +74,10 @@ Vue.use(Button);
 Vue.use(Table);
 Vue.use(TableColumn);
 Vue.use(DatePicker);
-Vue.use(Tooltip);
 Vue.use(Form);
 Vue.use(FormItem);
-Vue.use(Tabs);
-Vue.use(TabPane);
 Vue.use(Tag);
-Vue.use(Tree);
 Vue.use(Alert);
-Vue.use(Slider);
 Vue.use(Icon);
 Vue.use(Row);
 Vue.use(Col);
@@ -108,5 +98,4 @@ Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;
 Vue.prototype.$confirm = MessageBox.confirm;
 Vue.prototype.$prompt = MessageBox.prompt;
-Vue.prototype.$notify = Notification;
 Vue.prototype.$message = Message;
