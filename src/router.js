@@ -1,24 +1,24 @@
-import Vue from 'vue';
-import Router from 'vue-router';
-import home from '@/views/home';
-import login from '@/components/user-login';
-import register from '@/components/user-register';
-import mainSearch from "@/components/main-search";
-import bilibiliRead from '@/components/projects/bilibili-read';
-import baseArticle from '@/components/article/base-article';
-import articleView from '@/components/article/article-view';
-import articleWrite from '@/components/article/article-write';
-import baseUser from '@/components/user/base-user';
-import userInfo from '@/components/user/user-info';
-import userPassword from '@/components/user/user-password';
-import userSafe from '@/components/user/user-safe';
-import userMessage from '@/components/user/user-message';
-import userArtcile from '@/components/user/user-article';
-import userSubscribe from '@/components/user/user-subscribe';
-import userRecord from '@/components/user/user-record';
-import userPicture from '@/components/user/user-picture';
-import Cookies from 'js-cookie';
+import Vue from  'vue'
+import Router from  'vue-router'
+import Cookies from  'js-cookie';
 import { Message } from 'element-ui';
+const home =()=>import('@/views/home')
+const login =()=>import ('@/components/user-login')
+const register =()=>import('@/components/user-register')
+const mainSearch =()=>import("@/components/main-search")
+const baseArticle =()=>import('@/components/article/base-article')
+const articleView =()=>import('@/components/article/article-view')
+const articleWrite =()=>import('@/components/article/article-write')
+const baseUser =()=>import('@/components/user/base-user')
+const userInfo =()=>import('@/components/user/user-info')
+const userPassword =()=>import('@/components/user/user-password')
+const userSafe =()=>import('@/components/user/user-safe')
+const userMessage =()=>import('@/components/user/user-message')
+const userArtcile =()=>import('@/components/user/user-article')
+const userSubscribe =()=>import('@/components/user/user-subscribe')
+const userRecord =()=>import('@/components/user/user-record')
+const userPicture =()=>import('@/components/user/user-picture')
+
 Vue.use(Router);
 
 const router = new Router({
@@ -58,18 +58,6 @@ const router = new Router({
       path: '/search',
       name: 'main-search',
       component: mainSearch,
-    },
-    // 项目
-    {
-      path: '/projects',
-      name: 'projects',
-      children: [
-        {
-          path: 'bilibiliRead',
-          name: 'bilibili-read',
-          component: bilibiliRead,
-        },
-      ],
     },
     // 文章
     {
