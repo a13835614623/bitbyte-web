@@ -63,7 +63,8 @@ export default {
           })
           .catch(err => {
             loading.close();
-            this.$message.error("取消关注失败!" + err.message);
+            this.$message.error("取消关注失败!");
+            console.log(err)
           });
       });
     },

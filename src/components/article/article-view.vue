@@ -112,7 +112,8 @@ export default {
       }
     } catch (e) {
       loading.close();
-      this.$message.error(e.message);
+      this.$message.error("获取文章信息出错!");
+      console.error(e);
     }
   },
   data() {

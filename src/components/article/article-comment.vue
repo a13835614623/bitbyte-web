@@ -185,7 +185,8 @@ export default {
       await this.GET_USER_SUBSCRIBERS();
       await this.flushComments();
     } catch (error) {
-      this.$message.error(error.message);
+      console.log(error)
+      this.$message.error("获取用户关注列表出错");
     }
   },
   methods: {

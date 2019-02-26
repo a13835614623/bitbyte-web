@@ -131,7 +131,8 @@ export default {
           this.articles = articles;
         })
         .catch(error => {
-          this.$message.error(error.message);
+          console.log(error)
+          this.$message.error("获取文章列表出错");
         });
     },
     //当前导航索引

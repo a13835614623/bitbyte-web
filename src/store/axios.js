@@ -27,7 +27,8 @@ axios.interceptors.request.use(
     return config;
   },
   error => {
-    MessageBox.error(error.message);
+    Message.error('未知错误!');
+    console.log(error)
   },
 );
 axios.interceptors.response.use(
@@ -46,7 +47,8 @@ axios.interceptors.response.use(
     return res;
   },
   error => {
-    Message.error('发生未知错误');
+    Message.error('未知错误!');
+    console.log(error)
   },
 );
 export default axios;

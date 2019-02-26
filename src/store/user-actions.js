@@ -11,8 +11,9 @@ let GET_USER_INFO = async ({
   let {
     data
   } = await axios.post('/user/get?userId=' + userId);
-  if (!data || data.status == 'error')
+  if (!data || data.status != 'success'){
     throw new Error('[GET_USER_INFO]服务器状态异常!');
+  }
   // 提交更改
   commit('saveUser', {
     user: data.data,
