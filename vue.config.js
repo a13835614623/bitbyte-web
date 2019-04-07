@@ -1,9 +1,16 @@
+const isProduction = process.env.NODE_ENV === 'production'
+
 // 开发环境
 let dev_url = 'http://127.0.0.1:8180';
 // 生产环境
 let prod_url = 'http://127.0.0.1:80';
 // 目标url
-let target = process.env.NODE_ENV=='development'?dev_url:prod_url;
+let target = isProduction ? prod_url : dev_url;
+// 压缩插件
+const CompressionWebpackPlugin = require('compression-webpack-plugin')
+// 多线程打包插件
+const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
+const productionGzipExtensions = ['js', 'css']
 module.exports = {
   // publicPath: '/',
   outputDir: 'dist',
@@ -29,8 +36,27 @@ module.exports = {
   },
   // webpack配置
   configureWebpack: config => {
-    if (process.env.NODE_ENV === 'production') {
-      // 为生产环境修改配置...
+    // 为生产环境修改配置...
+    if (isProduction) {
+      // 启用gzip压缩
+      config.plugins.push(new CompressionWebpackPlugin({
+        filename: '[path].gz[query]',
+        algorithm: 'gzip',
+        test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
+        threshold: 2048,
+        minRatio: 0.8
+      }))
+      // 
+      config.plugins.push(new ParallelUglifyPlugin({
+        uglifyJS: {
+          output: {
+            comments: false
+          },
+          compress: {
+            warnings: false
+          }
+        }
+      }))
     } else {
       // 为开发环境修改配置...
     }
