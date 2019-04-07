@@ -1,6 +1,14 @@
 # bitbyte-web
 
-这是一个使用vue.js开发的博客网站,实现的功能如下:
+这是一个使用vue.js开发的博客网站,
+
+![java](https://img.shields.io/static/v1.svg?label=framework&message=vue2.0&color=green)
+
+![coder](https://img.shields.io/static/v1.svg?label=coder&message=zzk&color=green)
+
+## 功能简介
+
+---
 
 * 用户登录
 * 用户注册
