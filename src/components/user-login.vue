@@ -94,14 +94,14 @@ export default {
     // 登录
     onLogin(event) {
       let vm = this;
-      const loading = this.$loading({
-        lock: true,
-        text: "正在登录,请稍候...",
-        spinner: "el-icon-loading",
-        background: "rgba(0, 0, 0, 0.7)"
-      });
       this.$refs["user"].validate(valid => {
         if (valid) {
+          const loading = this.$loading({
+            lock: true,
+            text: "正在登录,请稍候...",
+            spinner: "el-icon-loading",
+            background: "rgba(0, 0, 0, 0.7)"
+          });
           let userInfo = {
             userMobile: vm.usernameIsMobile ? vm.user.username : "",
             userEmail: vm.usernameIsEmail ? vm.user.username : "",
