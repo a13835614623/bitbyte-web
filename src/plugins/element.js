@@ -36,6 +36,7 @@ import {
   Upload,
   Progress,
   Card,
+  scrollbar,
   Steps,
   Step,
   Container,
@@ -47,7 +48,7 @@ import {
   MessageBox,
   Message,
 } from 'element-ui';
-
+Vue.use(scrollbar);
 Vue.use(Pagination);
 Vue.use(Dialog);
 Vue.use(Autocomplete);
