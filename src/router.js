@@ -1,23 +1,23 @@
-import Vue from  'vue'
-import Router from  'vue-router'
-import Cookies from  'js-cookie';
+import Vue from 'vue';
+import Router from 'vue-router';
+import Cookies from 'js-cookie';
 import { Message } from 'element-ui';
-const home =()=>import('@/views/home')
-const login =()=>import ('@/components/user-login')
-const register =()=>import('@/components/user-register')
-const mainSearch =()=>import("@/components/main-search")
-const baseArticle =()=>import('@/components/article/base-article')
-const articleView =()=>import('@/components/article/article-view')
-const articleWrite =()=>import('@/components/article/article-write')
-const baseUser =()=>import('@/components/user/base-user')
-const userInfo =()=>import('@/components/user/user-info')
-const userPassword =()=>import('@/components/user/user-password')
-const userSafe =()=>import('@/components/user/user-safe')
-const userMessage =()=>import('@/components/user/user-message')
-const userArtcile =()=>import('@/components/user/user-article')
-const userSubscribe =()=>import('@/components/user/user-subscribe')
-const userRecord =()=>import('@/components/user/user-record')
-const userPicture =()=>import('@/components/user/user-picture')
+const home = () => import('@/views/home');
+const login = () => import('@/components/user-login');
+const register = () => import('@/components/user-register');
+const mainSearch = () => import('@/components/main-search');
+const baseArticle = () => import('@/components/article/base-article');
+const articleView = () => import('@/components/article/article-view');
+const articleWrite = () => import('@/components/article/article-write');
+const baseUser = () => import('@/components/user/base-user');
+const userInfo = () => import('@/components/user/user-info');
+const userPassword = () => import('@/components/user/user-password');
+const userSafe = () => import('@/components/user/user-safe');
+const userMessage = () => import('@/components/user/user-message');
+const userArtcile = () => import('@/components/user/user-article');
+const userSubscribe = () => import('@/components/user/user-subscribe');
+const userRecord = () => import('@/components/user/user-record');
+const userPicture = () => import('@/components/user/user-picture');
 
 Vue.use(Router);
 
@@ -144,6 +144,15 @@ router.beforeEach((to, from, next) => {
     next('/login');
   } else {
     next();
+  }
+});
+// 捕获加载错误，重新加载
+router.onError(error => {
+  const pattern = /Loading chunk (\d)+ failed/g;
+  const isChunkLoadFailed = error.message.match(pattern);
+  const targetPath = router.history.pending.fullPath;
+  if (isChunkLoadFailed) {
+    router.replace(targetPath);
   }
 });
 export default router;
