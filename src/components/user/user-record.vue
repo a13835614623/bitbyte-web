@@ -11,11 +11,11 @@
     </el-table>
     <div class="pageIndex"
          v-if="record">
-      <el-pagination layout="prev, pager, next,jumper"
+      <el-pagination layout="prev,pager,next,jumper"
                      :page-size="pageSize"
                      :background="true"
                      @current-change="onCurrentPage"
-                     :pager-count="6"
+                     :pager-count="7"
                      :total="record.length">
       </el-pagination>
     </div>
