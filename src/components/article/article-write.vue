@@ -262,8 +262,8 @@ export default {
 };
 </script>
 
-<style scoped>
-/* .article-write {
-
-} */
+<style lang="scss" scoped>
+.article-write {
+  padding: 0;
+}
 </style>

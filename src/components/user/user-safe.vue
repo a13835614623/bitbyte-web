@@ -125,6 +125,8 @@ export default {
 };
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.user-safe {
+  padding: 0;
+}
 </style>

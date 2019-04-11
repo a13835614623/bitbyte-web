@@ -1,20 +1,18 @@
 const isProduction = process.env.NODE_ENV === 'production'
 
 // 开发环境
-let dev_url = 'http://127.0.0.1:8180';
+let dev_url = 'http://127.0.0.1:8080';
 // 生产环境
 let prod_url = 'http://127.0.0.1:80';
 // 目标url
 let target = isProduction ? prod_url : dev_url;
 // 压缩插件
-const CompressionWebpackPlugin = require('compression-webpack-plugin')
+// const CompressionWebpackPlugin = require('compression-webpack-plugin')
+// const productionGzipExtensions = ['js', 'css']
 // 多线程打包插件
 const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
-const productionGzipExtensions = ['js', 'css']
 module.exports = {
-  // publicPath: '/',
   outputDir: 'dist',
-  assetsDir: '',
   indexPath: 'index.html',
   lintOnSave: true,
   // 是否使用包含运行时编译器的 Vue 构建版本
@@ -39,13 +37,13 @@ module.exports = {
     // 为生产环境修改配置...
     if (isProduction) {
       // 启用gzip压缩
-      config.plugins.push(new CompressionWebpackPlugin({
-        filename: '[path].gz[query]',
-        algorithm: 'gzip',
-        test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
-        threshold: 2048,
-        minRatio: 0.8
-      }))
+      // config.plugins.push(new CompressionWebpackPlugin({
+      //   filename: '[path].gz[query]',
+      //   algorithm: 'gzip',
+      //   test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
+      //   threshold: 2048,
+      //   minRatio: 0.8
+      // }))
       // 
       config.plugins.push(new ParallelUglifyPlugin({
         uglifyJS: {
