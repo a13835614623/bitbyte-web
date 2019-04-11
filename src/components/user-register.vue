@@ -291,7 +291,7 @@ export default {
       this.$refs["user"].validate(valid => {
         if (valid) {
           this.$store
-            .dispatch("DO_USER_REGISTER")
+            .dispatch("DO_USER_REGISTER",user)
             .then(data => {
               this.$message({
                 showClose: true,
