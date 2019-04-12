@@ -199,7 +199,7 @@ a:link {
 }
 // 文章视图根元素
 .article-view {
-  height: 500px;
+  min-height: 500px;
 }
 // 文章标题
 .article-title span {

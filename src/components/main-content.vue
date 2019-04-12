@@ -157,7 +157,6 @@ a {
 }
 // 根元素
 .main-content {
-  height: 1000px;
   width: 90%;
   margin: 0 auto;
   // 侧边导航
@@ -171,7 +170,7 @@ a {
 // 中间
 .main-center {
   width: 60%;
-  height: 1000px;
+  min-height: 1000px;
   margin: 0 auto;
 }
 // 文章
