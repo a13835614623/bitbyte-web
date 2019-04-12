@@ -32,7 +32,7 @@
     <!-- 分割线 -->
     <div class="line"></div>
     <!-- 评论区 -->
-    <div v-if="commentList">
+    <div v-if="commentList[0]">
       <!-- 评论列表 -->
       <div style="margin:30px 0;"
            v-for="(comment,index) in commentList"
@@ -146,6 +146,9 @@
           </el-col>
         </el-row>
       </div>
+    </div>
+    <div v-else style="text-align:center;padding:10px 0;">
+      <span class="caption">暂无评论</span>
     </div>
   </div>
 </template>
@@ -293,7 +296,9 @@ export default {
   margin-top: 20px;
 }
 a,
-a:hover {
+a:hover,
+a:link {
+  color: $text1;
   text-decoration: none;
 }
 $userPicWidth: 40px;
