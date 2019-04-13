@@ -73,12 +73,19 @@
         </el-form>
       </div>
       <!-- 发布成功页面 -->
-      <div v-else-if="isPublished">
-        <h1>发布成功!</h1>
+      <div style="text-align:center;" v-else-if="isPublished">
+        <h1 style="line-height:300px;">发布成功!</h1>
+        <div style="margin-top:50px;">
+          <el-button type="primary" @click="$router.push('/user/article')">查看文章</el-button>
+        </div>
       </div>
       <!-- 暂存成功页面 -->
-      <div v-else-if="isTemp">
-        <h1>暂存成功!</h1>
+      <div style="text-align:center;" v-else-if="isTemp">
+        <h1 style="line-height:300px;">暂存成功!</h1>
+        <div style="margin-top:50px;">
+          <el-button type="primary" @click="isTemp=false">重新编辑</el-button>
+          <el-button type="text" @click="$router.push('/user/info')">返回个人中心</el-button>
+        </div>
       </div>
     </el-card>
   </div>
@@ -140,8 +147,8 @@ export default {
         articleTitle: "", // 标题
         articleContent: "", // 内容
         articleMdContent: "", // md内容
-        articleTags: [],// 标签
-        articlePart:""//分区
+        articleTags: [], // 标签
+        articlePart: "" //分区
       },
       // 文章校验规则
       articleRules: {
@@ -155,14 +162,14 @@ export default {
           }
         ],
         articleTags: [
-          { required: true, validator: validateTags, trigger:"blur" }
+          { required: true, validator: validateTags, trigger: "blur" }
         ],
-        articlePart:[
-          {required:true,message:"请选择分区",trigger:'blur'}
+        articlePart: [
+          { required: true, message: "请选择分区", trigger: "blur" }
         ]
       },
       // 分区
-      articleParts:ARTICLE_PARTS,
+      articleParts: ARTICLE_PARTS
     };
   },
   methods: {
@@ -216,7 +223,7 @@ export default {
     // 正式提交文章
     commitArticle() {
       let article = this.article;
-      article.articleTags=article.articleTags.reduce(
+      article.articleTags = article.articleTags.reduce(
         (pre, cur, curIndex, array) => {
           return pre + "-" + cur;
         }
@@ -269,6 +276,9 @@ export default {
         return false;
       }
       return true;
+    },
+    onShowArticle(){
+
     }
   },
   components: {
@@ -286,5 +296,6 @@ export default {
 <style lang="scss" scoped>
 .article-write {
   padding: 0;
+  margin-bottom: 100px;
 }
 </style>

@@ -7,7 +7,7 @@
       </el-header>
       <!-- 主体 -->
       <el-main>
-        <router-view></router-view>
+        <router-view />
       </el-main>
       <!-- 页脚 -->
       <el-footer>
@@ -34,11 +34,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   background-color: #F2F6FC;
 }
-.el-header{
-  padding: 0;
-}
-.el-main{
-  height: 100vh;
+/* .el-main{
+  height: 700px;
   overflow: auto;
-}
+} */
 </style>

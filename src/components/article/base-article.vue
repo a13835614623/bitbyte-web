@@ -14,6 +14,6 @@ export default {
 .base-article {
   margin: 0 auto;
   width: 60%;
-  min-height: 600px;
+  min-height: 100%;
 }
 </style>

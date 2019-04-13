@@ -169,7 +169,6 @@ a {
   // 中间
   .main-center {
     width: 60%;
-    min-height: 105%;
     margin: 0 auto;
   }
 }
