@@ -7,6 +7,9 @@ const ARTICLE_PARTS = [
   '技术前瞻',
   '其他',
 ];
-export default {
-  ARTICLE_PARTS,
-};
+module.exports={
+  ARTICLE_PARTS
+}
+// export default {
+//   ARTICLE_PARTS,
+// };

@@ -9,6 +9,7 @@
                  ref="article"
                  :rules="articleRules"
                  label-width="80px">
+          <!-- 标题 -->
           <el-form-item label="标题"
                         prop="articleTitle">
             <el-input v-model="article.articleTitle"
@@ -21,6 +22,7 @@
             <base-markdown :init-value="article.articleMdContent"
                            @save="onSave($event)"></base-markdown>
           </el-form-item>
+          <!-- 标签 -->
           <el-form-item label="标签"
                         prop="articleTags">
             <el-card shadow="hover"
@@ -46,6 +48,19 @@
               <span style="color:#909399;padding:3px;float:right;">{{article.articleTags.length}}/10</span>
             </el-card>
           </el-form-item>
+          <!-- 分区选择 -->
+          <el-form-item label="分区"
+                        prop="articlePart">
+            <el-select v-model="article.articlePart"
+                       placeholder="选择分区">
+              <el-option v-for="(part,index) in articleParts"
+                         :key="index"
+                         :label="part"
+                         :value="part">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <!-- 发布/暂存 -->
           <el-form-item label
                         style="text-align:center;">
             <el-button type="primary"
@@ -62,15 +77,15 @@
         <h1>发布成功!</h1>
       </div>
       <!-- 暂存成功页面 -->
-      <div v-else>
+      <div v-else-if="isTemp">
         <h1>暂存成功!</h1>
       </div>
     </el-card>
   </div>
 </template>
-
 <script>
 import baseMarkdown from "@/components/article/base-markdown";
+import { ARTICLE_PARTS } from "@/util/constant";
 export default {
   name: "article-write",
   props: {
@@ -125,7 +140,8 @@ export default {
         articleTitle: "", // 标题
         articleContent: "", // 内容
         articleMdContent: "", // md内容
-        articleTags: [] // 标签
+        articleTags: [],// 标签
+        articlePart:""//分区
       },
       // 文章校验规则
       articleRules: {
@@ -139,9 +155,14 @@ export default {
           }
         ],
         articleTags: [
-          { required: true, validator: validateTags, trigger: "blur" }
+          { required: true, validator: validateTags, trigger:"blur" }
+        ],
+        articlePart:[
+          {required:true,message:"请选择分区",trigger:'blur'}
         ]
-      }
+      },
+      // 分区
+      articleParts:ARTICLE_PARTS,
     };
   },
   methods: {

@@ -102,10 +102,9 @@ export default {
   width: 100%;
   .pageIndex {
     position:absolute;
-    bottom: 20px;
-    padding: 0 10%;
+    bottom: 0;
     width: 80%;
-    margin: 0 auto;
+    left:10%;
   }
 }
 </style>

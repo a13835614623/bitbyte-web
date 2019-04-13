@@ -3,7 +3,7 @@
     <div class="line"></div>
     <p v-if="subscribers.length==0"
        class="empty-subscribe">暂无已关注用户</p>
-    <el-scrollbar style="height:100%"
+    <el-scrollbar style="height:104%"
                   v-else>
       <ul class="subscribe-list">
         <li v-for="subscriber in subscribers"
@@ -101,10 +101,8 @@ li {
 }
 // 滚动条
 .el-scrollbar__wrap {
-  overflow: {
-    x: hidden;
-    y: auto;
-  }
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 $height: 60px;

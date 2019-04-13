@@ -38,6 +38,7 @@ export default {
   padding: 0;
 }
 .el-main{
-  overflow: hidden;
+  height: 100vh;
+  overflow: auto;
 }
 </style>

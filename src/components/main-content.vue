@@ -166,12 +166,12 @@ a {
     width: 100px;
     left: 150px;
   }
-}
-// 中间
-.main-center {
-  width: 60%;
-  min-height: 1000px;
-  margin: 0 auto;
+  // 中间
+  .main-center {
+    width: 60%;
+    min-height: 105%;
+    margin: 0 auto;
+  }
 }
 // 文章
 .article {

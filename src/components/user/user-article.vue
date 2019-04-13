@@ -1,5 +1,5 @@
 <template>
-  <div class=".user-article">
+  <div class="user-article">
     <div class="line"></div>
     <el-form :model="articleFilterForm"
              ref="articleFilterForm"
@@ -23,7 +23,7 @@
     </el-form>
     <p v-if="articles.length==0"
        class="empty-article">暂无文章</p>
-    <el-scrollbar style="height:100%;"
+    <el-scrollbar style="height:87%;"
                   v-else>
       <!-- 文章列表 -->
       <ul class="article-list">
@@ -34,8 +34,9 @@
             <!-- 标题 -->
             <h3>{{article.articleTitle}}</h3>
           </el-row>
-          <el-row>
-            <el-col :span="18"
+          <el-row type="flex"
+                  justify="space-between">
+            <el-col :span="12"
                     class="article-info">
               <!-- 时间 -->
               <span v-if="article.articlePublishTime">{{new Date(article.articlePublishTime)|dateFormat}}</span>
@@ -48,14 +49,14 @@
               </el-tag> -->
               <span v-if="article.articlePublishTime">阅读&nbsp;{{article.articleRead}}</span>
             </el-col>
-            <el-col :span="6"
+            <el-col :span="7"
                     v-if="article.articlePublishTime">
               <el-button type="primary"
                          @click.stop="onEditArticle(article)">编辑</el-button>
               <el-button type="success"
                          @click.stop="onShowArticle(article)">查看</el-button>
             </el-col>
-            <el-col :span="6"
+            <el-col :span="7"
                     v-else>
               <el-button type="primary"
                          @click.stop="onEditArticle(article)">编辑</el-button>
@@ -180,7 +181,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.user-article {
+  height: 100%;
+  width: 100%;
+  padding: 5px;
+  margin-bottom: -17px;
+  margin-right: -17px;
+}
 ul,
 li,
 h3 {
@@ -197,6 +204,7 @@ h3 {
 // 文章列表
 .article-list {
   list-style-type: none;
+  margin-right: 10px;
   li {
     cursor: pointer;
     margin: 10px 1px;
@@ -221,10 +229,8 @@ h3 {
 }
 // 滚动条
 .el-scrollbar__wrap {
-  overflow: {
-    x: hidden;
-    y: auto;
-  }
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 // 标签
 .el-tag {

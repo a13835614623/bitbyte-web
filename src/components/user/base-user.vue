@@ -1,6 +1,5 @@
 <template>
-  <div class="base-user">
-    <el-card :body-style="{ padding: '0px' }">
+    <el-card class="base-user" :body-style="{ padding: '0px' }">
       <div slot="header"><span>个人中心</span></div>
       <el-row>
         <el-col :span="5">
@@ -23,13 +22,12 @@
           </el-menu>
         </el-col>
         <el-col :span="19"
-                style="padding:0px 30px;height:500px;">
+                style="padding:10px;height:500px;">
           <h3>{{activeTitle}}</h3>
           <router-view></router-view>
         </el-col>
       </el-row>
     </el-card>
-  </div>
 </template>
 
 <script>
@@ -111,8 +109,8 @@ export default {
 
 <style scoped>
 .base-user {
-  min-height: 1000px;
   width: 60%;
+  height: 620px;
   margin: 0 auto;
 }
 </style>
