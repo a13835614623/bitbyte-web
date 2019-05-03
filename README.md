@@ -1,53 +1,29 @@
-# bitbyte-web
+# <center>bitbyte-web<center/>
 
-这是一个使用vue.js开发的博客网站,
+![framework](https://img.shields.io/static/v1.svg?label=framework&message=vue2.0&color=green) ![coder](https://img.shields.io/static/v1.svg?label=coder&message=zzk&color=green) ![commit](https://img.shields.io/static/v1.svg?label=commit&message=57&color=blue) ![lang](https://img.shields.io/static/v1.svg?label=lang&message=javascript&color=indigo)
 
-![framework](https://img.shields.io/static/v1.svg?label=framework&message=vue2.0&color=green)
-![coder](https://img.shields.io/static/v1.svg?label=coder&message=zzk&color=green)
-![commit](https://img.shields.io/static/v1.svg?label=commit&message=57&color=blue)
-![lang](https://img.shields.io/static/v1.svg?label=lang&message=javascript&color=indigo)
+## 1.系统概述
 
-## 功能简介
+本系统是一个专门为 IT 从业人员和 IT 技术爱好者服务的的博客网站,用户在注册本网站登录后,可以在网站里浏览和发布计算机相关的文章,以及进行评论与作者进行交流反馈。
 
----
+## 2. 功能模块
 
-* 用户登录
-* 用户注册
-* 浏览文章
-* 发布文章
-* 关注用户
-* 评论文章
-* 回复评论
-* 修改用户信息
-
-## 启动相关
-
-### 启动项目
-
-```(command)
-npm install
+```mermaid
+graph TB
+    s[bitbyte博客系统]
+    s --- 用户注册;
+    s --- 用户登录;
+    s --- search[信息检索];
+    search --- 分类检索;
+    search --- 输入检索;
+    s --- article[文章管理];
+    s --- user[用户管理];
+    s --- com[评论管理];
+    user --- sub[关注管理];
+    user --- 消息管理;
+    user --- 信息管理;
+    user --- 密码管理;
+    user --- 安全管理;
+    s --- 评论管理;
 ```
 
-### 编译和热重载开发
-
-```(cmd)
-npm run serve
-```
-
-### 编译构建
-
-```(cmd)
-npm run build
-```
-
-### 运行测试
-
-```(cmd)
-npm run test
-```
-
-### 检测和修复
-
-```(cmd)
-npm run lint
-```
