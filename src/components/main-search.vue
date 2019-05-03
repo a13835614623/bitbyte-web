@@ -13,12 +13,12 @@
                  alt="bitbyte"
                  style="width:120px;">
           </el-col>
-          <el-col :span="14">
+          <el-col :span="16">
             <el-input v-model="searchText"
                       placeholder="搜索...">
             </el-input>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="4">
             <el-button type="primary"
                        @click="onSearch(searchText)"
                        icon="el-icon-search">
@@ -93,7 +93,7 @@ export default {
     onSearch(searchText) {
       if (!searchText) {
         this.$message.warning("搜索内容不能为空!");
-        return ;
+        return;
       }
       this.GET_ARTICLES({
         articleTitle: searchText
@@ -122,6 +122,10 @@ a {
 // 文章
 .article {
   margin: 20px 0;
+  padding: 20px;
+  border: $border1 1px solid;
+  border-radius: 20px;
+  background: $border4;
   // 标题
   .article-title {
     font-size: 1.2em;
@@ -153,5 +157,4 @@ a {
     color: #909399;
   }
 }
-
 </style>
