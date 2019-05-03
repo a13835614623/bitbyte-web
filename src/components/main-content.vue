@@ -13,7 +13,40 @@
                       :index="item.index">{{item.title}}</el-menu-item>
       </el-menu>
     </div>
+    <!-- 右边推荐 -->
+    <div class="main-right">
+      <img src="../assets/img/carousel-2.jpg"
+           width="100%"
+           height="100%"
+           alt="">
+      <el-card :body-style="{ padding: '0px' }">
+        <div slot="header">
+          <span>
+            <i style="color:blue;font-size:1.2em;"
+               class="el-icon-date"></i>
+            &nbsp;今日推荐</span>
+        </div>
+        <!-- card body -->
+        <div v-for="o in 4"
+             :key="o"
+             class="item">
+          <i style="color:skyblue;font-size:1.2em;"
+             class="el-icon-star-off"></i>
+          {{'列表内容 ' + o }}
+        </div>
+      </el-card>
+    </div>
+    <!-- 中间内容 -->
     <div class="main-center">
+      <el-carousel :interval="5000"
+                   arrow="always">
+        <el-carousel-item v-for="(carousel,index) in carousels"
+                          :key="index">
+          <img :src="carousel.imgSrc"
+               width="100%"
+               alt="">
+        </el-carousel-item>
+      </el-carousel>
       <el-card :body-style="cardBodyStyle"
                class="article"
                v-for="article in articles"
@@ -58,6 +91,7 @@
 export default {
   name: "main-content",
   data() {
+    // 左边悬浮菜单
     let leftmenus = [
       {
         title: "最新文章",
@@ -104,6 +138,13 @@ export default {
         index: "/home/else"
       }
     ];
+    // 跑马灯图片
+    let carousels = [1, 2, 3, 4].map((item, index) => {
+      return {
+        link: "",
+        imgSrc: require("../assets/img/carousel-" + item + ".jpg")
+      };
+    });
     return {
       // 导航菜单内容
       menus: leftmenus,
@@ -113,7 +154,8 @@ export default {
         paddingRight: "20px",
         paddingTop: "10px",
         paddingBottom: "10px"
-      }
+      },
+      carousels
     };
   },
   created() {
@@ -131,7 +173,7 @@ export default {
           this.articles = articles;
         })
         .catch(error => {
-          console.log(error)
+          console.log(error);
           this.$message.error("获取文章列表出错");
         });
     },
@@ -147,7 +189,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 a {
   text-decoration: none;
   color: $text1;
@@ -163,13 +204,24 @@ a {
   .main-left-nav {
     border: 1px solid $border1;
     position: fixed;
-    width: 100px;
-    left: 150px;
+    width: 7%;
+    left: 10%;
   }
   // 中间
   .main-center {
     width: 60%;
     margin: 0 auto;
+  }
+  // 右边
+  .main-right {
+    position: fixed;
+    width: 15%;
+    right: 5%;
+    .el-card {
+      .item {
+        padding: 20px;
+      }
+    }
   }
 }
 // 文章
