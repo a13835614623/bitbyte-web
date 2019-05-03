@@ -3,6 +3,8 @@ import {
   Pagination,
   Dialog,
   Autocomplete,
+  Carousel,
+  CarouselItem,
   Dropdown,
   DropdownMenu,
   DropdownItem,
@@ -48,6 +50,8 @@ import {
   MessageBox,
   Message,
 } from 'element-ui';
+Vue.use(Carousel);
+Vue.use(CarouselItem);
 Vue.use(scrollbar);
 Vue.use(Pagination);
 Vue.use(Dialog);
