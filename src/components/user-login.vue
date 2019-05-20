@@ -19,6 +19,7 @@
       <el-form-item prop="password">
         <el-input type="password"
                   v-model="user.password"
+                  @keyup.enter.native="onLogin($event)"
                   placeholder="请输入密码">
           <icon slot="prefix"
                 :icon="['fas','unlock-alt']"
