@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import {
+  Link,
   Pagination,
   Dialog,
   Autocomplete,
@@ -50,6 +51,7 @@ import {
   MessageBox,
   Message,
 } from 'element-ui';
+Vue.use(Link);
 Vue.use(Carousel);
 Vue.use(CarouselItem);
 Vue.use(scrollbar);
