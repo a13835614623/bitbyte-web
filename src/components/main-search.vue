@@ -9,9 +9,11 @@
         <!-- 搜索框 -->
         <el-row :gutter="20">
           <el-col :span="4">
-            <img src="../assets/logo.png"
-                 alt="bitbyte"
-                 style="width:120px;">
+            <router-link to="/">
+              <img src="../assets/logo.png"
+                   alt="bitbyte"
+                   style="width:120px;">
+            </router-link>
           </el-col>
           <el-col :span="16">
             <el-input v-model="searchText"
@@ -26,9 +28,12 @@
             </el-button>
           </el-col>
         </el-row>
-        <div class="line"></div>
         <div style="color:#909399;font-size:0.9em;margin:20px 0;">
-          bitbyte为您找到相关文章共{{articles.length}}篇
+          <el-alert :title="'bitbyte为您找到相关文章共'+articles.length+'篇'"
+                    type="success"
+                    show-icon>
+          </el-alert>
+
         </div>
         <!-- 搜索文章展示区 -->
         <div v-if="!articles[0]"
@@ -76,16 +81,19 @@
 import { mapActions } from "vuex";
 export default {
   name: "main-search",
-  // props: {
-  //   "search-text": {
-  //     required: false,
-  //     type: String
-  //   }
-  // },
+  props: {
+    searchText: {
+      default: "",
+      required: false,
+      type: String
+    }
+  },
+  created() {
+    this.onSearch(this.searchText);
+  },
   data() {
     return {
-      articles: [],
-      searchText: ""
+      articles: []
     };
   },
   methods: {
@@ -124,8 +132,8 @@ a {
   margin: 20px 0;
   padding: 20px;
   border: $border1 1px solid;
-  border-radius: 20px;
-  background: $border4;
+  border-radius: 5px;
+  background: rgb(252, 252, 252);
   // 标题
   .article-title {
     font-size: 1.2em;
