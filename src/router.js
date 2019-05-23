@@ -4,7 +4,9 @@ import Cookies from 'js-cookie';
 import { Message } from 'element-ui';
 const home = () => import('@/views/home');
 const login = () => import('@/components/user-login');
+const userCard = () => import('@/components/base/user-card');
 const register = () => import('@/components/user-register');
+const mainPart = () => import('@/components/main-part');
 const mainSearch = () => import('@/components/main-search');
 const baseArticle = () => import('@/components/article/base-article');
 const articleView = () => import('@/components/article/article-view');
@@ -26,20 +28,26 @@ const router = new Router({
     // 主页
     {
       path: '/',
-      redirect: '/home',
+      component: home,
     },
     // 主页
     {
       path: '/home',
-      name: 'home',
-      component: home,
-      redirect: '/home/lastetArticle',
-      children: [
-        {
-          path: '*',
-          // component:home
-        },
-      ],
+      redirect: '/',
+    },
+    // 分区
+    {
+      path: '/part/:part',
+      name: 'part',
+      props: true,
+      component: mainPart,
+    },
+    // 用户卡片
+    {
+      path:'/ucard/:userId',
+      name:'user-card',
+      props:true,
+      component:userCard
     },
     // 登录
     {
@@ -57,6 +65,7 @@ const router = new Router({
     {
       path: '/search',
       name: 'main-search',
+      props: route => ({ searchText: route.query.searchText }),
       component: mainSearch,
     },
     // 文章
