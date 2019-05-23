@@ -40,38 +40,10 @@
              style="height:600px;width:100%;text-align:center;">
           <span style="display:inline-block;color:#909399;margin:200px 0;">暂无搜索结果</span>
         </div>
-        <el-row v-else
-                class="article"
-                v-for="article in articles"
-                :key="article.id">
-          <!-- 文章标题 -->
-          <div class="article-title">
-            <router-link :to="'/article/view/'+article.articleId">
-              {{article.articleTitle}}
-            </router-link>
-          </div>
-          <!-- 文章介绍 -->
-          <el-row class="article-introduce">这是文章的介绍...</el-row>
-          <!-- 文章简要信息 -->
-          <el-row class="article-info">
-            <!-- 作者头像 -->
-            <el-col :span="2">
-              <router-link to="">
-                <img :src="'/api/user/pic?userPic='+article.userPic"
-                     class="article-user-pic">
-              </router-link>
-            </el-col>
-            <!-- 作者昵称 -->
-            <el-col :span="22">
-              <el-row style="height:42px;padding:10px 0px;">
-                <router-link to="">
-                  <span class="article-username">{{article.userName}}</span>
-                </router-link>
-                <span class="article-read">{{article.articleRead}}&nbsp;阅读</span>
-              </el-row>
-            </el-col>
-          </el-row>
-        </el-row>
+        <article-card v-else
+                      v-for="article in articles"
+                      :article="article"
+                      :key="article.id" />
       </div>
     </el-card>
   </div>
@@ -79,6 +51,8 @@
 
 <script>
 import { mapActions } from "vuex";
+import { PARTS_PROP_MAP } from "@/util/constant.js";
+import articleCard from "./base/article-card";
 export default {
   name: "main-search",
   props: {
@@ -87,6 +61,9 @@ export default {
       required: false,
       type: String
     }
+  },
+  components: {
+    "article-card": articleCard
   },
   created() {
     this.onSearch(this.searchText);
