@@ -139,6 +139,6 @@ export default {
 
 <style scoped>
 .user-password {
-  width: 500px;
+  width: 90%;
 }
 </style>
