@@ -53,10 +53,10 @@
                         prop="articlePart">
             <el-select v-model="article.articlePart"
                        placeholder="选择分区">
-              <el-option v-for="(part,index) in articleParts"
-                         :key="index"
-                         :label="part"
-                         :value="part">
+              <el-option v-for="(value,key) in partMap"
+                         :key="key"
+                         :label="value"
+                         :value="key">
               </el-option>
             </el-select>
           </el-form-item>
@@ -73,18 +73,25 @@
         </el-form>
       </div>
       <!-- 发布成功页面 -->
-      <div style="text-align:center;" v-else-if="isPublished">
-        <h1 style="line-height:300px;">发布成功!</h1>
+      <div style="text-align:center;"
+           v-else-if="isPublished">
+        <h1 style="line-height:300px;">{{result}}</h1>
         <div style="margin-top:50px;">
-          <el-button type="primary" @click="$router.push('/user/article')">查看文章</el-button>
+          <el-button type="primary"
+                     @click="$router.push('/article/view/'+articleId)">查看文章</el-button>
+          <el-button type="success"
+                     @click="$router.push('/article/write/')">继续投稿</el-button>
         </div>
       </div>
       <!-- 暂存成功页面 -->
-      <div style="text-align:center;" v-else-if="isTemp">
-        <h1 style="line-height:300px;">暂存成功!</h1>
+      <div style="text-align:center;"
+           v-else-if="isTemp">
+        <h1 style="line-height:300px;">{{result}}</h1>
         <div style="margin-top:50px;">
-          <el-button type="primary" @click="isTemp=false">重新编辑</el-button>
-          <el-button type="text" @click="$router.push('/user/info')">返回个人中心</el-button>
+          <el-button type="primary"
+                     @click="isTemp=false">重新编辑</el-button>
+          <el-button type="text"
+                     @click="$router.push('/user/info')">返回个人中心</el-button>
         </div>
       </div>
     </el-card>
@@ -92,7 +99,8 @@
 </template>
 <script>
 import baseMarkdown from "@/components/article/base-markdown";
-import { ARTICLE_PARTS } from "@/util/constant";
+import { PARTS_PROP_MAP } from "@/util/constant";
+
 export default {
   name: "article-write",
   props: {
@@ -113,6 +121,7 @@ export default {
         .dispatch("GET_ARTICLE", this.articleId)
         .then(article => {
           this.article = article;
+          this.articlePart = this.partMap[this.article.articlePart];
           this.article.articleTags = this.article.articleTags.split("-");
           loading.close();
         })
@@ -168,8 +177,10 @@ export default {
           { required: true, message: "请选择分区", trigger: "blur" }
         ]
       },
-      // 分区
-      articleParts: ARTICLE_PARTS
+      // 分区选项
+      partMap: PARTS_PROP_MAP,
+      result: "",
+      aid:""
     };
   },
   methods: {
@@ -243,7 +254,9 @@ export default {
       this.$store
         .dispatch(commitFunc, article)
         .then(data => {
+          this.aid = data.data;
           loading.close();
+          this.result = data.message;
           this.showMessage(data.message, data.status, false);
         })
         .catch(error => {
@@ -277,9 +290,7 @@ export default {
       }
       return true;
     },
-    onShowArticle(){
-
-    }
+    onShowArticle() {}
   },
   components: {
     "base-markdown": baseMarkdown
