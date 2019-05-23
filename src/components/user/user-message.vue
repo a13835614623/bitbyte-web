@@ -1,5 +1,5 @@
 <template>
-  <div class="empty">
+  <div class="empty-message">
     <span>暂无消息</span>
   </div>
 </template>
@@ -11,7 +11,7 @@
 </script>
 
 <style lang="scss" scoped>
-.empty{
+.empty-message{
   text-align: center;
   span{
     line-height: 200px ;
