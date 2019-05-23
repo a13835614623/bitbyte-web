@@ -23,7 +23,7 @@
       </el-row>
       <el-row class="article-user">
         <el-col :span="2">
-          <router-link to="">
+          <router-link :to="'/ucard/'+article.articleUser">
             <!-- 作者头像 -->
             <img v-if="article.userPic"
                  :src="'/api/user/pic?userPic='+article.userPic" />
@@ -32,7 +32,7 @@
           </router-link>
         </el-col>
         <el-col :span="18">
-          <router-link to="">
+          <router-link :to="'/ucard/'+article.articleUser">
             <!-- 作者昵称 -->
             <span class="article-username">{{article.userName}}</span><br>
           </router-link>
