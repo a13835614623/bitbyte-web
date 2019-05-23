@@ -2,8 +2,7 @@
   <div class="user-picture">
     <div class="pic-old">
       <img :src="userPicPath"
-           style="width:100%;height:100%;margin:0 auto;"
-           alt="我的头像">
+           style="width:100%;height:100%;margin:0 auto;">
     </div>
     <div class="line"></div>
     <h3>更改头像</h3>
