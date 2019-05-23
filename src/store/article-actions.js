@@ -16,6 +16,15 @@ let GET_ARTICLE = async ({ commit }, articleId) => {
   console.log(`from store.js:文章${articleId}获取成功!`);
   return data.data;
 };
+// 根据查询条件获取文章及其作者信息
+let GET_ARTICLE_QUERY = async ({ commit }, queryOption) => {
+  let url=`/article/query`;
+  let { data } = await axios.post(url,queryOption);
+  if (!data || data.status == 'error')
+    throw new Error('[GET_PART_ARTICLE]服务器状态异常!');
+  console.log(`from store.js:文章查询成功!`);
+  return data;
+};
 // 搜索文章及其作者信息
 let GET_ARTICLES = async ({ commit }, article) => {
   let url=`/article/search`;
@@ -108,6 +117,7 @@ export {
   GET_ALL_ARTICLES,
   GET_ARTICLE,
   GET_ARTICLES,
+  GET_ARTICLE_QUERY,
   GET_ARTICLE_ISLIKE,
   GET_ARTICLE_LIKE_COUNT,
   DO_LIKE_ARTICLE,

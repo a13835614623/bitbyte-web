@@ -4,21 +4,25 @@ import axios from '@/store/axios';
 let GET_USER_INFO = async ({
   commit,
   state
-}) => {
-  let userId = Cookies.get('userId');
-  let token = Cookies.get('token');
-  if (!userId || !token) return;
+},userId='') => {
+  let isOwner = !userId;
+  if(isOwner){
+    userId = Cookies.get('userId');
+  }
   let {
     data
-  } = await axios.post('/user/get?userId=' + userId);
+  } = await axios.post(`/user/get?userId=${userId}&isOwner=${isOwner}`);
   if (!data || data.status != 'success'){
     throw new Error('[GET_USER_INFO]服务器状态异常!');
   }
-  // 提交更改
-  commit('saveUser', {
-    user: data.data,
-    token: token,
-  });
+  if(isOwner){
+    let token = Cookies.get('token');
+    // 提交更改
+    commit('saveUser', {
+      user: data.data,
+      token: token,
+    });
+  }
   console.log('from store.js:用户信息更新成功!');
   return data.data;
 };
@@ -54,17 +58,8 @@ let DO_USER_REGISTER = async ({
   let {
     data
   } = await axios.post('/user/register', user);
-  if (!data || data.status == 'error')
-    throw new Error('[DO_USER_REGISTER]服务器状态异常!');
-  else if (data.status == 'success') {
-    //设置cookie
-    let cookieConfig = {
-      expires: 7
-    };
-    Cookies.set('token', data.token, cookieConfig);
-    Cookies.set('userId', data.data.userId, cookieConfig);
-    Cookies.set('userName', data.data.userName, cookieConfig);
-    console.log('from store.js:用户注册成功!');
+  if (!data){
+    throw new Error(data.status == 'warning'?'手机号或邮箱已经被注册!':'[DO_USER_REGISTER]服务器状态异常!');
   }
   return data;
 };
@@ -106,12 +101,13 @@ let DO_USER_PASSWORD_VALIDATE = async ({
 };
 // 获取用户关注列表
 let GET_USER_SUBSCRIBERS = async ({
-  commit
-}) => {
+  commit,
+  state
+},userId=Cookies.get('userId')) => {
   let {
     data
   } = await axios.post(
-    '/user/subscribe?userId=' + Cookies.get('userId'),
+    '/user/subscribe?userId=' +userId ,
   );
   if (!data || data.status == 'error')
     throw new Error('[GET_USER_SUBSCRIBERS]服务器状态异常！');
@@ -119,9 +115,47 @@ let GET_USER_SUBSCRIBERS = async ({
     user.userPic = '/api/user/pic?userPic=' + user.userPic;
     return user;
   });
-  // 提交更改，保存用户关注列表
-  await commit('saveSubscribers', data.data);
-  console.log('from store.js:用户关注列表更新成功!');
+  if(userId==state.user.userId){
+    // 提交更改，保存用户关注列表
+    await commit('saveSubscribers', data.data);
+    console.log('from store.js:用户关注列表更新成功!');
+  }
+  return data;
+};
+// 获取用户粉丝列表
+let GET_USER_FANS = async ({
+  commit,
+  state
+},userId=Cookies.get('userId')) => {
+  let {
+    data
+  } = await axios.post(
+    '/user/fans?userId=' +userId ,
+  );
+  if (!data || data.status == 'error')
+    throw new Error('[GET_USER_FANS]服务器状态异常！');
+  data.data = data.data.map(user => {
+    user.userPic = '/api/user/pic?userPic=' + user.userPic;
+    return user;
+  });
+  return data;
+};
+// 获取用户最新关注的用户的五篇文章
+let GET_USER_LATEST_ARTICLES = async ({
+  commit,
+  state
+},userId=Cookies.get('userId')) => {
+  let {
+    data
+  } = await axios.post(
+    '/article/latest?userId=' +userId ,
+  );
+  if (!data || data.status == 'error')
+    throw new Error('[GET_USER_LATEST_ARTICLES]服务器状态异常！');
+  data.data = data.data.map(user => {
+    user.userPic = '/api/user/pic?userPic=' + user.userPic;
+    return user;
+  });
   return data;
 };
 // 获取当前用户的文章列表
@@ -155,6 +189,8 @@ let GET_USER_RECORD = async ({
 export {
   GET_USER_INFO,
   GET_USER_SUBSCRIBERS,
+  GET_USER_FANS,
+  GET_USER_LATEST_ARTICLES,
   GET_USER_ARTICLES,
   GET_USER_RECORD,
   DO_USER_LOGIN,
