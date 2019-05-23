@@ -69,7 +69,9 @@ export default {
       });
     },
     // 查看关注者主页
-    onShowIndex(subscriberId) {}
+    onShowIndex(subscriberId) {
+      this.$router.push('/ucard/'+subscriberId);
+    }
   },
   computed: {
     // 关注用户列表
