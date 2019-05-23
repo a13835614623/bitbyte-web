@@ -40,7 +40,7 @@
         <el-row>
           <!-- 评论的用户头像 -->
           <el-col :span="2">
-            <router-link to="">
+            <router-link :to="'/ucard/'+comment.commentUser">
               <img v-if="comment.commentUserPic"
                    class="user-pic"
                    :src="'/api/user/pic?userPic='+comment.commentUserPic" />
@@ -48,7 +48,7 @@
           </el-col>
           <!-- 评论用户信息 -->
           <el-col :span="18">
-            <router-link to="">
+            <router-link :to="'/ucard/'+comment.commentUser">
               <!-- 昵称 -->
               <span class="comment-username">{{comment.commentUserName}}</span>
             </router-link>
@@ -85,11 +85,11 @@
                       style="margin:10px 0;"
                       :key="reply.replyFloor">
                 <!-- 评论回复信息 -->
-                <router-link to="">
+                <router-link :to="'/ucard/'+reply.fromUserId">
                   <!-- 回复用户昵称 -->
                   <span style="color:#66b1ff;font-size:0.9em;padding-right:5px;">{{reply.fromUserName}}:</span>
                 </router-link>
-                <router-link to=""
+                <router-link :to="'/ucard/'+reply.toUserId"
                              v-if="reply.replyContent[0]=='@'">
                   <span style="font-size:0.9em;">回复&nbsp;</span>
                   <span style="color:#66b1ff;font-size:0.9em;padding-right:5px;">@{{reply.toUserName}}</span>
