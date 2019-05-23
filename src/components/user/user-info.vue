@@ -1,13 +1,13 @@
 <template>
   <div class="user-info">
     <img class="user-pic"
-         :src="userPicPath"
-         alt="头像">
+         :src="userPicPath">
     <el-form :model="oldUser"
+             class="user-form"
              ref="oldUser"
              v-if="oldUser"
              :rules="userRules"
-             label-width="120px">
+             label-width="220px">
       <el-form-item label="用户名"
                     prop="userName">
         <el-input v-model="oldUser.userName"></el-input>
@@ -41,9 +41,10 @@
         </el-date-picker>
       </el-form-item>
     </el-form>
-    <el-button type="primary"
-               class="userinfo-save"
-               @click="onSaveUserInfo">保存</el-button>
+    <div class="userinfo-save">
+      <el-button type="primary"
+                 @click="onSaveUserInfo">保存</el-button>
+    </div>
   </div>
 </template>
 
@@ -176,14 +177,15 @@ $user-pic-width: 120px;
     display: block;
     margin: 15px auto;
   }
+  .user-form {
+    // 输入框长度
+    .el-input {
+      width: 70%;
+    }
+  }
   // 保存按钮
   .userinfo-save {
-    display: block;
-    margin: 0 auto;
-  }
-  // 输入框长度
-  .el-input {
-    width: 70%;
+    text-align: center;
   }
 }
 </style>
