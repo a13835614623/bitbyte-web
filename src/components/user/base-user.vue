@@ -109,7 +109,7 @@ export default {
 
 <style scoped>
 .base-user {
-  width: 60%;
+  width: 80%;
   height: 620px;
   margin: 0 auto;
 }
