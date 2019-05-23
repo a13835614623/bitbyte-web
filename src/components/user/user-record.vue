@@ -103,8 +103,6 @@ export default {
   .pageIndex {
     position:absolute;
     bottom: 0;
-    width: 80%;
-    left:10%;
   }
 }
 </style>
