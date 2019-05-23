@@ -33,6 +33,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #F2F6FC;
+    min-height: 800px;
 }
 /* .el-main{
   height: 700px;
