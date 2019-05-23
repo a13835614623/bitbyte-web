@@ -27,3 +27,37 @@ $border4:#F2F6FC;
 h1{
   font-weight: 500;
 }
+// 链接
+@mixin link-colors($normal, $hover, $visited) {
+  text-decoration: none;
+  color: $text1;
+  &:hover { color: $hover;}
+  &:visited { color: $visited; }
+}
+// 空白文字样式
+@mixin empty($margin) {
+  @extend .caption;
+  text-align: center;
+  margin: $margin 0;
+}
+.empty{
+  @include empty(300px);
+}
+a{
+  @include link-colors($text1,$blue,$text1);
+}
+.h3{
+  font-size: 1.17em;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
+}
+// 超过部分省略号
+@mixin word-ellipsis($line) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $line;
+  overflow: hidden;
+}
