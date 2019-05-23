@@ -32,11 +32,12 @@
             :key="article.articleId">
           <el-row>
             <!-- 标题 -->
-            <h3>{{article.articleTitle}}</h3>
+            <span class="h3">{{article.articleTitle}}</span>
+            <el-tag type="success">{{partMap[article.articlePart]}}</el-tag>
           </el-row>
           <el-row type="flex"
-                  justify="space-between">
-            <el-col :span="12"
+                  justify="space-around">
+            <el-col :span="18"
                     class="article-info">
               <!-- 时间 -->
               <span v-if="article.articlePublishTime">{{new Date(article.articlePublishTime)|dateFormat}}</span>
@@ -49,14 +50,14 @@
               </el-tag> -->
               <span v-if="article.articlePublishTime">阅读&nbsp;{{article.articleRead}}</span>
             </el-col>
-            <el-col :span="7"
+            <el-col :span="6"
                     v-if="article.articlePublishTime">
               <el-button type="primary"
                          @click.stop="onEditArticle(article)">编辑</el-button>
               <el-button type="success"
                          @click.stop="onShowArticle(article)">查看</el-button>
             </el-col>
-            <el-col :span="7"
+            <el-col :span="6"
                     v-else>
               <el-button type="primary"
                          @click.stop="onEditArticle(article)">编辑</el-button>
@@ -71,6 +72,8 @@
 </template>
 
 <script>
+import { PARTS_PROP_MAP } from "@/util/constant.js";
+
 export default {
   name: "user-article",
   data() {
@@ -80,7 +83,8 @@ export default {
       articleFilterForm: {
         checkList: ["已发布", "未发布"],
         searchText: ""
-      }
+      },
+      partMap: PARTS_PROP_MAP
     };
   },
   async created() {
@@ -196,7 +200,7 @@ h3 {
 }
 .empty-article {
   width: 120px;
-  color: $text1;
+  color: $text3;
   height: 100%;
   line-height: 500px;
   margin: 0 auto;
