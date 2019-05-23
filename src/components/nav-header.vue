@@ -3,7 +3,7 @@
     <el-row>
       <!-- logo -->
       <el-col :span="3"
-              :offset="2">
+              :offset="1">
         <div class="logo">
           <router-link to="/">
             <img src="../assets/logo.png"
@@ -13,79 +13,41 @@
         </div>
       </el-col>
       <!-- 导航 -->
-      <el-col :span="19"
-              style="float:right;">
+      <el-col :span="20">
         <el-menu mode="horizontal"
                  @select="handleSelect"
-                 :router="true"
                  active-text-color="#409EFF"
                  :default-active="activeIndex"
                  :unique-opened="true">
-          <el-submenu index="/language">
-            <template slot="title">编程语言</template>
-            <el-submenu index="/frontDev">
-              <template slot="title">前端</template>
-              <el-menu-item index="/frontDev/html">HTML</el-menu-item>
-              <el-menu-item index="/frontDev/css">CSS</el-menu-item>
-              <el-menu-item index="/frontDev/js">JavaScript</el-menu-item>
-            </el-submenu>
-            <el-submenu index="/serverDev">
-              <template slot="title">后端</template>
-              <el-menu-item index="/serverDev/java">Java</el-menu-item>
-              <el-menu-item index="/serverDev/python">Python</el-menu-item>
-              <el-menu-item index="/serverDev/nodejs">Nodejs</el-menu-item>
-            </el-submenu>
-          </el-submenu>
-          <el-submenu index="/framework">
-            <template slot="title">流行框架</template>
-            <el-submenu index="/framework/front">
-              <template slot="title">前端</template>
-              <el-menu-item index="/framework/front/css">CSS</el-menu-item>
-              <el-menu-item index="/framework/front/js">JavaScript</el-menu-item>
-            </el-submenu>
-            <el-submenu index="/framework/server">
-              <template slot="title">后端</template>
-              <el-menu-item index="/framework/server/java">Java</el-menu-item>
-              <el-menu-item index="/framework/server/python">Python</el-menu-item>
-              <el-menu-item index="/framework/server/nodejs">Nodejs</el-menu-item>
-            </el-submenu>
-          </el-submenu>
-          <el-submenu index="/database">
-            <template slot="title">数据库|缓存</template>
-            <el-menu-item index="/database/bilibiliRead">mysql</el-menu-item>
-            <el-submenu index="/database/cache">
-              <template slot="title">缓存</template>
-              <el-menu-item index="/database/cache/redis">redis</el-menu-item>
-            </el-submenu>
-          </el-submenu>
-          <el-submenu index="/projects">
-            <template slot="title">项目相关</template>
-            <el-menu-item index="/projects/project1">项目1</el-menu-item>
-            <el-menu-item index="/projects/project2">项目2</el-menu-item>
-            <el-menu-item index="/projects/project3">项目3</el-menu-item>
-          </el-submenu>
           <!-- 算法相关 -->
-          <el-menu-item index="/algorithm">
-            <a href="#"
-               target="_blank">算法与数据结构</a>
+          <el-menu-item v-for="(item,index) in menus"
+                        :index="item.path"
+                        @click="dispatch(item.path)"
+                        :key="index">
+            {{item.title}}
           </el-menu-item>
           <!-- 搜索框 -->
-          <el-menu-item index="/search">
+          <el-menu-item class="search"
+                        index="/search">
             <el-input v-model="searchText"
-                      placeholder="搜索"
+                      placeholder="搜索博客"
+                      @keyup.enter.native="dispatch('/search?searchText='+searchText)"
                       clearable>
               <i slot="suffix"
+                 @click="dispatch('/search?searchText='+searchText)"
                  class="el-input__icon el-icon-search"></i>
             </el-input>
           </el-menu-item>
           <!-- 登录 -->
           <el-menu-item v-if="!isLogin"
-                        index="/login">
+                        index="/login"
+                        @click="dispatch('/login')">
             <el-button type="text">登&nbsp;录</el-button>
           </el-menu-item>
           <!-- 注册 -->
           <el-menu-item v-if="!isLogin"
                         index="/register"
+                        @click="dispatch('/register')"
                         style="padding-left:20px;">
             <el-button type="text">注&nbsp;册</el-button>
           </el-menu-item>
@@ -121,7 +83,8 @@
               </el-dropdown-menu>
             </el-dropdown>
           </el-menu-item>
-          <el-menu-item index="/article/write">
+          <!-- 写文章 -->
+          <el-menu-item @click="dispatch('/article/write')">
             <el-button type="primary">写文章
               <icon :icon="['fas','edit']" />
             </el-button>
@@ -133,10 +96,19 @@
 </template>
 
 <script>
+import { PARTS_PROP_MAP } from "@/util/constant.js";
 export default {
   name: "nav-header",
   data() {
+    let menus = [];
+    for (const key in PARTS_PROP_MAP) {
+      menus.push({
+        path: "/part/" + key,
+        title: PARTS_PROP_MAP[key]
+      });
+    }
     return {
+      menus,
       searchText: "" // 搜索内容
     };
   },
@@ -182,7 +154,7 @@ export default {
       };
       handle[command]();
       console.log("this.$route.path:" + vm.$route.path);
-    }
+    },
   },
   computed: {
     // 当前路由
@@ -205,7 +177,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-
 .nav-header {
   position: fixed;
   right: 0;
@@ -213,15 +184,11 @@ export default {
   z-index: 100;
   background-color: white;
   border-bottom: 1px solid $border3;
-  .el-menu {
-    border: 0;
-  }
-  a,
-  a:hover {
-    text-decoration: none;
-  }
   .logo {
     padding: 10px 0;
+  }
+  .search {
+    border: 0;
   }
 }
 </style>
