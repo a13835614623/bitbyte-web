@@ -1,24 +1,7 @@
 <template>
   <div class="main-content">
-    <!-- 侧边栏 -->
-    <div class="main-left-nav">
-      <el-menu mode="vertical"
-               :default-active="activeIndex()"
-               :router="true"
-               active-text-color="#fff"
-               text-color="#909399"
-               @select="onSelect">
-        <el-menu-item v-for="(item,index) in menus"
-                      :key="index"
-                      :index="item.index">{{item.title}}</el-menu-item>
-      </el-menu>
-    </div>
-    <!-- 右边推荐 -->
-    <div class="main-right">
-      <img src="../assets/img/carousel-2.jpg"
-           width="100%"
-           height="100%"
-           alt="">
+    <!-- 左边推荐 -->
+    <div class="main-left">
       <el-card :body-style="{ padding: '0px' }">
         <div slot="header">
           <span>
@@ -27,12 +10,57 @@
             &nbsp;今日推荐</span>
         </div>
         <!-- card body -->
-        <div v-for="o in 4"
-             :key="o"
-             class="item">
-          <i style="color:skyblue;font-size:1.2em;"
-             class="el-icon-star-off"></i>
-          {{'列表内容 ' + o }}
+        <div class="left-article">
+          <div v-for="(article,index) in articles.slice(0,8)"
+               class="item"
+               :key="index">
+            <router-link :to="'/article/view/'+article.articleId"
+                         class="left-article-title"><i class="el-icon-star-on"></i>{{article.articleTitle}}</router-link>
+          </div>
+        </div>
+      </el-card>
+    </div>
+    <!-- 右边动态 -->
+    <div class="main-right">
+      <el-card :body-style="{ padding: '0px' }">
+        <div slot="header" class="right-header">
+          <router-link to="/user/subscribe">
+            <i style="color:blue;font-size:1.2em;"
+               class="el-icon-user-solid"></i>
+            &nbsp;最新动态</router-link>
+          <el-button type="text"
+                     @click="onRefreshSubscribeArticles"
+                     :icon="isLoading?'el-icon-loading':'el-icon-refresh-right'"></el-button>
+        </div>
+        <!-- card body -->
+        <div class="sub-article"
+             v-if="isLogin">
+          <div v-for="(article,index) in subscribeArticles"
+               class="item"
+               :key="index">
+            <img :src="article.userPic"
+                 class="sub-article-userpic">
+            <!-- 作者名称 -->
+            <router-link :to="'/ucard/'+article.articleUser"
+                         class="sub-article-username">{{article.userName}}</router-link>
+            <span class="sub-text">发表了文章</span>
+            <!-- 文章标题 -->
+            <div class="sub-article-title">
+              <router-link :to="'/article/view/'+article.articleId">{{article.articleTitle}}</router-link>
+            </div>
+          </div>
+          <div v-if="!subscribeArticles[0]" class="empty-right">
+              暂无动态
+          </div>
+        </div>
+        <div v-else
+             style="text-align:center;margin:100px 0;">
+          <div class="caption">
+            <el-link type="primary"
+                     @click="$router.push('/login')">登录</el-link>
+            <span class="el-link"
+                  style="cursor:default;">后查看</span>
+          </div>
         </div>
       </el-card>
     </div>
@@ -47,97 +75,22 @@
                alt="">
         </el-carousel-item>
       </el-carousel>
-      <el-card :body-style="cardBodyStyle"
-               class="article"
-               v-for="article in articles"
-               :key="article.id">
-        <!-- 文章标题 -->
-        <div slot="header">
-          <router-link :to="'/article/view/'+article.articleId">
-            <b>{{article.articleTitle}}</b>
-          </router-link>
-          <el-button style="float: right; padding: 3px 0"
-                     type="text"
-                     @click="onCardClose"
-                     icon="el-icon-close"></el-button>
-        </div>
-        <!-- 文章介绍 -->
-        <el-row class="article-introduce">这是文章的介绍...</el-row>
-        <!-- 文章简要信息 -->
-        <el-row class="article-info">
-          <!-- 作者头像 -->
-          <el-col :span="2">
-            <router-link to="">
-              <img :src="'/api/user/pic?userPic='+article.userPic"
-                   class="article-userpic">
-            </router-link>
-          </el-col>
-          <!-- 作者昵称 -->
-          <el-col :span="22">
-            <el-row style="height:42px;padding:10px 0px;">
-              <router-link to="">
-                <span class="article-username">{{article.userName}}</span>
-              </router-link>
-              <span class="article-read">{{article.articleRead}}&nbsp;阅读</span>
-            </el-row>
-          </el-col>
-        </el-row>
-      </el-card>
+      <article-card v-for="article in articles"
+                    :article="article"
+                    :key="article.id" />
+      <el-row v-if="!articles[0]">
+        <div class="caption empty">暂无文章可供浏览</div>
+      </el-row>
     </div>
   </div>
 </template>
 
 <script>
+import articleCard from "./base/article-card";
+import { mapActions } from "vuex";
 export default {
   name: "main-content",
   data() {
-    // 左边悬浮菜单
-    let leftmenus = [
-      {
-        title: "最新文章",
-        index: "/home/lastetArticle"
-      },
-      {
-        title: "订阅",
-        index: "/home/mySubscribe"
-      },
-      {
-        title: "人工智能",
-        index: "/home/ai"
-      },
-      {
-        title: "区块链",
-        index: "/home/blockchain"
-      },
-      {
-        title: "大数据",
-        index: "/home/bigData"
-      },
-      {
-        title: "Linux",
-        index: "/home/linux"
-      },
-      {
-        title: "计算机",
-        index: "/home/computer"
-      },
-      {
-        title: "软件架构",
-        index: "/home/architecture"
-      },
-      {
-        title: "安全",
-        index: "/home/safety"
-      },
-      {
-        title: "游戏开发",
-        index: "/home/gameDev"
-      },
-      {
-        title: "其他",
-        index: "/home/else"
-      }
-    ];
     // 跑马灯图片
     let carousels = [1, 2, 3, 4].map((item, index) => {
       return {
@@ -146,8 +99,6 @@ export default {
       };
     });
     return {
-      // 导航菜单内容
-      menus: leftmenus,
       articles: [],
       cardBodyStyle: {
         paddingLeft: "20px",
@@ -155,108 +106,153 @@ export default {
         paddingTop: "10px",
         paddingBottom: "10px"
       },
-      carousels
+      carousels,
+      // 关注文章
+      subscribeArticles: [],
+      isLoading: false
     };
+  },
+  components: {
+    "article-card": articleCard
   },
   created() {
     this.getArticles();
+    if (this.isLogin) {
+      this.getUserLatestArticles();
+    }
   },
   methods: {
+    ...mapActions(["GET_ARTICLE_QUERY", "GET_USER_LATEST_ARTICLES"]),
+    getUserLatestArticles() {
+      this.isLoading = true;
+      this.GET_USER_LATEST_ARTICLES()
+        .then(data => {
+          this.subscribeArticles = data.data;
+          this.isLoading = false;
+        })
+        .catch(error => {
+          this.isLoading = false;
+          console.log(error);
+          this.$message.error("获取文章列表出错");
+        });
+    },
+    //刷新关注文章
+    onRefreshSubscribeArticles() {
+      this.getUserLatestArticles();
+    },
     onSelect() {
       console.log();
     },
     // 获取文章列表
     getArticles() {
-      this.$store
-        .dispatch("GET_ALL_ARTICLES")
-        .then(articles => {
-          this.articles = articles;
+      this.GET_ARTICLE_QUERY({ article: {}, start: 0, count: 10 })
+        .then(data => {
+          this.articles = data.data;
         })
         .catch(error => {
           console.log(error);
           this.$message.error("获取文章列表出错");
         });
     },
-    //当前导航索引
-    activeIndex() {
-      return this.$route.path;
-    },
     //关闭卡片事件
-    onCardClose() {}
+    onCardClose(index) {
+      this.articles.splice(index, 1);
+    }
   },
-  computed: {}
+  computed: {
+    // 关注用户列表
+    subscribers() {
+      return this.$store.state.subscribers;
+    },
+    isLogin() {
+      return this.$store.getters.isLogin;
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-a {
-  text-decoration: none;
-  color: $text1;
-  &:hover {
-    color: $blue;
-  }
-}
 // 根元素
 .main-content {
   width: 90%;
   margin: 0 auto;
-  // 侧边导航
-  .main-left-nav {
+  $common-margin: 2%;
+  .common {
     border: 1px solid $border1;
-    position: fixed;
-    width: 7%;
-    left: 10%;
+    position: absolute;
+    width: 20%-$common-margin;
+    .el-card {
+      .item {
+        padding: 10px;
+        color: $blue;
+      }
+    }
+  }
+  // 左边边导航
+  .main-left {
+    @extend .common;
+    .left-article {
+      .left-article-title {
+        i {
+          color: $blue;
+        }
+        @include word-ellipsis(1);
+      }
+    }
+    left: $common-margin;
+  }
+  // 右边
+  .main-right {
+    @extend .common;
+    right: $common-margin;
+    .right-header{
+      .el-button{
+        font-size: 1.2em;
+        position: absolute;
+        right: 20px;
+        top: 10px;
+      }
+    }
+    .sub-article {
+      .sub-article-userpic {
+        border-radius: 15px;
+        width: 30px;
+      }
+      .sub-article-username {
+        font-weight: 200;
+        padding-left: 10px;
+        font-size: 0.9em;
+        line-height: 30px;
+        vertical-align: top;
+        height: 20px;
+      }
+      .sub-text {
+        @extend .sub-article-username;
+        color: $border1;
+        font-size: 0.8em;
+      }
+      .sub-article-title {
+        margin-top: 5px;
+        a {
+          @include word-ellipsis(1);
+          &:hover {
+            text-decoration: underline;
+          }
+          color: $blue;
+          font-size: 0.9em;
+        }
+      }
+    }
   }
   // 中间
   .main-center {
     width: 60%;
     margin: 0 auto;
   }
-  // 右边
-  .main-right {
-    position: fixed;
-    width: 15%;
-    right: 5%;
-    .el-card {
-      .item {
-        padding: 20px;
-      }
-    }
-  }
 }
-// 文章
-.article {
-  margin: 5px 0;
-  // 文章介绍
-  .article-introduce {
-    margin-bottom: 10px;
-    color: $text3;
-  }
-  // 文章标题
-  .article-title:hover {
-    color: $blue;
-  }
-  // 头像
-  .article-userpic {
-    display: inline-block;
-    vertical-align: middle;
-    width: 40px;
-    height: 40px;
-    border: 1px solid #409eff;
-    border-radius: 20px;
-  }
-  // 用户名
-  .article-username {
-    font: bold 0.9em;
-  }
-  // 阅读量
-  .article-read {
-    font: 0.8em;
-    float: right;
-    color: $text3;
-  }
+.empty-right{
+  @include empty(100px);
 }
-
 // 激活路由元素
 .is-active {
   background: $blue;
