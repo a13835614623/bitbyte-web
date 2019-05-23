@@ -3,6 +3,8 @@ import {
   Link,
   Pagination,
   Dialog,
+  Breadcrumb,
+  BreadcrumbItem,
   Autocomplete,
   Carousel,
   CarouselItem,
@@ -50,7 +52,13 @@ import {
   Loading,
   MessageBox,
   Message,
+  Tabs,
+  TabPane
 } from 'element-ui';
+Vue.use(Tabs);
+Vue.use(TabPane)
+Vue.use(Breadcrumb);
+Vue.use(BreadcrumbItem);
 Vue.use(Link);
 Vue.use(Carousel);
 Vue.use(CarouselItem);
