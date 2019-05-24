@@ -58,11 +58,11 @@
                          @command="handleCommand"
                          :show-timeout="0">
               <!-- 头像 -->
-              <span>
+              <router-link :to="'/user/info'">
                 <img :src="userPicPath"
                      style="width:30px;height:30px;border-radius:15px;">
                 {{user.userName||''}}
-              </span>
+              </router-link>
               <!-- 下拉区 -->
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="userCenter">
