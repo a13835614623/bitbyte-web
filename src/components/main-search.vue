@@ -74,16 +74,20 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["GET_ARTICLES"]),
+    ...mapActions(["GET_ARTICLE_QUERY"]),
     onSearch(searchText) {
       if (!searchText) {
         this.$message.warning("搜索内容不能为空!");
         return;
       }
-      this.GET_ARTICLES({
-        articleTitle: searchText
-      }).then(articles => {
-        this.articles = articles;
+      this.GET_ARTICLE_QUERY({
+        article:{
+          articleTitle: searchText
+        },
+        start:0,
+        count:10
+      }).then(data => {
+        this.articles = data.data;
       });
     }
   }
