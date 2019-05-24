@@ -11,6 +11,9 @@
           <article-card v-for="(article,index) in articles"
                         :article="article"
                         :key="index" />
+          <div class="empty-article-list">
+            此用户暂未发表博客
+          </div>
         </el-col>
         <el-col :span="6">
           <div class="user">
@@ -75,37 +78,7 @@
             </el-tabs>
             <!-- 文章动态信息 -->
             <div class="news">
-              <el-card :body-style="{ padding: '10px' }"
-                       shadow="hover">
-                <div slot="header"
-                     class="news-header">
-                  <router-link to="/user/subscribe">
-                    <i style="color:blue;font-size:1.2em;"
-                       class="el-icon-user-solid"></i>
-                    &nbsp;最新动态</router-link>
-                </div>
-                <!-- card body -->
-                <div class="article">
-                  <div v-for="(article,index) in articles.slice(0,5)"
-                       class="article-item"
-                       :key="index">
-                    <img :src="'/api/user/pic?userPic='+article.userPic"
-                         class="article-userpic">
-                    <!-- 作者名称 -->
-                    <router-link :to="'/ucard/'+article.articleUser"
-                                 class="article-username">{{article.userName}}</router-link>
-                    <span class="article-text">发表了文章</span>
-                    <!-- 文章标题 -->
-                    <div class="article-title">
-                      <router-link :to="'/article/view/'+article.articleId">{{article.articleTitle}}</router-link>
-                    </div>
-                  </div>
-                  <div v-if="!articles[0]"
-                       class="empty-list">
-                    暂无动态
-                  </div>
-                </div>
-              </el-card>
+              <user-news-card :articles="articles.slice(0,5)"/>
             </div>
           </div>
         </el-col>
@@ -116,6 +89,7 @@
 
 <script>
 import articleCard from "./article-card";
+import userNewsCard from "./user-news-card"
 import { mapActions } from "vuex";
 export default {
   name: "user-card",
@@ -126,7 +100,8 @@ export default {
     }
   },
   components: {
-    "article-card": articleCard
+    "article-card": articleCard,
+    "user-news-card":userNewsCard
   },
   created() {
     this.getUserInfo();
@@ -231,7 +206,9 @@ export default {
 .empty-list {
   @include empty(50px);
 }
-
+.empty-article-list {
+  @include empty(50%);
+}
 .user-card {
   width: 80%;
   margin: 0 auto;
@@ -310,7 +287,7 @@ export default {
         .article-title {
           margin-top: 5px;
           a {
-            @include word-ellipsis(1);
+            @include word-ellipsis;
             &:hover {
               text-decoration: underline;
             }
