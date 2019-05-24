@@ -66,8 +66,8 @@
           <el-col :span="4">
             <el-button v-if="comment.commentUser!=user.userId"
                        :type="isSubscribe(comment.commentUser)?'info':'success'"
-                       :disabled="isSubscribe(comment.commentUser)"
                        style="float:right;"
+                       @click="onToggleSubscribe(comment.commentUser,isSubscribe(comment.commentUser))"
                        size="small"
                        :icon="isSubscribe(comment.commentUser)?'':'el-icon-plus'">
               {{isSubscribe(comment.commentUser)?'已关注':'关注'}}
@@ -196,8 +196,10 @@ export default {
     ...mapActions([
       "DO_ARTICLE_COMMENT",
       "DO_ARTICLE_COMMENT_REPLY",
+      "DO_SUBSCRIBE_USER",
       "GET_ARTICLE_COMMENTS",
-      "GET_USER_SUBSCRIBERS"
+      "GET_USER_SUBSCRIBERS",
+      "DO_REMOVE_SUBSCRIBE"
     ]),
     // 刷新评论
     async flushComments() {
@@ -272,11 +274,25 @@ export default {
       }
       callback();
     },
+    // 是否关注
     isSubscribe(userId) {
       for (const subscriber of this.$store.state.subscribers) {
         if (subscriber.userId == userId) return true;
       }
       return false;
+    },
+    // 关注用户
+    onToggleSubscribe(userId,isSubscribe){
+      if (!isSubscribe) {
+        // 之前是未点赞状态
+        this.DO_SUBSCRIBE_USER(userId).then(data => {
+          this.$message.success("关注成功!");
+        });
+      } else {
+        this.DO_REMOVE_SUBSCRIBE(userId).then(data => {
+          this.$message.success("取消关注成功!");
+        });
+      }
     }
   },
   computed: {
