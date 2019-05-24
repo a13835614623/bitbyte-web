@@ -11,7 +11,7 @@ let DO_SUBSCRIBE_USER = async ({ commit, state }, subscriberId) => {
 };
 // 取消关注
 let DO_REMOVE_SUBSCRIBE = async ({ commit, state }, subscriberId) => {
-  let { data } = await axios.get(
+  let { data } = await axios.post(
     `/subscribe/remove?userId=${
       state.user.userId
     }&subscriberId=${subscriberId}`,
