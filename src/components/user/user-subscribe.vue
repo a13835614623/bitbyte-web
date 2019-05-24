@@ -95,11 +95,7 @@ li {
 }
 // 空关注
 .empty-subscribe {
-  width: 120px;
-  color: $text1;
-  height: 100%;
-  line-height: 500px;
-  margin: 0 auto;
+  @include empty(250px);
 }
 // 滚动条
 .el-scrollbar__wrap {
