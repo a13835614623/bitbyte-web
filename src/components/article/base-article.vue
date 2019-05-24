@@ -13,7 +13,7 @@ export default {
 <style scoped>
 .base-article {
   margin: 0 auto;
-  width: 60%;
+  width: 80%;
   min-height: 100%;
 }
 </style>
