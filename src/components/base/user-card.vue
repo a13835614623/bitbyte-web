@@ -11,7 +11,7 @@
           <article-card v-for="(article,index) in articles"
                         :article="article"
                         :key="index" />
-          <div class="empty-article-list">
+          <div v-if="!articles[0]" class="empty-article-list">
             此用户暂未发表博客
           </div>
         </el-col>
