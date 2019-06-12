@@ -1,38 +1,39 @@
 // scss全局变量
-$blue:#409EFF;
-$success:#67C23A;
-$warning:#E6A23C;
-$danger:#F56C6C;
-$info:#909399;
-$text1:#303133;
-$text2:#606266;
-$text3:#909399;
-$text4:#C0C4CC;
-$border1:#DCDFE6;
-$border2:#E4E7ED;
-$border3:#EBEEF5;
-$border4:#F2F6FC;
+$blue: #409eff;
+$success: #67c23a;
+$warning: #e6a23c;
+$danger: #f56c6c;
+$info: #909399;
+$text1: #303133;
+$text2: #606266;
+$text3: #909399;
+$text4: #c0c4cc;
+$border1: #dcdfe6;
+$border2: #e4e7ed;
+$border3: #ebeef5;
+$border4: #f2f6fc;
 // 线段
 .line {
   width: 100%;
   margin: 10px 0;
   height: 1px;
-  background-color:$border1;
+  background-color: $border1;
 }
 // 说明文字
-.caption{
+.caption {
   color: $text3;
   font-size: 0.9em;
 }
-h1{
+h1 {
   font-weight: 500;
 }
 // 链接
-@mixin link-colors($normal, $hover, $visited) {
+@mixin link-colors($normal, $hover) {
   text-decoration: none;
   color: $text1;
-  &:hover { color: $hover;}
-  &:visited { color: $visited; }
+  &:hover {
+    color: $hover;
+  }
 }
 // 空白文字样式
 @mixin empty($margin) {
@@ -40,13 +41,13 @@ h1{
   text-align: center;
   margin: $margin 0;
 }
-.empty{
+.empty {
   @include empty(300px);
 }
-a{
-  @include link-colors($text1,$blue,$text1);
+a {
+  @include link-colors($text1, $blue);
 }
-.h3{
+.h3 {
   font-size: 1.17em;
   margin-block-start: 1em;
   margin-block-end: 1em;
@@ -55,9 +56,11 @@ a{
   font-weight: bold;
 }
 // 超过部分省略号
-@mixin word-ellipsis($line) {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: $line;
-  overflow: hidden;
+@mixin word-ellipsis {
+  // line-clamp: $line;
+  display: inline-block;
+  width: 100%;
+  overflow: hidden; /* 让超出边框的文本隐藏起来*/
+  text-overflow: ellipsis; /* 让超出边框边缘的的文本显示成...*/
+  white-space: nowrap; /*让多出边框的文本不换行，在同一行显示*/
 }
