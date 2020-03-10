@@ -49,6 +49,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: "user-info",
   data() {
@@ -117,6 +119,8 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['GET_USER_INFO']),
+
     // 保存并提交用户信息
     onSaveUserInfo() {
       let userInfo = {
@@ -135,18 +139,19 @@ export default {
           });
         })
         .catch(err => {
-          this.$message.error("更新异常！\r\n" + err);
+          this.$message.error("更新异常!");
+          console.error(err)
         });
     },
     // 获取用户信息
     getOldUser() {
-      this.$store
-        .dispatch("GET_USER_INFO")
+      this.GET_USER_INFO()
         .then(data => {
           this.oldUser = data;
         })
         .catch(err => {
-          this.$message.error("状态异常:" + err.message);
+          this.$message.error("服务器状态异常:");
+          console.error(err)
         });
     }
   },

@@ -55,7 +55,7 @@ export default {
         },
         {
           title: "消息管理",
-          path: "/user/message"
+          path: "/user/notice"
         },
         {
           title: "我的足迹",

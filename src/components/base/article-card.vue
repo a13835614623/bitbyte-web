@@ -8,7 +8,9 @@
         <router-link :to="'/article/view/'+article.articleId">
           <b>{{article.articleTitle}}</b>
         </router-link>
+        <!-- 分区 -->
         <el-tag type="success"
+                class="hidden-sm-and-down"
                 style="float:right;">{{partMap[article.articlePart]}}</el-tag>
       </div>
       <!-- 文章介绍 -->
@@ -17,7 +19,7 @@
       <el-row class="article-info">
         <!-- 作者头像 -->
         <router-link :to="'/ucard/'+article.articleUser">
-          <img :src="'/api/user/pic?userPic='+article.userPic"
+          <img :src="article.userPic"
                class="article-userpic">
         </router-link>
         <!-- 作者昵称 -->
@@ -31,7 +33,7 @@
 </template>
 
 <script>
-import { PARTS_PROP_MAP } from "@/util/constant.js";
+import { ARTICLE_PART_MAP } from "@/util/constant.js";
 
 export default {
   name: "article-card",
@@ -48,7 +50,7 @@ export default {
         paddingTop: "10px",
         paddingBottom: "10px"
       },
-      partMap: PARTS_PROP_MAP
+      partMap: ARTICLE_PART_MAP
     };
   }
 };

@@ -51,7 +51,7 @@
 
 <script>
 import { mapActions } from "vuex";
-import { PARTS_PROP_MAP } from "@/util/constant.js";
+import { ARTICLE_PART_MAP } from "@/util/constant.js";
 import articleCard from "./base/article-card";
 export default {
   name: "main-search",
@@ -74,13 +74,13 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["GET_ARTICLE_QUERY"]),
+    ...mapActions(["GET_ARTICLE_LIST"]),
     onSearch(searchText) {
       if (!searchText) {
         this.$message.warning("搜索内容不能为空!");
         return;
       }
-      this.GET_ARTICLE_QUERY({
+      this.GET_ARTICLE_LIST({
         article:{
           articleTitle: searchText
         },

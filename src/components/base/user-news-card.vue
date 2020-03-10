@@ -14,7 +14,7 @@
       <div v-for="(article,index) in articles"
            class="article-item"
            :key="index">
-        <img :src="'/api/user/pic?userPic='+article.userPic"
+        <img :src="article.userPic"
              class="article-userpic">
         <!-- 作者名称 -->
         <router-link :to="'/ucard/'+article.articleUser"

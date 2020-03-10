@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Cookies from 'js-cookie';
+import { IS_LOGIN } from '@/util/constant';
 import { Message } from 'element-ui';
-const home = () => import('@/views/home');
+const mainContent = () => import('@/components/main-content');
 const login = () => import('@/components/user-login');
 const userCard = () => import('@/components/base/user-card');
 const register = () => import('@/components/user-register');
@@ -15,7 +15,7 @@ const baseUser = () => import('@/components/user/base-user');
 const userInfo = () => import('@/components/user/user-info');
 const userPassword = () => import('@/components/user/user-password');
 const userSafe = () => import('@/components/user/user-safe');
-const userMessage = () => import('@/components/user/user-message');
+const userNotice = () => import('@/components/user/user-notice');
 const userArtcile = () => import('@/components/user/user-article');
 const userSubscribe = () => import('@/components/user/user-subscribe');
 const userRecord = () => import('@/components/user/user-record');
@@ -28,11 +28,11 @@ const router = new Router({
     // 主页
     {
       path: '/',
-      component: home,
+      component: mainContent,
     },
     // 主页
     {
-      path: '/home',
+      path: '/mainContent',
       redirect: '/',
     },
     // 分区
@@ -44,10 +44,10 @@ const router = new Router({
     },
     // 用户卡片
     {
-      path:'/ucard/:userId',
-      name:'user-card',
-      props:true,
-      component:userCard
+      path: '/ucard/:userId',
+      name: 'user-card',
+      props: true,
+      component: userCard,
     },
     // 登录
     {
@@ -117,9 +117,9 @@ const router = new Router({
           component: userSafe,
         },
         {
-          path: 'message',
-          name: 'user-message',
-          component: userMessage,
+          path: 'notice',
+          name: 'user-notice',
+          component: userNotice,
         },
         {
           path: 'article',
@@ -146,9 +146,11 @@ const router = new Router({
   ],
 });
 router.beforeEach((to, from, next) => {
-  let token = Cookies.get('token');
   // 如果尚未登录，而且访问的是带user的路径，则跳转到登录界面
-  if (!token && (to.path.startsWith('/user') || to.path == '/article/write')) {
+  if (
+    !IS_LOGIN() &&
+    (to.path.startsWith('/user') || to.path == '/article/write')
+  ) {
     Message.warning('您尚未登录，请先登录!');
     next('/login');
   } else {

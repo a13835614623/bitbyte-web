@@ -1,54 +1,60 @@
 import axios from 'axios';
-import Cookies from 'js-cookie';
-import md5 from 'crypto-js/md5';
-import {
-  Message,
-  MessageBox
-} from 'element-ui';
+import { LOCAL_DATA_MAP, USER_PIC_PRE_URL, BASE_URL } from '@/util/constant';
+import { MessageBox } from 'element-ui';
 import router from '@/router';
-axios.defaults.baseURL = '/api';
+axios.defaults.baseURL = BASE_URL;
+axios.$USER_PIC_PRE_URL = USER_PIC_PRE_URL;
+axios.$LOCAL_DATA_MAP = LOCAL_DATA_MAP;
+var msgBox = false;
+
+function closeMsgBox() {
+  msgBox = false;
+}
+function showMsgBox() {
+  msgBox = true;
+}
 // 请求拦截器
 axios.interceptors.request.use(
   config => {
     // 获取token
-    const AUTH_TOKEN = Cookies.get('token');
-    const USER_ID = Cookies.get('userId');
-    if (AUTH_TOKEN && USER_ID) {
-      const TIMESTAMP = new Date().getTime();
-      const RANDOM = Math.round(Math.random() * 100000000);
+    const AUTH_TOKEN = localStorage.getItem(LOCAL_DATA_MAP.token);
+    if (AUTH_TOKEN) {
       config.headers.common['Authorization'] = AUTH_TOKEN;
-      config.headers.common['Timestamp'] = TIMESTAMP;
-      config.headers.common['Random'] = RANDOM;
-      config.headers.common['UserId'] = USER_ID;
-      config.headers.common['Signature'] = md5(
-        AUTH_TOKEN + USER_ID + TIMESTAMP + RANDOM,
-      );
     }
     return config;
   },
   error => {
-    Message.error('未知错误!');
-    console.log(error)
+    console.error(error);
   },
 );
 axios.interceptors.response.use(
   res => {
-    switch (res.data.status) {
-      case '101': //验证失败
-        console.log(res.data.message);
-        Message.error('验证失败');
-        break;
-      case '102': // 验证信息过期
-        MessageBox.confirm('验证信息过期，点击确定重新登录').then(action => {
-          router.push('/login');
-        });
-        break;
+    let authorization = res.headers.Authorization || res.headers.authorization;
+    if (authorization) {
+      localStorage.setItem(LOCAL_DATA_MAP.token, authorization);
     }
     return res;
   },
   error => {
-    Message.error('未知错误!');
-    console.log(error)
+    let { response, request } = error;
+    let url = request.responseURL;
+    console.log(url);
+    switch (response.status) {
+      case 401:
+        if (msgBox || url.indexOf('/api/login') != -1) return;
+        showMsgBox();
+        MessageBox.confirm('验证信息失效，点击确定重新登录')
+          .then(() => {
+            closeMsgBox();
+            router.push('/login');
+          })
+          .catch(() => {
+            closeMsgBox();
+          });
+        break;
+      default:
+        break;
+    }
   },
 );
 export default axios;

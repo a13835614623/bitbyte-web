@@ -22,7 +22,7 @@
                      shadow="hover">
               <!-- card body -->
               <!-- 作者头像 -->
-              <img :src="'/api/user/pic?userPic='+user.userPic"
+              <img :src="user.userPic"
                    class="user-pic">
               <div class="user-name">
                 {{user.userName}}
@@ -148,12 +148,12 @@ export default {
   methods: {
     ...mapActions([
       "GET_USER_INFO",
-      "GET_ARTICLE_QUERY",
+      "GET_ARTICLE_LIST",
       "GET_USER_SUBSCRIBERS",
       "GET_USER_FANS"
     ]),
     getUserInfo() {
-      this.GET_USER_INFO(this.userId)
+      this.GET_USER_INFO()
         .then(user => {
           this.user = user;
         })
@@ -163,7 +163,7 @@ export default {
         });
     },
     getArticles() {
-      this.GET_ARTICLE_QUERY({
+      this.GET_ARTICLE_LIST({
         article: {
           articleUser: this.userId
         },

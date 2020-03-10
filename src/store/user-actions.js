@@ -1,187 +1,121 @@
-import Cookies from 'js-cookie';
 import axios from '@/store/axios';
 // 异步获取用户信息
-let GET_USER_INFO = async ({
-  commit,
-  state
-},userId='') => {
-  let isOwner = !userId;
-  if(isOwner){
-    userId = Cookies.get('userId');
-  }
-  let {
-    data
-  } = await axios.post(`/user/get?userId=${userId}&isOwner=${isOwner}`);
-  if (!data || data.status != 'success'){
+let GET_USER_INFO = async ({ commit, state }) => {
+  let userId = state.user.userId;
+  if (!userId) return;
+  let { data } = await axios.get(`/user/get/${userId}`);
+  if (data.status != 'success') {
     throw new Error('[GET_USER_INFO]服务器状态异常!');
   }
-  if(isOwner){
-    let token = Cookies.get('token');
-    // 提交更改
-    commit('saveUser', {
-      user: data.data,
-      token: token,
-    });
-  }
-  console.log('from store.js:用户信息更新成功!');
+  data.data.userPic = axios.$USER_PIC_PRE_URL + data.data.userPic;
+  commit('saveUser', {
+    user: data.data,
+  });
+  console.log('from store.js:用户信息获取成功!');
   return data.data;
 };
 // 用户登录
-let DO_USER_LOGIN = async ({
-  commit
-}, userInfo) => {
-  let {
-    data
-  } = await axios.post('/user/login', userInfo);
-  if (!data || data.status == 'error')
-    throw new Error('[DO_USER_LOGIN]服务器状态异常!');
+let DO_USER_LOGIN = async ({ commit }, { username, password }) => {
+  let { data } = await axios.post(
+    `/login?username=${username}&password=${password}`,
+  );
+  if (data.status == 'error') throw new Error('[DO_USER_LOGIN]服务器状态异常!');
   else if (data.status == 'success') {
-    //设置cookie
-    let cookieConfig = {
-      expires: 7
-    };
-    Cookies.set('token', data.token, cookieConfig);
-    Cookies.set('userId', data.data.userId, cookieConfig);
-    // 存储用户状态
     commit('saveUser', {
       user: data.data,
-      token: data.token,
     });
     console.log('from store.js:用户登录成功!');
   }
   return data;
 };
 // 用户注册
-let DO_USER_REGISTER = async ({
-  commit
-}, user) => {
-  let {
-    data
-  } = await axios.post('/user/register', user);
-  if (!data){
-    throw new Error(data.status == 'warning'?'手机号或邮箱已经被注册!':'[DO_USER_REGISTER]服务器状态异常!');
+let DO_USER_REGISTER = async ({ commit }, user) => {
+  let { data } = await axios.post('/user/register', user);
+  if (!data) {
+    throw new Error(
+      data.status == 'warning'
+        ? '手机号或邮箱已经被注册!'
+        : '[DO_USER_REGISTER]服务器状态异常!',
+    );
   }
   return data;
 };
 // 更新用户信息
-let DO_USER_UPDATE = async ({
-  commit
-}, userInfo) => {
-  let {
-    data
-  } = await axios.post('/user/info/update', userInfo);
-  if (!data || data.status == 'error')
+let DO_USER_UPDATE = async ({ commit }, userInfo) => {
+  let { data } = await axios.post('/user/info/update', userInfo);
+  if (data.status == 'error')
     throw new Error('[DO_USER_UPDATE]服务器状态异常!');
   console.log('from store.js:用户信息更新成功!');
   return data;
 };
 // 更新密码
-let DO_USER_PASSWORD_UPDATE = async ({
-  commit
-}, postData) => {
-  let {
-    data
-  } = await axios.post('/user/password/update', postData);
-  if (!data || data.status == 'error')
+let DO_USER_PASSWORD_UPDATE = async ({ commit,state }, password) => {
+  let { data } = await axios.post(`/user/password/update?userId=${state.user.userId}&password=${password}`);
+  if (data.status == 'error')
     throw new Error('[DO_USER_PASSWORD_UPDATE]服务器状态异常!');
   console.log('from store.js:用户密码更新成功!');
   return data;
 };
 // 验证密码
-let DO_USER_PASSWORD_VALIDATE = async ({
-  commit
-}, postData) => {
-  let {
-    data
-  } = await axios.post('/user/password/update', postData);
-  if (!data || data.status == 'error')
+let DO_USER_PASSWORD_VALIDATE = async ({ commit,state }, password) => {
+  let { data } = await axios.post(`/user/password/validate?userId=${state.user.userId}&password=${password}`);
+  if (data.status == 'error')
     throw new Error('[DO_USER_PASSWORD_UPDATE]服务器状态异常!');
   console.log('from store.js:用户密码验证完毕!');
   return data;
 };
 // 获取用户关注列表
-let GET_USER_SUBSCRIBERS = async ({
-  commit,
-  state
-},userId=Cookies.get('userId')) => {
-  let {
-    data
-  } = await axios.post(
-    '/user/subscribe?userId=' +userId ,
-  );
-  if (!data || data.status == 'error')
+let GET_USER_SUBSCRIBERS = async (
+  { commit, state },
+  userId = state.user.userId,
+) => {
+  let { data } = await axios.post('/user/subscribe?userId=' + userId);
+  if (data.status == 'error')
     throw new Error('[GET_USER_SUBSCRIBERS]服务器状态异常！');
   data.data = data.data.map(user => {
-    user.userPic = '/api/user/pic?userPic=' + user.userPic;
+    user.userPic = axios.$USER_PIC_PRE_URL + user.userPic;
     return user;
   });
-  if(userId==state.user.userId){
-    // 提交更改，保存用户关注列表
-    await commit('saveSubscribers', data.data);
-    console.log('from store.js:用户关注列表更新成功!');
-  }
+  console.log('from store.js:用户关注列表更新成功!');
   return data;
 };
 // 获取用户粉丝列表
-let GET_USER_FANS = async ({
-  commit,
-  state
-},userId=Cookies.get('userId')) => {
-  let {
-    data
-  } = await axios.post(
-    '/user/fans?userId=' +userId ,
-  );
-  if (!data || data.status == 'error')
+let GET_USER_FANS = async ({ commit, state }, userId = state.user.userId) => {
+  let { data } = await axios.post('/user/fans?userId=' + userId);
+  if (data.status == 'error')
     throw new Error('[GET_USER_FANS]服务器状态异常！');
   data.data = data.data.map(user => {
-    user.userPic = '/api/user/pic?userPic=' + user.userPic;
+    user.userPic = axios.$USER_PIC_PRE_URL + user.userPic;
     return user;
   });
   return data;
 };
 // 获取用户最新关注的用户的五篇文章
-let GET_USER_LATEST_ARTICLES = async ({
-  commit,
-  state
-},userId=Cookies.get('userId')) => {
-  let {
-    data
-  } = await axios.post(
-    '/article/latest?userId=' +userId ,
-  );
-  if (!data || data.status == 'error')
+let GET_USER_LATEST_ARTICLES = async (
+  { commit, state },
+  userId = state.user.userId,
+) => {
+  let { data } = await axios.post('/article/latest?userId=' + userId);
+  if (data.status == 'error')
     throw new Error('[GET_USER_LATEST_ARTICLES]服务器状态异常！');
-  data.data = data.data.map(user => {
-    user.userPic = '/api/user/pic?userPic=' + user.userPic;
-    return user;
+  data.data = data.data.map(article => {
+    article.userPic = axios.$USER_PIC_PRE_URL + article.userPic;
+    return article;
   });
   return data;
 };
 // 获取当前用户的文章列表
-let GET_USER_ARTICLES = async ({
-  commit,
-  state
-}) => {
-  let {
-    data
-  } = await axios.post(`/user/article?userId=${state.user.userId}`);
-  if (!data || data.status == 'error')
+let GET_USER_ARTICLES = async ({ commit, state }) => {
+  let { data } = await axios.get(`/article/user/get/${state.user.userId}`);
+  if (data.status == 'error')
     throw new Error('[GET_USER_ARTICLES]服务器状态异常!');
-  // 提交更改，更新用户文章列表
-  await commit('saveArticles', data.data);
   console.log('from store.js:用户文章列表更新成功!');
-  return data.data.length;
+  return data;
 };
 // 获取当前用户的操作记录
-let GET_USER_RECORD = async ({
-  commit,
-  state
-}) => {
-  let {
-    data
-  } = await axios.post(`/user/record?userId=${state.user.userId}`);
-  if (!data || data.status == 'error')
+let GET_USER_RECORD = async ({ commit, state }) => {
+  let { data } = await axios.get(`/record/user/get/${state.user.userId}`);
+  if (data.status == 'error')
     throw new Error('[GET_USER_RECORD]服务器状态异常!');
   console.log('from store.js:用户操作记录获取成功!');
   return data;

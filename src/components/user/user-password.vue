@@ -40,12 +40,8 @@ export default {
     let vm = this;
     // 校验旧密码
     let validateOldPwd = (rule, value, callback) => {
-      let postData = {
-        userMobile: this.$store.state.user.userMobile,
-        userPassword: md5(value).toString()
-      };
       this.$store
-        .dispatch("DO_USER_PASSWORD_VALIDATE", postData)
+        .dispatch("DO_USER_PASSWORD_VALIDATE", md5(value).toString())
         .then(data => {
           if (data.status == "warning") {
             callback("原密码错误");
@@ -73,7 +69,6 @@ export default {
       if (!value) {
         return callback(new Error("确认密码不能为空"));
       } else if (value != this.password.new) {
-        console.log(this.user.password);
         return callback(new Error("两次密码不一致"));
       }
       callback();
@@ -99,10 +94,6 @@ export default {
       let vm = this;
       this.$refs["password"].validate(valid => {
         if (valid) {
-          let postData = {
-            userId: this.$store.state.user.userId,
-            userPassword: md5(vm.password.new).toString()
-          };
           const loading = vm.$loading({
             lock: true,
             text: "正在提交",
@@ -110,13 +101,14 @@ export default {
             background: "rgba(0, 0, 0, 0.7)"
           });
           this.$store
-            .dispatch("DO_USER_PASSWORD_UPDATE", postData)
+            .dispatch("DO_USER_PASSWORD_UPDATE", md5(vm.password.new).toString())
             .then(data => {
               vm.showMessage(data.message, data.status);
               loading.close();
             })
             .catch(error => {
-              vm.showMessage("更新异常!\r\n" + error.message, "error");
+              vm.showMessage("更新异常!", "error");
+              console.error(error);
               loading.close();
             });
         }

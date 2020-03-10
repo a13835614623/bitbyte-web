@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { PARTS_PROP_MAP } from "@/util/constant.js";
+import { ARTICLE_PART_MAP } from "@/util/constant.js";
 import articleCard from "./base/article-card";
 
 export default {
@@ -62,7 +62,7 @@ export default {
         paddingTop: "10px",
         paddingBottom: "10px"
       },
-      partMap: PARTS_PROP_MAP
+      partMap: ARTICLE_PART_MAP
     };
   },
   components: {
@@ -91,7 +91,7 @@ export default {
     },
     query(queryOptions) {
       this.$store
-        .dispatch("GET_ARTICLE_QUERY", queryOptions?queryOptions:this.queryOptions)
+        .dispatch("GET_ARTICLE_LIST", queryOptions?queryOptions:this.queryOptions)
         .then(data => {
           this.total=data.more;
           this.currentArticles = data.data;

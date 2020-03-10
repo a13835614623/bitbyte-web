@@ -1,28 +1,27 @@
 <template>
   <div class="article-comment">
     <!-- 用户头像以及评论输入框 -->
+    <div style="display:flex;justify-content:space-between;">
+      <img class="user-pic"
+           :src="userPicPath">
+      <el-form :model="inputText"
+               ref="commentText"
+               style="width:100%;margin-left:5px;"
+               label-width="0">
+        <el-form-item prop="commentText"
+                      :rules="{validator:validateCommentText,trigger:['change']}">
+          <el-input v-model="inputText.commentText"
+                    type="textarea"
+                    :rows="3"
+                    placeholder="写评论..."></el-input>
+        </el-form-item>
+      </el-form>
+    </div>
     <el-row>
-      <el-col :span="2">
-        <img class="user-pic"
-             :src="userPicPath">
-      </el-col>
-      <el-col :span="22">
-        <el-form :model="inputText"
-                 ref="commentText"
-                 label-width="0">
-          <el-form-item prop="commentText"
-                        :rules="{validator:validateCommentText,trigger:['change']}">
-            <el-input v-model="inputText.commentText"
-                      type="textarea"
-                      :rows="3"
-                      placeholder="写评论..."></el-input>
-          </el-form-item>
-        </el-form>
-      </el-col>
       <!-- 发表评论 -->
       <el-button type="primary"
-                 style="float:right;"
-                 @click="onPublishComment">
+                style="float:right;"
+                @click="onPublishComment">
         发表评论
       </el-button>
     </el-row>
@@ -34,51 +33,41 @@
     <!-- 评论区 -->
     <div v-if="commentList[0]">
       <!-- 评论列表 -->
-      <div style="margin:30px 0;"
+      <div class="comment"
            v-for="(comment,index) in commentList"
            :key="index">
-        <el-row>
+        <div>
           <!-- 评论的用户头像 -->
-          <el-col :span="2">
-            <router-link :to="'/ucard/'+comment.commentUser">
-              <img v-if="comment.commentUserPic"
-                   class="user-pic"
-                   :src="'/api/user/pic?userPic='+comment.commentUserPic" />
-            </router-link>
-          </el-col>
-          <!-- 评论用户信息 -->
-          <el-col :span="18">
-            <router-link :to="'/ucard/'+comment.commentUser">
-              <!-- 昵称 -->
-              <span class="comment-username">{{comment.commentUserName}}</span>
-            </router-link>
+          <router-link :to="'/ucard/'+comment.commentUser">
+            <img v-if="comment.commentUserPic"
+                 class="user-pic"
+                 :src="comment.commentUserPic" />
+          </router-link>
+          <!-- 用户昵称和评论内容 -->
+          <div class="comment-name-content">
+            <!-- 昵称 -->
+            <div class="comment-username">
+              <router-link :to="'/ucard/'+comment.commentUser">
+                {{comment.commentUserName}}
+              </router-link>
+            </div>
+            <!-- 评论内容 -->
             <div class="comment-content">
               {{comment.commentContent}}
             </div>
-            <div class="comment-info">
-              <span>{{comment.commentFloor}}楼</span>
-              <span>{{new Date(comment.commentTime).toLocaleString()}}</span>
-              <el-button type="text"
-                         @click="onShowReplyInput(index,comment.commentUser,comment.commentUserName,false)">回复</el-button>
-            </div>
-          </el-col>
-          <!-- 关注按钮 -->
-          <el-col :span="4">
-            <el-button v-if="comment.commentUser!=user.userId"
-                       :type="isSubscribe(comment.commentUser)?'info':'success'"
-                       style="float:right;"
-                       @click="onToggleSubscribe(comment.commentUser,isSubscribe(comment.commentUser))"
-                       size="small"
-                       :icon="isSubscribe(comment.commentUser)?'':'el-icon-plus'">
-              {{isSubscribe(comment.commentUser)?'已关注':'关注'}}
-            </el-button>
-          </el-col>
-        </el-row>
+          </div>
+          <!-- 楼层以及发送时间，回复按钮 -->
+          <div class="comment-info">
+            <span>{{comment.commentFloor}}楼</span>
+            <span>{{new Date(comment.commentTime).toLocaleString()}}</span>
+            <el-button type="text"
+                       @click="onShowReplyInput(index,comment.commentUser,comment.commentUserName,false)">回复</el-button>
+          </div>
+        </div>
         <!-- 评论回复区 -->
         <el-row v-if="comment">
-          <el-col :span="22"
-                  style="padding-left:10px;border-left:2px solid #dcdfe6;"
-                  :offset="2">
+          <el-col :span="24"
+                  class="comment-reply">
             <div v-if="comment.commentReplyList">
               <!-- 评论回复列表 -->
               <el-row v-for="reply in comment.commentReplyList"
@@ -146,8 +135,12 @@
           </el-col>
         </el-row>
       </div>
+      <div class="end">
+        没有更多了...
+      </div>
     </div>
-    <div v-else style="text-align:center;padding:10px 0;">
+    <div v-else
+         style="text-align:center;padding:50px 0;">
       <span class="caption">暂无评论</span>
     </div>
   </div>
@@ -185,21 +178,17 @@ export default {
   },
   async created() {
     try {
-      await this.GET_USER_SUBSCRIBERS();
       await this.flushComments();
     } catch (error) {
-      console.log(error)
-      this.$message.error("获取用户关注列表出错");
+      console.log(error);
+      this.$message.error("刷新评论列表出错");
     }
   },
   methods: {
     ...mapActions([
       "DO_ARTICLE_COMMENT",
       "DO_ARTICLE_COMMENT_REPLY",
-      "DO_SUBSCRIBE_USER",
       "GET_ARTICLE_COMMENTS",
-      "GET_USER_SUBSCRIBERS",
-      "DO_REMOVE_SUBSCRIBE"
     ]),
     // 刷新评论
     async flushComments() {
@@ -221,7 +210,6 @@ export default {
     },
     // 发表评论
     onPublishComment() {
-      console.log("this.inputText.commentText:" + this.inputText.commentText);
       this.DO_ARTICLE_COMMENT({
         articleId: this.articleId,
         commentContent: this.inputText.commentText
@@ -264,7 +252,6 @@ export default {
     },
     // 校验评论内容
     validateCommentText(rule, value, callback) {
-      console.log("评论:" + value);
       if (!value) {
         callback("评论内容不能为空!");
       } else if (value[0] == "@") {
@@ -274,28 +261,11 @@ export default {
       }
       callback();
     },
-    // 是否关注
-    isSubscribe(userId) {
-      for (const subscriber of this.$store.state.subscribers) {
-        if (subscriber.userId == userId) return true;
-      }
-      return false;
-    },
-    // 关注用户
-    onToggleSubscribe(userId,isSubscribe){
-      if (!isSubscribe) {
-        // 之前是未点赞状态
-        this.DO_SUBSCRIBE_USER(userId).then(data => {
-          this.$message.success("关注成功!");
-        });
-      } else {
-        this.DO_REMOVE_SUBSCRIBE(userId).then(data => {
-          this.$message.success("取消关注成功!");
-        });
-      }
-    }
   },
   computed: {
+    isLogin() {
+      return this.$store.getters.isLogin;
+    },
     user() {
       return this.$store.state.user;
     },
@@ -311,40 +281,55 @@ export default {
 .article-comment {
   margin-top: 20px;
 }
-a,
-a:hover,
-a:link {
-  color: $text1;
-  text-decoration: none;
-}
 $userPicWidth: 40px;
+$picRightPadding: 20px;
 // 用户头像
 .user-pic {
   display: inline-block;
-  vertical-align: middle;
   width: $userPicWidth;
   height: $userPicWidth;
   border: 1px solid $blue;
   border-radius: $userPicWidth/2;
 }
-// 评论用户名
-.comment-username {
-  font: {
-    size: 0.9em;
-    weight: bold;
+.comment {
+  position: relative;
+  margin: 30px 0;
+  .comment-name-content {
+    display: inline-block;
+    width: 200px;
+    height: 50px;
+    padding-left: $picRightPadding;
+    // 评论用户名
+    .comment-username {
+      font: {
+        size: 0.9em;
+        weight: bold;
+      }
+    }
+    // 评论内容
+    .comment-content {
+      padding-top: 5px;
+    }
+  }
+  // 评论相关信息,包括楼层,评论时间等
+  .comment-info {
+    margin-left: $userPicWidth + $picRightPadding;
+    margin-top: 5px;
+    font-size: 0.8em;
+    color: $text3;
+    span {
+      margin-right: 20px;
+    }
+  }
+  .comment-reply {
+    margin-left: $userPicWidth + $picRightPadding;
+    padding-left: $picRightPadding;
+    border-left: 2px solid #dcdfe6;
   }
 }
-// 评论内容
-.comment-content {
-  margin-top: 5px;
-}
-// 评论相关信息,包括楼层,评论时间等
-.comment-info {
-  margin-top: 5px;
-  font-size: 0.8em;
-  color: $text3;
-  span {
-    margin-right: 20px;
-  }
+.end {
+  @extend .caption;
+  text-align: center;
+  margin: 20px 0;
 }
 </style>

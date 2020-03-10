@@ -1,67 +1,88 @@
 <template>
   <div class="nav-header">
-    <el-row>
+    <el-row type="flex" justify="center">
       <!-- logo -->
-      <el-col :span="3"
-              :offset="1">
+      <el-col :xs="11" :sm="6" :md="4" :lg="3" :xl="3">
         <div class="logo">
           <router-link to="/">
-            <img src="../assets/logo.png"
-                 alt="BitByte"
-                 height="36">
+            <img src="../assets/logo.png" alt="BitByte" height="36" />
           </router-link>
         </div>
       </el-col>
       <!-- 导航 -->
-      <el-col :span="20">
-        <el-menu mode="horizontal"
-                 @select="handleSelect"
-                 active-text-color="#409EFF"
-                 :default-active="activeIndex"
-                 :unique-opened="true">
+      <el-col :lg="11" :xl="9" class="mid">
+        <el-menu
+          mode="horizontal"
+          @select="handleSelect"
+          active-text-color="#409EFF"
+          :default-active="activeIndex"
+          :unique-opened="true"
+        >
           <!-- 算法相关 -->
-          <el-menu-item v-for="(item,index) in menus"
-                        :index="item.path"
-                        @click="dispatch(item.path)"
-                        :key="index">
-            {{item.title}}
+          <el-menu-item
+            v-for="(item, index) in menus"
+            :index="item.path"
+            @click="dispatch(item.path)"
+            :key="index"
+          >
+            {{ item.title }}
           </el-menu-item>
+        </el-menu>
+      </el-col>
+      <el-col :xs="11" :sm="11" :md="15" :lg="9" :xl="7">
+        <el-menu
+          mode="horizontal"
+          @select="handleSelect"
+          active-text-color="#409EFF"
+          :default-active="activeIndex"
+          :unique-opened="true"
+        >
           <!-- 搜索框 -->
-          <el-menu-item class="search"
-                        index="/search">
-            <el-input v-model="searchText"
-                      placeholder="搜索博客"
-                      @keyup.enter.native="dispatch('/search?searchText='+searchText)"
-                      clearable>
-              <i slot="suffix"
-                 @click="dispatch('/search?searchText='+searchText)"
-                 class="el-input__icon el-icon-search"></i>
+          <el-menu-item class="search hidden-xs-and-down" index="/search">
+            <el-input
+              v-model="searchText"
+              placeholder="搜索博客"
+              @keyup.enter.native="dispatch('/search?searchText=' + searchText)"
+              clearable
+            >
+              <i
+                slot="suffix"
+                @click="dispatch('/search?searchText=' + searchText)"
+                class="el-input__icon el-icon-search"
+              ></i>
             </el-input>
           </el-menu-item>
           <!-- 登录 -->
-          <el-menu-item v-if="!isLogin"
-                        index="/login"
-                        @click="dispatch('/login')">
+          <el-menu-item
+            v-if="!isLogin"
+            index="/login"
+            @click="dispatch('/login')"
+          >
             <el-button type="text">登&nbsp;录</el-button>
           </el-menu-item>
           <!-- 注册 -->
-          <el-menu-item v-if="!isLogin"
-                        index="/register"
-                        @click="dispatch('/register')"
-                        style="padding-left:20px;">
+          <el-menu-item
+            v-if="!isLogin"
+            index="/register"
+            @click="dispatch('/register')"
+            style="padding-left:20px;"
+          >
             <el-button type="text">注&nbsp;册</el-button>
           </el-menu-item>
           <!-- 用户下拉菜单 -->
-          <el-menu-item v-if="isLogin"
-                        index="">
-            <el-dropdown trigger="hover"
-                         @command="handleCommand"
-                         :show-timeout="0">
+          <el-menu-item v-if="isLogin" index="">
+            <el-dropdown
+              trigger="hover"
+              @command="handleCommand"
+              :show-timeout="0"
+            >
               <!-- 头像 -->
               <router-link :to="'/user/info'">
-                <img :src="userPicPath"
-                     style="width:30px;height:30px;border-radius:15px;">
-                {{user.userName||''}}
+                <img
+                  :src="userPicPath"
+                  style="width:30px;height:30px;border-radius:15px;"
+                />
+                {{ user.userName || '' }}
               </router-link>
               <!-- 下拉区 -->
               <el-dropdown-menu slot="dropdown">
@@ -84,9 +105,13 @@
             </el-dropdown>
           </el-menu-item>
           <!-- 写文章 -->
-          <el-menu-item @click="dispatch('/article/write')">
-            <el-button type="primary">写文章
-              <icon :icon="['fas','edit']" />
+          <el-menu-item
+            @click="dispatch('/article/write')"
+            class="hidden-sm-and-down"
+          >
+            <el-button type="primary"
+              >写文章
+              <icon :icon="['fas', 'edit']" />
             </el-button>
           </el-menu-item>
         </el-menu>
@@ -96,25 +121,21 @@
 </template>
 
 <script>
-import { PARTS_PROP_MAP } from "@/util/constant.js";
+import { ARTICLE_PART_MAP } from '@/util/constant.js';
 export default {
-  name: "nav-header",
+  name: 'nav-header',
   data() {
     let menus = [];
-    for (const key in PARTS_PROP_MAP) {
+    for (const key in ARTICLE_PART_MAP) {
       menus.push({
-        path: "/part/" + key,
-        title: PARTS_PROP_MAP[key]
+        path: '/part/' + key,
+        title: ARTICLE_PART_MAP[key],
       });
     }
     return {
       menus,
-      searchText: "" // 搜索内容
+      searchText: '', // 搜索内容
     };
-  },
-  created() {
-    // 根据cookie登录并获取用户信息
-    this.$store.dispatch("GET_USER_INFO");
   },
   methods: {
     // 路由
@@ -130,30 +151,29 @@ export default {
       let vm = this;
       let handle = {
         write() {
-          vm.dispatch("/article/write");
+          vm.dispatch('/article/write');
         },
         logout() {
-          // 清空用户记录并清除cookie
-          vm.$store.commit("clearUser");
+          // 清空用户记录并清除记录
+          vm.$store.commit('clearUser');
           vm.$message({
             showClose: false,
-            message: "退出成功!",
-            type: "success"
+            message: '退出成功!',
+            type: 'success',
           });
-          vm.$router.push("/home");
+          vm.$router.push('/home');
         },
         userCenter() {
-          vm.dispatch("/user/info");
+          vm.dispatch('/user/info');
         },
         userSubscribe() {
-          vm.dispatch("/user/subscribe");
+          vm.dispatch('/user/subscribe');
         },
         userArticle() {
-          vm.dispatch("/user/article");
-        }
+          vm.dispatch('/user/article');
+        },
       };
       handle[command]();
-      console.log("this.$route.path:" + vm.$route.path);
     },
   },
   computed: {
@@ -172,8 +192,8 @@ export default {
     // 用户头像路径
     userPicPath() {
       return this.$store.getters.userPicPath;
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -187,8 +207,15 @@ export default {
   .logo {
     padding: 10px 0;
   }
+  .mid {
+    @media screen and(max-width:1500px) {
+      display: none;
+    }
+  }
   .search {
-    border: 0;
+    @media screen and(max-width:909px) {
+      display: none;
+    }
   }
 }
 </style>
