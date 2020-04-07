@@ -21,6 +21,15 @@ let GET_ARTICLE = async ({ commit }, articleId) => {
   console.log(`from store.js:文章${articleId}获取成功!`);
   return data.data;
 };
+// 获取推荐文章
+let GET_RECOMMEND_ARTICLE = async ({ commit }, userId="") => {
+  let { data } = await axios.post(base + `/recommend/get?userId=${userId}`);
+  if (data.status == 'error')
+    throw new Error('[GET_RECOMMEND_ARTICLE]服务器状态异常!');
+  data.data.userPic = axios.$USER_PIC_PRE_URL + data.data.userPic;
+  console.log(`from store.js:推荐文章获取成功!`);
+  return data.data;
+};
 // 根据查询条件获取文章及其作者信息
 let GET_ARTICLE_LIST = async ({ commit }, queryOption) => {
   let { data } = await axios.post(base + `/list`, queryOption);
@@ -104,8 +113,8 @@ let DO_DELETE_ARTICLE = async ({ commit, state }, article) => {
   return data.data;
 };
 // 增加阅读量1
-let DO_ADD_ARTCILE_READ = async ({ commit, state }, articleId) => {
-  let { data } = await axios.post(base + `/read/add?articleId=${articleId}`);
+let DO_ADD_ARTCILE_READ = async ({ commit, state }, articleId,userId) => {
+  let { data } = await axios.post(base + `/read/add?articleId=${articleId}&userId=${userId}`);
   if (data.status == 'error')
     throw new Error('[DO_ADD_ARTCILE_READ]服务器状态异常!');
   console.log('from store.js:文章阅读量+1成功!');
@@ -117,6 +126,7 @@ export {
   GET_ARTICLE_LIST,
   GET_ARTICLE_ISLIKE,
   GET_ARTICLE_LIKE_COUNT,
+  GET_RECOMMEND_ARTICLE,
   DO_LIKE_ARTICLE,
   DO_DISLIKE_ARTICLE,
   DO_COMMIT_ARTICLE,

@@ -51,7 +51,7 @@
 
 <script>
 import { mapActions } from "vuex";
-import { ARTICLE_PART_MAP } from "@/util/constant.js";
+import { ARTICLE_PART_MAP,ARTICLE_STATE_MAP } from "@/utils/util.js";
 import articleCard from "./base/article-card";
 export default {
   name: "main-search",
@@ -82,7 +82,8 @@ export default {
       }
       this.GET_ARTICLE_LIST({
         article:{
-          articleTitle: searchText
+          articleTitle: searchText,
+          articleState:ARTICLE_STATE_MAP.PUBLISHED
         },
         start:0,
         count:10

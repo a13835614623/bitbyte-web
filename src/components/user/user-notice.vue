@@ -2,29 +2,35 @@
   <div>
     <div class="line"></div>
     <div class="empty-message">
-      <span v-if="!notices[0]">暂无消息</span>
+      <span v-if="!loading&&!notices[0]">暂无消息</span>
     </div>
-    <template>
+    <div v-infinite-scroll="getNoticeList">
       <el-card
         shadow="never"
         v-for="notice in notices"
         :key="notice.noticeId"
         :body-style="cardBodyStyle"
       >
+        <!-- card body -->
         <div>
-          <span
-            >{{ notice.noticeTitle }}
-            <span class="caption" style="padding-left:10px;">{{
-              notice.noticeTime
-            }}</span>
-          </span>
-          <!-- card body -->
+          <el-row type="flex" justify="space-between">
+            <el-col :md="6" :xs="24">{{ notice.noticeTitle }}</el-col>
+            <el-col :md="6" style="text-align:right;" :xs="0"
+              ><span class="caption" style="padding-left:10px;">{{
+                notice.noticeTime
+              }}</span></el-col
+            >
+          </el-row>
           <div class="caption" style="padding-top:10px;">
             {{ notice.noticeContent }}
           </div>
         </div>
       </el-card>
-    </template>
+    </div>
+    <div class="caption text-center" style="margin-top:20px;">
+      <div v-if="loading">加载中...</div>
+      <div v-else-if="noMore&&notices[0]">没有更多了</div>
+    </div>
   </div>
 </template>
 
@@ -42,6 +48,7 @@ export default {
         paddingBottom: '20px',
       },
       loading: false,
+      noMore: false,
       page: 1,
       pageSize: 5,
     };
@@ -50,18 +57,16 @@ export default {
     ...mapState(['user']),
     queryVo() {
       return {
-        notice: {
-          noticeTopicList: [
-            '/system/notice',
-            '/user/' + this.user.userId + '/audit/end',
-          ],
-        },
-        start: this.page * this.pageSize,
+        noticeTopicList: [
+          '/system/notice',
+          '/user/' + this.user.userId + '/audit/end',
+        ],
+        start: (this.page - 1) * this.pageSize,
         count: this.pageSize,
       };
     },
   },
-  created () {
+  created() {
     this.getNoticeList();
   },
   methods: {
@@ -74,9 +79,17 @@ export default {
     },
     async getNoticeList() {
       try {
-        let { data } = await this.GET_NOTICE_LIST(this.queryVo);
+        this.noMore = false;
+        this.showLoading();
+        let { data, more } = await this.GET_NOTICE_LIST(this.queryVo);
+        this.notices = data;
+        if (more == this.notices.length) {
+          this.noMore = true;
+        }
       } catch (error) {
         console.error(error);
+      } finally {
+        this.closeLoading();
       }
     },
   },

@@ -90,6 +90,7 @@
 <script>
 import articleCard from "./article-card";
 import userNewsCard from "./user-news-card"
+import {ARTICLE_STATE_MAP} from '@/utils/util.js'
 import { mapActions } from "vuex";
 export default {
   name: "user-card",
@@ -153,7 +154,7 @@ export default {
       "GET_USER_FANS"
     ]),
     getUserInfo() {
-      this.GET_USER_INFO()
+      this.GET_USER_INFO(this.userId)
         .then(user => {
           this.user = user;
         })
@@ -165,7 +166,8 @@ export default {
     getArticles() {
       this.GET_ARTICLE_LIST({
         article: {
-          articleUser: this.userId
+          articleUser: this.userId,
+          articleState:ARTICLE_STATE_MAP.PUBLISHED
         },
         start: 0,
         count: 10

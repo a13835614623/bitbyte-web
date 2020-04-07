@@ -119,8 +119,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['GET_USER_INFO']),
-
+    ...mapActions(['GET_USER_INFO','DO_USER_UPDATE']),
     // 保存并提交用户信息
     onSaveUserInfo() {
       let userInfo = {
@@ -130,8 +129,7 @@ export default {
         userAddress: this.oldUser.userAddress,
         userBirthday: this.oldUser.userBirthday
       };
-      this.$store
-        .dispatch("DO_USER_UPDATE", userInfo)
+      this.DO_USER_UPDATE(userInfo)
         .then(data => {
           this.$message({
             message: data.message,

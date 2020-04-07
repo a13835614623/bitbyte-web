@@ -2,7 +2,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 // 开发环境
 let dev_url = 'http://127.0.0.1:9527';
 // 目标url
-let target = "http://106.13.32.222:9527";
+let target = "http://106.13.32.222";
 // let target=dev_url;
 // const HappyPack = require('happypack');
 // const os = require('os');

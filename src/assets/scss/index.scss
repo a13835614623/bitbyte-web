@@ -27,6 +27,9 @@ $border4: #f2f6fc;
 h1 {
   font-weight: 500;
 }
+.text-center{
+  text-align: center;
+}
 // 链接
 @mixin link-colors($normal, $hover) {
   text-decoration: none;

@@ -106,6 +106,7 @@
           </el-menu-item>
           <!-- 写文章 -->
           <el-menu-item
+            index="/article/write"
             @click="dispatch('/article/write')"
             class="hidden-sm-and-down"
           >
@@ -121,7 +122,8 @@
 </template>
 
 <script>
-import { ARTICLE_PART_MAP } from '@/util/constant.js';
+import { ARTICLE_PART_MAP } from '@/utils/util.js';
+import { mapActions } from 'vuex';
 export default {
   name: 'nav-header',
   data() {
@@ -137,7 +139,19 @@ export default {
       searchText: '', // 搜索内容
     };
   },
+  created() {
+    if (this.isLogin) {
+      this.getUserInfo();
+    }
+  },
   methods: {
+    ...mapActions(['GET_USER_INFO']),
+    getUserInfo() {
+      this.GET_USER_INFO().catch(error => {
+        console.log(error);
+        this.$message.error('获取用户信息出错');
+      });
+    },
     // 路由
     dispatch(path) {
       this.$router.push(path);
@@ -155,7 +169,7 @@ export default {
         },
         logout() {
           // 清空用户记录并清除记录
-          vm.$store.commit('clearUser');
+          vm.$store.commit('CLEAR_USER');
           vm.$message({
             showClose: false,
             message: '退出成功!',

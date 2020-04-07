@@ -44,7 +44,7 @@
 
 <script>
 import md5 from 'crypto-js/md5';
-import { mapActions } from 'vuex';
+import { mapActions,mapMutations } from 'vuex';
 export default {
   name: 'user-login',
   data() {
@@ -90,6 +90,7 @@ export default {
   },
   methods: {
     ...mapActions(['DO_USER_LOGIN']),
+    ...mapMutations(['CLAER_USER']),
     // 登录
     onLogin(event) {
       let vm = this;
@@ -132,7 +133,6 @@ export default {
         }
       });
     },
-    setCookies() {},
     onForgetPwd() {
       console.log('忘记密码');
     },

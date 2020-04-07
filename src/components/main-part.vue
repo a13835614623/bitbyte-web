@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { ARTICLE_PART_MAP } from "@/util/constant.js";
+import { ARTICLE_PART_MAP,ARTICLE_STATE_MAP } from "@/utils/util.js";
 import articleCard from "./base/article-card";
 
 export default {
@@ -81,17 +81,17 @@ export default {
     onPageSizeChange(pageSize) {
       this.pageSize = pageSize;
       // 查询
-      this.query(this.queryOptions);
+      this.query();
     },
     // 当前页码改变
     onCurrentPageChange(page) {
       this.currentPage = page;
       // 查询
-      this.query(this.queryOptions);
+      this.query();
     },
-    query(queryOptions) {
+    query() {
       this.$store
-        .dispatch("GET_ARTICLE_LIST", queryOptions?queryOptions:this.queryOptions)
+        .dispatch("GET_ARTICLE_LIST", this.queryVo)
         .then(data => {
           this.total=data.more;
           this.currentArticles = data.data;
@@ -110,10 +110,11 @@ export default {
     start() {
       return (this.currentPage - 1) * this.pageSize;
     },
-    queryOptions(){
+    queryVo(){
       return {
         article:{
           articlePart:this.part,
+          articleState:ARTICLE_STATE_MAP.PUBLISHED
         },
         start:this.start,
         count:this.pageSize

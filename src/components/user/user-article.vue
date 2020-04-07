@@ -29,7 +29,9 @@
         </el-input>
       </el-form-item>
     </el-form>
-    <p v-if="articles.length == 0" class="empty-article">暂无文章</p>
+    <p v-if="articles && articles.length == 0" class="empty-article">
+      暂无文章
+    </p>
     <el-scrollbar style="height:87%;" v-else>
       <!-- 文章列表 -->
       <ul class="article-list">
@@ -48,8 +50,8 @@
           <el-row type="flex" justify="space-around">
             <el-col :span="18" class="article-info">
               <!-- 时间 -->
-              <span v-if="article.articlePublishTime">{{
-                new Date(article.articlePublishTime) | dateFormat
+              <span v-if="isPublished(article)">{{
+                new Date(article.articlePublishTime).format()
               }}</span>
               <span v-else>未发布</span>
               <!-- 标签 -->
@@ -58,23 +60,24 @@
                       :key="tag">
                 {{tag}}
               </el-tag> -->
-              <span v-if="article.articlePublishTime"
+              <span v-if="isPublished(article)"
                 >阅读&nbsp;{{ article.articleRead }}</span
               >
+              <span
+                :style="{ color: getColorByArticleState(article.articleState) }"
+              >
+                {{ ARTICLE_STATE_MAP[article.articleState] }}
+              </span>
             </el-col>
-            <el-col :span="6" v-if="article.articlePublishTime">
-              <el-button type="primary" @click.stop="onEditArticle(article)"
+            <!-- 已发布，允许编辑和查看 -->
+            <el-col :span="6" >
+              <el-button v-if="isEnableEdit(article)" type="primary" @click.stop="onEditArticle(article)"
                 >编辑</el-button
               >
-              <el-button type="success" @click.stop="onShowArticle(article)"
+              <el-button v-if="isEnableView(article)" type="success" @click.stop="onShowArticle(article)"
                 >查看</el-button
               >
-            </el-col>
-            <el-col :span="6" v-else>
-              <el-button type="primary" @click.stop="onEditArticle(article)"
-                >编辑</el-button
-              >
-              <el-button type="danger" @click.stop="onDeleteArticle(article)"
+              <el-button v-if="isEnableDelete(article)" type="danger" @click.stop="onDeleteArticle(article)"
                 >删除</el-button
               >
             </el-col>
@@ -86,19 +89,22 @@
 </template>
 
 <script>
-import { ARTICLE_PART_MAP } from '@/util/constant.js';
+import { ARTICLE_PART_MAP, ARTICLE_STATE_MAP } from '@/utils/util.js';
 import { mapActions } from 'vuex';
 export default {
   name: 'user-article',
   data() {
     return {
-      // 文章
+      // 展示的文章
       articles: [],
+      // 所有文章
+      allArticles: [],
       articleFilterForm: {
         checkList: ['已发布', '未发布'],
         searchText: '',
       },
       partMap: ARTICLE_PART_MAP,
+      ARTICLE_STATE_MAP,
     };
   },
   async created() {
@@ -108,14 +114,14 @@ export default {
   computed: {
     // 已经发布的文章
     publishedArticles() {
-      return this.articles.filter(article => {
-        return article.articlePublishTime;
+      return this.allArticles.filter(article => {
+        return this.isPublished(article);
       });
     },
-    // 暂存的文章
-    tempArticles() {
-      return this.articles.filter(article => {
-        return !article.articlePublishTime;
+    // 未发布的文章
+    notPublishedArticles() {
+      return this.allArticles.filter(article => {
+        return !this.isPublished(article);
       });
     },
   },
@@ -124,28 +130,29 @@ export default {
     // 获取用户文章
     async getArticles() {
       let { data } = await this.GET_USER_ARTICLES();
-      this.articles = data;
+      this.allArticles = data;
+      this.articles = this.allArticles;
       this.articleFilterForm.checkList = ['已发布', '未发布'];
     },
     // 搜索文章
     onSearchArticle() {
-      this.articles = this.articles.filter(
-        (article, index, arr) => {
-          return (
-            article.articleTitle.indexOf(this.articleFilterForm.searchText) !=
-            -1
-          );
-        },
-      );
+      this.articles = this.articles.filter((article, index, arr) => {
+        return (
+          article.articleTitle.indexOf(this.articleFilterForm.searchText) != -1
+        );
+      });
     },
     // 文章筛选条件改变事件
     onCheckChange(checkList) {
       if (checkList.length == 2) {
-        this.articles = this.articles;
+        this.articles = [
+          ...this.publishedArticles,
+          ...this.notPublishedArticles,
+        ];
       } else if (checkList[0] == ['已发布']) {
         this.articles = this.publishedArticles;
       } else if (checkList[0] == ['未发布']) {
-        this.articles = this.tempArticles;
+        this.articles = this.notPublishedArticles;
       } else {
         this.articles = [];
       }
@@ -178,6 +185,42 @@ export default {
         });
       });
     },
+    // 根据文章状态获取颜色
+    getColorByArticleState(articleState) {
+      switch (articleState) {
+        // 已发布
+        case ARTICLE_STATE_MAP.PUBLISHED:
+          return '#409eff';
+        //审核通过和已发布
+        case ARTICLE_STATE_MAP.PASS:
+          return 'green';
+        //审核拒绝
+        case ARTICLE_STATE_MAP.REFUSE:
+          return 'red';
+        case ARTICLE_STATE_MAP.CREATED:
+          return 'pink';
+        case ARTICLE_STATE_MAP.AUDITING:
+          return 'orange';
+        default:
+          return '#909399';
+      }
+    },
+    // 文章是否已经发布
+    isPublished(article) {
+      return article.articleState == ARTICLE_STATE_MAP.PUBLISHED;
+    },
+    // 是否允许编辑
+    isEnableEdit(article){
+      return article.articleState==ARTICLE_STATE_MAP.CREATED;
+    },
+    // 是否允许删除
+    isEnableDelete(article){
+      return this.isEnableEdit(article);
+    },
+    // 是否允许查看
+    isEnableView(article){
+      return this.isPublished(article);
+    }
   },
   filters: {
     dateFormat(date = new Date()) {

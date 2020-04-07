@@ -1,7 +1,8 @@
 import axios from 'axios';
-import { LOCAL_DATA_MAP, USER_PIC_PRE_URL, BASE_URL } from '@/util/constant';
+import { LOCAL_DATA_MAP, USER_PIC_PRE_URL, BASE_URL,CLEAR_LOCAL_DATA } from '@/utils/util';
 import { MessageBox } from 'element-ui';
 import router from '@/router';
+import store from '@/store'
 axios.defaults.baseURL = BASE_URL;
 axios.$USER_PIC_PRE_URL = USER_PIC_PRE_URL;
 axios.$LOCAL_DATA_MAP = LOCAL_DATA_MAP;
@@ -46,9 +47,11 @@ axios.interceptors.response.use(
         MessageBox.confirm('验证信息失效，点击确定重新登录')
           .then(() => {
             closeMsgBox();
+            store.commit('CLEAR_USER');
             router.push('/login');
           })
           .catch(() => {
+            store.commit('CLEAR_USER');
             closeMsgBox();
           });
         break;

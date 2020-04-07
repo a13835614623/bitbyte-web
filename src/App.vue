@@ -19,7 +19,7 @@
 <script>
 import navHeader from '@/components/nav-header';
 import pageFooter from '@/components/page-footer';
-import { WEBSOCKET_URL, GET_LOCAL_TOKEN } from '@/util/constant.js';
+import { WEBSOCKET_URL, GET_LOCAL_TOKEN } from '@/utils/util.js';
 import { mapState, mapMutations,mapGetters } from 'vuex';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
@@ -39,7 +39,7 @@ export default {
   },
   created() {
     if (!this.isLogin) {
-      this.saveUser();
+      this.SAVE_USER();
     }
   },
   mounted() {
@@ -52,7 +52,7 @@ export default {
     this.disconnect();
   },
   methods: {
-    ...mapMutations(['saveUser']),
+    ...mapMutations(['SAVE_USER']),
     initWebSocket() {
       // 建立连接对象
       let socket = new SockJS(WEBSOCKET_URL);
@@ -110,7 +110,9 @@ export default {
         },
       };
       map['/user/' + this.user.userId + '/audit/end'] = msg => {
+        console.log(msg.body)
         let { noticeContent } = JSON.parse(msg.body);
+        noticeContent=JSON.parse(noticeContent);
         let stateMap = {
           24: '审核通过',
           25: '审核被拒绝',
@@ -118,7 +120,7 @@ export default {
         this.notify({
           message: `您投递的博客《${noticeContent.articleTitle}》${
             stateMap[noticeContent.auditState]
-          }`,
+          }!`,
         });
       };
       return map;

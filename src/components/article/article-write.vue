@@ -117,7 +117,7 @@
 </template>
 <script>
 import baseMarkdown from '@/components/article/base-markdown';
-import { ARTICLE_PART_MAP } from '@/util/constant';
+import { ARTICLE_PART_MAP } from '@/utils/util';
 import { mapActions } from 'vuex';
 export default {
   name: 'article-write',

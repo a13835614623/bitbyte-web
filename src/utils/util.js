@@ -25,10 +25,31 @@ const ARTICLE_PART_MAP = {
   21: '技术前瞻',
   22: '其他',
 };
-// module.exports={
-//   ARTICLE_PARTS,
-//   ARTICLE_PART_MAP
-// }
+// 访问类型属性k/v映射
+const ACCESS_TYPE_MAP = {
+  14: '首页',
+  15: '博客分区',
+};
+// 访问值属性k/v映射
+const ACCESS_VALUE_MAP = Object.assign(
+  {
+    23: '首页',
+  },
+  ARTICLE_PART_MAP,
+);
+// 文章状态
+const ARTICLE_STATE_MAP = {
+  24: '审核通过',
+  25: '审核拒绝',
+  27: '已创建',
+  28: '已发布',
+  29: '审核中',
+  PASS:24,
+  REFUSE:25,
+  CREATED:27,
+  PUBLISHED:28,
+  AUDITING:29
+};
 export {
   ARTICLE_PARTS,
   ARTICLE_PART_MAP,
@@ -41,4 +62,7 @@ export {
   USER_PIC_PRE_URL,
   GET_LOCAL_USER,
   GET_LOCAL_TOKEN,
+  ACCESS_TYPE_MAP,
+  ACCESS_VALUE_MAP,
+  ARTICLE_STATE_MAP
 };

@@ -4,6 +4,7 @@ import {
   GET_ARTICLE_LIST,
   GET_ARTICLE_ISLIKE,
   GET_ARTICLE_LIKE_COUNT,
+  GET_RECOMMEND_ARTICLE,
   DO_LIKE_ARTICLE,
   DO_DISLIKE_ARTICLE,
   DO_COMMIT_ARTICLE,
@@ -35,7 +36,8 @@ import {
   GET_IS_SUBSCRIBE,
 } from '@/store/subscribe-actions';
 
-import { GET_NOTICE_LIST } from '@/store/message-action.js';
+import { GET_NOTICE_LIST } from '@/store/message-actions.js';
+import { DO_ACCESS_ADD } from '@/store/access-actions.js';
 // store actions
 export default {
   //article-actions
@@ -44,6 +46,7 @@ export default {
   GET_ARTICLE_LIST,
   GET_ARTICLE_ISLIKE,
   GET_ARTICLE_LIKE_COUNT,
+  GET_RECOMMEND_ARTICLE,
   DO_LIKE_ARTICLE,
   DO_DISLIKE_ARTICLE,
   DO_COMMIT_ARTICLE,
@@ -72,4 +75,6 @@ export default {
   GET_IS_SUBSCRIBE,
   //message-actions
   GET_NOTICE_LIST,
+  // access-actions
+  DO_ACCESS_ADD
 };

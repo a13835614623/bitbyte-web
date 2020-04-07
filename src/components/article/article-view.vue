@@ -1,21 +1,33 @@
 <template>
   <div class="article-view">
     <el-card :body-style="{ padding: '20px' }">
-      <div slot="header" class="article-title">
-        <h1>{{ article.articleTitle }}</h1>
-        <span>阅读&nbsp;{{ article.articleRead }}</span>
-        <span>点赞&nbsp;{{ articleLikeCount }}</span>
+      <div v-if="article.articleId" slot="header" class="article-title">
+        <h1>
+          {{ article.articleTitle }}
+          <el-button size="mini" plain type="primary" @click="$router.push('/part/'+article.articlePart)"> 
+          {{ ARTICLE_PART_MAP[article.articlePart] }}</el-button>
+        </h1>
+        <div class="at-info">
+          <span>阅读&nbsp;{{ article.articleRead }}</span>
+          <span>点赞&nbsp;{{ article.articleLikeNum }}</span>
+          <span>{{ new Date(article.articlePublishTime).format() }}</span>
+        </div>
       </div>
       <!-- 文章主体 -->
-      <div class="article-content">
+      <div v-if="article.articleId" class="article-content">
         <p v-html="article.articleContent"></p>
       </div>
       <div class="line"></div>
       <!-- 点赞 -->
       <el-row>
-        <el-button type="danger" :disabled="!isLogin" @click="onToggleLike">
-          点赞
+        <el-button
+          type="danger"
+          :plain="!isLike"
+          :disabled="!isLogin"
+          @click="onToggleLike"
+        >
           <icon :icon="likeIcon" />
+          {{ article.articleLikeNum }}
         </el-button>
       </el-row>
       <!-- 作者 -->
@@ -63,6 +75,7 @@
 </template>
 
 <script>
+import { ARTICLE_PART_MAP,ARTICLE_STATE_MAP } from '@/utils/util';
 import { mapActions } from 'vuex';
 import articleComment from './article-comment';
 export default {
@@ -86,16 +99,20 @@ export default {
     });
     try {
       // 获取文章
-      await this.GET_ARTICLE(this.articleId).then(article => {
-        this.article = article;
-      });
+      let data = await this.GET_ARTICLE(this.articleId);
+      if(data.articleState!=ARTICLE_STATE_MAP.PUBLISHED){
+        this.$router.go(-1);
+      }
+      this.article = data;
       // 获取文章点赞数量
       this.GET_ARTICLE_LIKE_COUNT(this.articleId).then(count => {
-        this.articleLikeCount = count;
+        this.article.articleLikeNum = count;
       });
-      // 阅读量+1
-      this.DO_ADD_ARTCILE_READ(this.articleId);
+      // 访问统计
+      this.DO_ACCESS_ADD({ type: 15, value: this.article.articlePart });
       if (this.isLogin) {
+        // 阅读量+1
+        this.DO_ADD_ARTCILE_READ(this.articleId,this.userId);
         //获取文章该登录用户是否已经点赞
         this.GET_ARTICLE_ISLIKE(this.articleId).then(isLike => {
           this.isLike = isLike;
@@ -122,8 +139,7 @@ export default {
       isSubscribe: false,
       // 文章对象
       article: {},
-      // 文章点赞数
-      articleLikeCount: 0,
+      ARTICLE_PART_MAP,
     };
   },
   methods: {
@@ -137,16 +153,17 @@ export default {
       'GET_IS_SUBSCRIBE',
       'GET_ARTICLE',
       'DO_ADD_ARTCILE_READ',
+      'DO_ACCESS_ADD',
     ]),
     // 点赞
     onToggleLike() {
       if (!this.isLike) {
         // 之前是未点赞状态
         this.DO_LIKE_ARTICLE(this.article.articleId);
-        this.article.articleLike += 1;
+        this.article.articleLikeNum += 1;
         this.likeIcon[0] = 'fas';
       } else {
-        this.article.articleLike -= 1;
+        this.article.articleLikeNum -= 1;
         this.DO_DISLIKE_ARTICLE(this.article.articleId);
         this.likeIcon[0] = 'far';
       }
@@ -177,22 +194,18 @@ export default {
     isLogin() {
       return this.$store.getters.isLogin;
     },
-    userId(){
+    userId() {
       return this.$store.state.user.userId;
     },
     // 是否允许关注
     isEnableSubscribe() {
       return (
-        !this.isSubscribe && //未关注
-        this.isEnableClick
+        !this.isSubscribe && this.isEnableClick //未关注
       );
     },
     // 是否允许点击
     isEnableClick() {
-      return (
-        this.isLogin &&
-        this.article.articleUser != this.userId
-      );
+      return this.isLogin && this.article.articleUser != this.userId;
     },
   },
 };
@@ -209,9 +222,15 @@ a:link {
   min-height: 500px;
 }
 // 文章标题
-.article-title span {
-  padding: 10px;
-  color: $text3;
+.article-title {
+  // padding-right: 10px;
+  .at-info {
+    color: $text3;
+    font-size: 0.8em;
+    span {
+      padding-right: 10px;
+    }
+  }
 }
 // 文章内容
 .article-content {

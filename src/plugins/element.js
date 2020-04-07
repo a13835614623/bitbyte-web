@@ -39,6 +39,7 @@ import {
   Icon,
   Row,
   Col,
+  InfiniteScroll,
   Upload,
   Progress,
   Card,
@@ -109,6 +110,7 @@ Vue.use(Aside);
 Vue.use(Main);
 Vue.use(Footer);
 Vue.use(Loading.directive);
+Vue.use(InfiniteScroll);
 // Vue.use(Notification);
 
 Vue.prototype.$loading = Loading.service;

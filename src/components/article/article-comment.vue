@@ -66,7 +66,7 @@
         </div>
         <!-- 评论回复区 -->
         <el-row v-if="comment">
-          <el-col :span="24"
+          <el-col :span="22"
                   class="comment-reply">
             <div v-if="comment.commentReplyList">
               <!-- 评论回复列表 -->
@@ -87,7 +87,7 @@
                       style="padding-left:5px;">{{reply.replyContent.substring(1)}}</span>
                 <span v-else
                       style="padding-left:5px;">{{reply.replyContent}}</span>
-                <div class="comment-info">
+                <div class="comment-info" style="margin-left:0;">
                   <!-- <span>{{reply.replyFloor}}楼</span> -->
                   <span>{{new Date(reply.replyTime).toLocaleString()}}</span>
                   <el-button type="text"

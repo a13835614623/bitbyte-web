@@ -9,7 +9,7 @@ async function DO_ARTICLE_COMMENT(
     commentArticle: articleId,
     commentUser: state.user.userId,
     commentUserName: state.user.userName,
-    commentUserPic: state.user.userPic,
+    commentUserPic: state.user.userPic.split('name=')[1],
     commentContent: commentContent,
   });
   if (data.status == 'error')

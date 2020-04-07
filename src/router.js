@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import { IS_LOGIN } from '@/util/constant';
+import { IS_LOGIN } from '@/utils/util';
 import { Message } from 'element-ui';
 const mainContent = () => import('@/components/main-content');
 const login = () => import('@/components/user-login');
@@ -32,7 +32,7 @@ const router = new Router({
     },
     // 主页
     {
-      path: '/mainContent',
+      path: '/home',
       redirect: '/',
     },
     // 分区

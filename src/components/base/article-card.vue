@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { ARTICLE_PART_MAP } from "@/util/constant.js";
+import { ARTICLE_PART_MAP } from "@/utils/util.js";
 
 export default {
   name: "article-card",

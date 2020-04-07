@@ -11,9 +11,9 @@
             >
           </div>
           <!-- card body -->
-          <div v-if="articles[0]" class="left-article">
+          <div v-if="recommendArticles&&recommendArticles[0]" class="left-article">
             <div
-              v-for="(article, index) in articles.slice(0, 8)"
+              v-for="(article, index) in recommendArticles"
               class="item"
               :key="index"
             >
@@ -25,24 +25,31 @@
               >
             </div>
           </div>
+          <div
+            v-else
+            v-loading="recommendArticlesLoading"
+            class="caption text-center"
+            style="margin:30px 0;"
+          >
+            暂无今日推荐
+          </div>
         </el-card>
       </el-col>
+      <!-- 中间内容 -->
       <el-col :xl="13" :lg="13">
-        <!-- 中间内容 -->
         <el-carousel :interval="5000" class="hidden-sm-and-down" arrow="always">
           <el-carousel-item v-for="(carousel, index) in carousels" :key="index">
             <img :src="carousel.imgSrc" width="100%" alt="" />
           </el-carousel-item>
         </el-carousel>
+        <el-row v-loading="loading" v-if="!articles[0]">
+          <div class="caption empty">暂无文章可供浏览</div>
+        </el-row>
         <article-card
           v-for="article in articles"
           :article="article"
           :key="article.id"
         />
-        <el-row v-if="!articles[0]">
-          <div class="caption empty">暂无文章可供浏览</div>
-        </el-row>
-        <div class="main-center"></div>
       </el-col>
       <!-- 右边动态 -->
       <el-col :xl="5" :lg="5" class="main-right hidden-md-and-down">
@@ -58,7 +65,11 @@
             <el-button
               type="text"
               @click="onRefreshSubscribeArticles"
-              :icon="isLoading ? 'el-icon-loading' : 'el-icon-refresh-right'"
+              :icon="
+                lastestArticlesLoading
+                  ? 'el-icon-loading'
+                  : 'el-icon-refresh-right'
+              "
             ></el-button>
           </div>
           <!-- card body -->
@@ -83,7 +94,11 @@
                 }}</router-link>
               </div>
             </div>
-            <div v-if="!subscribeArticles[0]" class="empty-right">
+            <div
+              v-if="!subscribeArticles[0]"
+              v-loading="lastestArticlesLoading"
+              class="empty-right"
+            >
               暂无动态
             </div>
           </div>
@@ -103,7 +118,7 @@
 
 <script>
 import articleCard from './base/article-card';
-
+import {ARTICLE_STATE_MAP} from '@/utils/util'
 import { mapActions } from 'vuex';
 export default {
   name: 'main-content',
@@ -116,6 +131,7 @@ export default {
       };
     });
     return {
+      recommendArticles:[],
       articles: [],
       cardBodyStyle: {
         paddingLeft: '20px',
@@ -126,16 +142,20 @@ export default {
       carousels,
       // 关注文章
       subscribeArticles: [],
-      isLoading: false,
+      lastestArticlesLoading: false,
+      loading: false,
+      recommendArticlesLoading:false
     };
   },
   components: {
     'article-card': articleCard,
   },
-  created() {
+  async created() {
+    // 访问统计
+    this.DO_ACCESS_ADD({ type: 14, value: 23 });
     this.getArticles();
+    await this.getRecommendArticles();
     if (this.isLogin) {
-      this.getUserInfo();
       this.getUserLatestArticles();
     }
   },
@@ -143,24 +163,27 @@ export default {
     ...mapActions([
       'GET_ARTICLE_LIST',
       'GET_USER_LATEST_ARTICLES',
+      'GET_RECOMMEND_ARTICLE',
       'GET_USER_INFO',
+      'DO_ACCESS_ADD',
     ]),
-    getUserInfo() {
-      this.GET_USER_INFO()
-        .catch(error => {
-          console.log(error);
-          this.$message.error('获取用户信息出错');
-        });
+    async getUserInfo() {
+      try {
+        await this.GET_USER_INFO();
+      } catch (error) {
+        console.error(error);
+        this.$message.error('获取用户信息出错');
+      }
     },
     getUserLatestArticles() {
-      this.isLoading = true;
+      this.lastestArticlesLoading = true;
       this.GET_USER_LATEST_ARTICLES()
         .then(data => {
           this.subscribeArticles = data.data;
-          this.isLoading = false;
+          this.lastestArticlesLoading = false;
         })
         .catch(error => {
-          this.isLoading = false;
+          this.lastestArticlesLoading = false;
           console.log(error);
           this.$message.error('获取文章列表出错');
         });
@@ -169,17 +192,31 @@ export default {
     onRefreshSubscribeArticles() {
       this.getUserLatestArticles();
     },
-    onSelect() {
-      console.log();
+    // 获取推荐文章
+    getRecommendArticles(){
+      this.recommendArticlesLoading = true;
+      this.GET_RECOMMEND_ARTICLE()
+        .then(data => {
+          this.recommendArticlesLoading = false;
+          this.recommendArticles = data;
+        })
+        .catch(error => {
+          this.recommendArticlesLoading = false;
+          console.error(error);
+          this.$message.error('获取推荐文章列表出错');
+        });
     },
     // 获取文章列表
     getArticles() {
-      this.GET_ARTICLE_LIST({ article: {}, start: 0, count: 10 })
+      this.loading = true;
+      this.GET_ARTICLE_LIST({ article: {articleState:ARTICLE_STATE_MAP.PUBLISHED}, start: 0, count: 10 })
         .then(data => {
+          this.loading = false;
           this.articles = data.data;
         })
         .catch(error => {
-          console.log(error);
+          this.loading = false;
+          console.error(error);
           this.$message.error('获取文章列表出错');
         });
     },
@@ -244,7 +281,7 @@ export default {
         }
         .sub-text {
           @extend .sub-article-username;
-          color: $border1;
+          color: $text3;
           font-size: 0.8em;
         }
         .sub-article-title {

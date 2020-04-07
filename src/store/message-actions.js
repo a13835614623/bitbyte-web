@@ -5,11 +5,12 @@ async function GET_NOTICE_LIST({ commit, state }, queryVo) {
   let { data } = await axios.post(base + `/notice/list`, queryVo);
   if (data.status == 'error')
     throw new Error('[GET_NOTICE_LIST]服务器状态异常!');
-  data.data.map(comment => {
-    comment.commentUserPic = axios.$USER_PIC_PRE_URL + comment.commentUserPic;
-  });
-  console.log(`from store.js:获取文章评论成功!`);
-  return data.data;
+  data.data = data.data.map(notice=>{
+    notice.noticeTime= new Date(notice.noticeTime).format();
+    return notice;
+  })
+  console.log(`from store.js:获取公告列表成功!`);
+  return data;
 }
 
 export { GET_NOTICE_LIST };
