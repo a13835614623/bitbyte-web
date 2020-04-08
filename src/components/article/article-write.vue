@@ -96,7 +96,6 @@
       <div style="text-align:center;" v-else-if="isCommit && isSuccess">
         <h1 style="line-height:300px;">{{ result }}</h1>
         <div style="margin-top:50px;">
-          <el-button type="primary" @click="showArticle">查看文章</el-button>
           <el-button type="success" @click="$router.go(0)"
             >继续投稿</el-button
           >
@@ -107,6 +106,15 @@
         <h1 style="line-height:300px;">{{ result }}</h1>
         <div style="margin-top:50px;">
           <el-button type="primary" @click="isTemp = false">重新编辑</el-button>
+          <el-button type="text" @click="$router.push('/user/info')"
+            >返回个人中心</el-button
+          >
+        </div>
+      </div>
+      <!-- 提交失败页面 -->
+      <div style="text-align:center;" v-else>
+        <h1 style="line-height:300px;">提交失败!</h1>
+        <div style="margin-top:50px;">
           <el-button type="text" @click="$router.push('/user/info')"
             >返回个人中心</el-button
           >
