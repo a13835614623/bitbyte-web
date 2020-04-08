@@ -215,7 +215,7 @@ export default {
     },
     // 是否允许删除
     isEnableDelete(article){
-      return this.isEnableEdit(article);
+      return this.isPublished(article);
     },
     // 是否允许查看
     isEnableView(article){
