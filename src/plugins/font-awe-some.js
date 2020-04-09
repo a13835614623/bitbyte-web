@@ -6,12 +6,16 @@ import faEdit from '@fortawesome/fontawesome-free-solid/faEdit'
 import faUser from '@fortawesome/fontawesome-free-solid/faUser'
 import faUnlockAlt from '@fortawesome/fontawesome-free-solid/faUnlockAlt'
 import farThumbsUp from '@fortawesome/fontawesome-free-regular/faThumbsUp'
+import faStar from '@fortawesome/fontawesome-free-solid/faStar'
+import farStar from '@fortawesome/fontawesome-free-regular/faStar'
 
 library.add(faEdit)
 library.add(faUser)
 library.add(faUnlockAlt)
 library.add(faThumbsUp)
 library.add(farThumbsUp)
+library.add(faStar)
+library.add(farStar)
 
 // import solid from '@fortawesome/fontawesome-free-solid'
 // import regular from '@fortawesome/fontawesome-free-regular'

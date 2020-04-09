@@ -56,10 +56,14 @@ import {
   MessageBox,
   Message,
   Tabs,
-  TabPane
+  TabPane,
+  Collapse,
+  CollapseItem
 } from 'element-ui';
 Vue.use(Tabs);
 Vue.use(TabPane)
+Vue.use(Collapse);
+Vue.use(CollapseItem)
 Vue.use(Breadcrumb);
 Vue.use(BreadcrumbItem);
 Vue.use(Link);
