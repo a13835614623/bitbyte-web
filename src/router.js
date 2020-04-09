@@ -20,6 +20,7 @@ const userArtcile = () => import('@/components/user/user-article');
 const userSubscribe = () => import('@/components/user/user-subscribe');
 const userRecord = () => import('@/components/user/user-record');
 const userPicture = () => import('@/components/user/user-picture');
+const userFavorite = () => import('@/components/user/user-favorite');
 
 Vue.use(Router);
 
@@ -141,6 +142,11 @@ const router = new Router({
           name: 'user-picture',
           component: userPicture,
         },
+        {
+          path:'favorite',
+          name: 'user-favorite',
+          component:userFavorite
+        }
       ],
     },
   ],

@@ -38,6 +38,15 @@ import {
 
 import { GET_NOTICE_LIST } from '@/store/message-actions.js';
 import { DO_ACCESS_ADD } from '@/store/access-actions.js';
+import {
+  DO_ADD_FAVORITE,
+  DO_DELETE_FAVORITE,
+  DO_ADD_FAVORITE_GROUP,
+  DO_DELETE_FAVORITE_GROUP,
+  GET_FAVORITE_GROUP_LIST,
+  GET_FAVORITE_LIST,
+  GET_FAVORITE_INFO
+} from '@/store/favorite-actions.js';
 // store actions
 export default {
   //article-actions
@@ -76,5 +85,13 @@ export default {
   //message-actions
   GET_NOTICE_LIST,
   // access-actions
-  DO_ACCESS_ADD
+  DO_ACCESS_ADD,
+  // favorite-actions
+  DO_ADD_FAVORITE,
+  DO_DELETE_FAVORITE,
+  DO_ADD_FAVORITE_GROUP,
+  DO_DELETE_FAVORITE_GROUP,
+  GET_FAVORITE_GROUP_LIST,
+  GET_FAVORITE_LIST,
+  GET_FAVORITE_INFO
 };

@@ -58,6 +58,10 @@ export default {
           path: "/user/notice"
         },
         {
+          title:"我的收藏",
+          path:"/user/favorite"
+        },
+        {
           title: "我的足迹",
           path: "/user/record"
         },
