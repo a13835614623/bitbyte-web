@@ -14,7 +14,7 @@
                 style="float:right;">{{partMap[article.articlePart]}}</el-tag>
       </div>
       <!-- 文章介绍 -->
-      <el-row class="article-introduce">这是文章的介绍...</el-row>
+      <!-- <el-row class="article-introduce">这是文章的介绍...</el-row> -->
       <!-- 文章简要信息 -->
       <el-row class="article-info">
         <!-- 作者头像 -->
