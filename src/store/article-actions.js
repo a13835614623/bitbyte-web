@@ -113,8 +113,9 @@ let DO_DELETE_ARTICLE = async ({ commit, state }, article) => {
   return data.data;
 };
 // 增加阅读量1
-let DO_ADD_ARTCILE_READ = async ({ commit, state }, articleId,userId) => {
-  let { data } = await axios.post(base + `/read/add?articleId=${articleId}&userId=${userId}`);
+let DO_ADD_ARTCILE_READ = async ({ getters, state }, articleId) => {
+  if(!getters.isLogin)return;
+  let { data } = await axios.post(base + `/read/add?articleId=${articleId}&userId=${state.user.userId}`);
   if (data.status == 'error')
     throw new Error('[DO_ADD_ARTCILE_READ]服务器状态异常!');
   console.log('from store.js:文章阅读量+1成功!');
