@@ -58,13 +58,15 @@ import {
   Tabs,
   TabPane,
   Collapse,
-  CollapseItem
+  CollapseItem,
+  Popover
 } from 'element-ui';
 Vue.use(Tabs);
 Vue.use(TabPane)
 Vue.use(Collapse);
 Vue.use(CollapseItem)
 Vue.use(Breadcrumb);
+Vue.use(Popover);
 Vue.use(BreadcrumbItem);
 Vue.use(Link);
 Vue.use(Carousel);
