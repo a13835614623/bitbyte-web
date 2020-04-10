@@ -2,26 +2,9 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import { IS_LOGIN } from '@/utils/util';
 import { Message } from 'element-ui';
-const mainContent = () => import('@/components/main-content');
-const login = () => import('@/components/user-login');
-const userCard = () => import('@/components/base/user-card');
-const register = () => import('@/components/user-register');
-const mainPart = () => import('@/components/main-part');
-const mainSearch = () => import('@/components/main-search');
-const baseArticle = () => import('@/components/article/base-article');
-const articleView = () => import('@/components/article/article-view');
-const articleWrite = () => import('@/components/article/article-write');
-const baseUser = () => import('@/components/user/base-user');
-const userInfo = () => import('@/components/user/user-info');
-const userPassword = () => import('@/components/user/user-password');
-const userSafe = () => import('@/components/user/user-safe');
-const userNotice = () => import('@/components/user/user-notice');
-const userArtcile = () => import('@/components/user/user-article');
-const userSubscribe = () => import('@/components/user/user-subscribe');
-const userRecord = () => import('@/components/user/user-record');
-const userPicture = () => import('@/components/user/user-picture');
-const userFavorite = () => import('@/components/user/user-favorite');
-
+const _import = name => {
+  return () => import('./components/' + name);
+};
 Vue.use(Router);
 
 const router = new Router({
@@ -30,127 +13,90 @@ const router = new Router({
     // 主页
     {
       path: '/',
-      component: mainContent,
-    },
-    // 主页
-    {
-      path: '/home',
-      redirect: '/',
+      component: _import('main-content')
     },
     // 分区
     {
       path: '/part/:part',
       name: 'part',
       props: true,
-      component: mainPart,
+      component: _import('main-part')
     },
     // 用户卡片
     {
       path: '/ucard/:userId',
       name: 'user-card',
       props: true,
-      component: userCard,
+      component: _import('user-card')
     },
-    // 登录
-    {
-      path: '/login',
-      name: 'user-login',
-      component: login,
-    },
-    // 注册
-    {
-      path: '/register',
-      name: 'user-register',
-      component: register,
-    },
+    // 登录,注册
+    ...['login','register'].map(name=>{
+      return     {
+        path: '/'+name,
+        name,
+        component: _import(name)
+      }
+    }),
     // 搜索
     {
       path: '/search',
       name: 'main-search',
       props: route => ({ searchText: route.query.searchText }),
-      component: mainSearch,
+      component: _import('main-search')
     },
     // 文章
     {
       path: '/article',
       name: 'article',
-      component: baseArticle,
+      component: _import('article/base-article'),
       children: [
         {
           path: 'write',
           name: 'article-write',
-          component: articleWrite,
+          component: _import('article/article-write')
         },
         // 写文章
         {
           path: 'write/:articleId',
           name: 'article-write-byid',
           props: true,
-          component: articleWrite,
+          component: _import('article/article-write')
         },
         // 查看文章
         {
           path: 'view/:articleId',
           props: true,
           name: 'article-view',
-          component: articleView,
-        },
-      ],
+          component: _import('article/article-view')
+        }
+      ]
     },
     // 用户
     {
       path: '/user',
       name: 'user',
-      component: baseUser,
+      component: _import('user/base-user'),
       children: [
-        {
-          path: 'info',
-          name: 'user-info',
-          component: userInfo,
-        },
-        {
-          path: 'password',
-          name: 'user-password',
-          component: userPassword,
-        },
-        {
-          path: 'safe',
-          name: 'user-safe',
-          component: userSafe,
-        },
-        {
-          path: 'notice',
-          name: 'user-notice',
-          component: userNotice,
-        },
-        {
-          path: 'article',
-          name: 'user-article',
-          component: userArtcile,
-        },
-        {
-          path: 'subscribe',
-          name: 'user-subscribe',
-          component: userSubscribe,
-        },
-        {
-          path: 'record',
-          name: 'user-record',
-          component: userRecord,
-        },
-        {
-          path: 'picture',
-          name: 'user-picture',
-          component: userPicture,
-        },
-        {
-          path:'favorite',
-          name: 'user-favorite',
-          component:userFavorite
-        }
-      ],
-    },
-  ],
+        ...[
+          'info',
+          'safe',
+          'notice',
+          'password',
+          'article',
+          'subscribe',
+          'record',
+          'picture',
+          'favorite'
+        ].map(name => {
+          return {
+            path: name,
+            name: 'user-' + name,
+            component: _import('user/user-' + name)
+          };
+        })
+      ]
+    }
+  ]
 });
 router.beforeEach((to, from, next) => {
   // 如果尚未登录，而且访问的是带user的路径，则跳转到登录界面
