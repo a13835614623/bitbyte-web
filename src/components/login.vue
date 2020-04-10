@@ -117,7 +117,7 @@ export default {
               if (data.status == 'success') {
                 event.target.disabled = true; // 设置不可点击
                 setTimeout(() => {
-                  this.$router.push('/home');
+                  this.$router.push('/');
                 }, 100);
               }
             })
