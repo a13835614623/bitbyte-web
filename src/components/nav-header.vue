@@ -175,7 +175,7 @@ export default {
             message: '退出成功!',
             type: 'success',
           });
-          vm.$router.push('/home');
+          vm.$router.push('/');
         },
         userCenter() {
           vm.dispatch('/user/info');
