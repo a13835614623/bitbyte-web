@@ -25,6 +25,7 @@ const userFavorite = () => import('@/components/user/user-favorite');
 Vue.use(Router);
 
 const router = new Router({
+  mode: 'history',
   routes: [
     // 主页
     {
