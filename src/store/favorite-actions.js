@@ -53,10 +53,10 @@ async function GET_FAVORITE_GROUP_LIST({state,getters }) {
   console.log(`from store.js:查询成功!`);
   return data;
 }
-//根据分组ID查询收藏列表
-async function GET_FAVORITE_LIST({ getters, state },groupId) {
+//根据分组ID以及索引,数量查询收藏列表
+async function GET_FAVORITE_LIST({ getters, state },{groupId,start,count}) {
   if(!getters.isLogin)return;
-  let { data } = await axios.post(base + `/get?groupId=${groupId}`);
+  let { data } = await axios.post(base + `/get?groupId=${groupId}&start=${start}&count=${count}`);
   if (data.status == 'error')
     throw new Error('[GET_FAVORITE_GROUP_LIST]服务器状态异常!');
   data.data=data.data.map(d=>{
