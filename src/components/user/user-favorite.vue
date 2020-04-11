@@ -3,7 +3,7 @@
     <el-collapse v-if="favoriteGroupList&&favoriteGroupList.length>0"
                  :value="favoriteGroupList"
                  :accordion="true"
-                 @change="getFavoriteList">
+                 @change="flushFavoriteList">
       <el-collapse-item v-for="item in favoriteGroupList"
                         :key="item.favoriteGroupId"
                         style="padding:10px 0;"
@@ -28,17 +28,35 @@
             </el-col>
           </el-row>
         </template>
-        <!-- content -->
-        <div v-if="favoriteGroupMap[item.favoriteGroupId]&&favoriteGroupMap[item.favoriteGroupId].length>0">
-          <article-card v-for="(item) in favoriteGroupMap[item.favoriteGroupId]"
-                        :article="item"
-                        :key="item.favoriteId" />
-        </div>
-        <div v-else
-             class="text-center caption"
-             style="padding:10px;">
-          暂无收藏内容
-        </div>
+        <scroll-list :load="()=>getFavoriteList(item.favoriteGroupId)"
+                     :data="favoriteGroupMap[item.favoriteGroupId]"
+                     empty="暂无收藏内容"
+                     :height="400"
+                     :noMore="noMore">
+          <!-- content -->
+          <template slot="data" slot-scope="{data}">
+            <div v-for="favorite in data" :key="favorite.favoriteId">
+              <h3>
+                <el-row>
+                  <el-col :span="21">
+                    <icon :icon="['far','bookmark']"
+                          style="margin:0 10px;"></icon>
+                    <router-link target="_blank"
+                                 :to="'/article/view/'+favorite.articleId">{{favorite.articleTitle}}</router-link>
+                    <el-tag type="success">{{partMap[favorite.articlePart + '']}}</el-tag>
+                  </el-col>
+                  <el-col :span="2">
+                    <el-button type="info"
+                               size="small"
+                               round
+                               icon="el-icon-delete"
+                               @click="deleteFavorite(favorite.favoriteId)">取消收藏</el-button>
+                  </el-col>
+                </el-row>
+              </h3>
+            </div>
+          </template>
+        </scroll-list>
       </el-collapse-item>
     </el-collapse>
     <div class="text-center"
@@ -68,8 +86,8 @@
 
 <script>
 import { mapActions } from "vuex";
-import articleCard from "../base/article-card";
-
+import { ARTICLE_PART_MAP } from "@/utils/util.js";
+import ScrollList from "../base/scroll-list";
 export default {
   name: "user-favorite",
   data() {
@@ -79,14 +97,24 @@ export default {
       addFavoriteGroupName: "",
       favoriteGroupList: [],
       favoriteGroupMap: {},
-      isAddingFavoriteGroup: false
+      isAddingFavoriteGroup: false,
+      partMap: ARTICLE_PART_MAP,
+      noMore: false,
+      start: 0,
+      count: 5,
+      page: 1
     };
   },
   components: {
-    articleCard
+    ScrollList
   },
   created() {
     this.getFavoriteGroupList();
+  },
+  watch: {
+    page(newValue, oldValue) {
+      this.start = (this.page - 1) * this.count;
+    }
   },
   methods: {
     ...mapActions([
@@ -106,25 +134,42 @@ export default {
       "DO_DELETE_FAVORITE_GROUP",
       "DO_DELETE_FAVORITE"
     ]),
+    async flushFavoriteList(groupId) {
+      if (!groupId || this.favoriteGroupMap[groupId].length > 0) return;
+      this.page = 1;
+      this.favoriteGroupMap[groupId] = [];
+      setTimeout(() => {
+        this.getFavoriteList(groupId);
+      }, 200);
+    },
     // 获取收藏分组列表
     async getFavoriteGroupList() {
+      this.page = 1;
       let { data } = await this.GET_FAVORITE_GROUP_LIST();
       this.favoriteGroupList = data;
+      data.forEach(favoriteGroup => {
+        this.favoriteGroupMap[favoriteGroup.favoriteGroupId] = [];
+      });
     },
     // 获取收藏内容列表
     async getFavoriteList(groupId) {
-      if (!groupId || this.favoriteGroupMap[groupId]) return;
-      let { data } = await this.GET_FAVORITE_LIST(groupId);
-      this.$nextTick(()=>{
-        this.$set(
-          this.favoriteGroupMap,
-          groupId,
-          data.map(d => {
+      let { data, more } = await this.GET_FAVORITE_LIST({
+        groupId,
+        start: this.start,
+        count: this.count
+      });
+      if (more == this.favoriteGroupMap[groupId].length) {
+        this.noMore = true;
+      } else {
+        this.favoriteGroupMap[groupId].push(
+          ...data.map(d => {
             d.articleId = d.favoriteArticle;
             return d;
           })
         );
-      })
+        this.page++;
+        this.$forceUpdate();
+      }
     },
     // 添加收藏夹
     async addFavoriteGroup() {
@@ -148,24 +193,25 @@ export default {
     },
     // 移除收藏
     async deleteFavorite(favoriteId) {
+      let vm = this;
       this.confirm({
         async ok() {
           try {
-            let { data, status, message } = await this.DO_DELETE_FAVORITE(
+            let { data, status, message } = await vm.DO_DELETE_FAVORITE(
               favoriteId
             );
             if (status == "success") {
-              this.$message.success(message);
-              this.getFavoriteInfo();
+              vm.$message.success(message);
+              vm.getFavoriteList();
             } else {
-              this.$message.error(message);
+              vm.$message.error(message);
             }
           } catch (error) {
-            this.$message.error("移除收藏失败!");
+            vm.$message.error("取消收藏失败!");
             console.error(error);
           }
         },
-        text: "确定要删除吗?"
+        text: "确定要取消收藏吗?"
       });
     },
     confirm({ ok, text }) {
@@ -177,20 +223,21 @@ export default {
     },
     // 移除收藏夹
     async deleteFavoriteGroup(groupId) {
+      let vm = this;
       this.confirm({
         async ok() {
           try {
-            let { data, status, message } = await this.DO_DELETE_FAVORITE_GROUP(
+            let { data, status, message } = await vm.DO_DELETE_FAVORITE_GROUP(
               groupId
             );
             if (status == "success") {
-              this.$message.success(message);
-              this.getFavoriteGroupList();
+              vm.$message.success(message);
+              vm.getFavoriteGroupList();
             } else {
-              this.$message.error(message);
+              vm.$message.error(message);
             }
           } catch (error) {
-            this.$message.error("删除收藏夹失败!");
+            vm.$message.error("删除收藏夹失败!");
             console.error(error);
           }
         },
