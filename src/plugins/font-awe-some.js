@@ -10,6 +10,7 @@ import faStar from '@fortawesome/fontawesome-free-solid/faStar'
 import faShare from '@fortawesome/fontawesome-free-solid/faShare'
 import farStar from '@fortawesome/fontawesome-free-regular/faStar'
 import faShareSquare from '@fortawesome/fontawesome-free-regular/faShareSquare'
+import faBookmark from '@fortawesome/fontawesome-free-regular/faBookmark'
 import faQq from '@fortawesome/fontawesome-free-brands/faQq'
 
 library.add(faEdit)
@@ -22,6 +23,7 @@ library.add(farStar)
 library.add(faShare)
 library.add(faShareSquare)
 library.add(faQq)
+library.add(faBookmark)
 // import solid from '@fortawesome/fontawesome-free-solid'
 // import regular from '@fortawesome/fontawesome-free-regular'
 
