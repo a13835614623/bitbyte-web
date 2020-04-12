@@ -22,14 +22,14 @@
           </el-col>
           <el-col :span="4">
             <el-button type="primary"
-                       @click="onSearch(searchText)"
+                       @click="search(searchText)"
                        icon="el-icon-search">
               搜索文章
             </el-button>
           </el-col>
         </el-row>
         <div style="color:#909399;font-size:0.9em;margin:20px 0;">
-          <el-alert :title="'bitbyte为您找到相关文章共'+articles.length+'篇'"
+          <el-alert :title="'bitbyte为您找到相关文章共'+total+'篇'"
                     type="success"
                     show-icon>
           </el-alert>
@@ -44,6 +44,16 @@
                       v-for="article in articles"
                       :article="article"
                       :key="article.id" />
+        <el-pagination layout="prev, pager, next,jumper"
+                       style="margin-top:20px;"
+                       @current-change="handlePageChange"
+                       :page-size="pageSize"
+                       background
+                       prev-text="上一页"
+                       next-text="下一页"
+                       :current-page.sync="page"
+                       :total="total">
+        </el-pagination>
       </div>
     </el-card>
   </div>
@@ -51,7 +61,7 @@
 
 <script>
 import { mapActions } from "vuex";
-import { ARTICLE_PART_MAP,ARTICLE_STATE_MAP } from "@/utils/util.js";
+import { ARTICLE_PART_MAP, ARTICLE_STATE_MAP } from "@/utils/util.js";
 import articleCard from "./base/article-card";
 export default {
   name: "main-search",
@@ -66,30 +76,46 @@ export default {
     "article-card": articleCard
   },
   created() {
-    this.onSearch(this.searchText);
+    this.search(this.searchText);
   },
   data() {
     return {
-      articles: []
+      articles: [],
+      total: 0,
+      pageSize: 10,
+      page: 1
     };
+  },
+  computed: {
+    queryVo() {
+      return {
+        article: {
+          articleTitle: this.searchText,
+          articleState: ARTICLE_STATE_MAP.PUBLISHED
+        },
+        start: (this.page - 1) * this.pageSize,
+        count: this.pageSize
+      };
+    }
   },
   methods: {
     ...mapActions(["GET_ARTICLE_LIST"]),
-    onSearch(searchText) {
-      if (!searchText) {
+    async search() {
+      if (!this.searchText) {
         this.$message.warning("搜索内容不能为空!");
         return;
       }
-      this.GET_ARTICLE_LIST({
-        article:{
-          articleTitle: searchText,
-          articleState:ARTICLE_STATE_MAP.PUBLISHED
-        },
-        start:0,
-        count:10
-      }).then(data => {
-        this.articles = data.data;
-      });
+      try {
+        let { data, more } = await this.GET_ARTICLE_LIST(this.queryVo);
+        this.articles = data;
+        this.total = more;
+      } catch (error) {
+        this.$message.error("搜索出现异常!");
+      }
+    },
+    handlePageChange(page) {
+      this.page = page;
+      this.search();
     }
   }
 };
@@ -102,7 +128,7 @@ a {
 }
 // 根选择器
 .main-search {
-  width: 60%;
+  width: 80%;
   margin: 0 auto;
   background: white;
   .search-result {
