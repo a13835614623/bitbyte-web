@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import { IS_LOGIN } from '@/utils/util';
 import { Message } from 'element-ui';
+import store from '@/store';
 const _import = name => {
   return () => import('./components/' + name);
 };
@@ -30,12 +30,12 @@ const router = new Router({
       component: _import('base/user-card')
     },
     // 登录,注册
-    ...['login','register'].map(name=>{
-      return     {
-        path: '/'+name,
+    ...['login', 'register'].map(name => {
+      return {
+        path: '/' + name,
         name,
         component: _import(name)
-      }
+      };
     }),
     // 搜索
     {
@@ -79,6 +79,7 @@ const router = new Router({
       children: [
         ...[
           'info',
+          'stats',
           'safe',
           'notice',
           'password',
@@ -99,15 +100,26 @@ const router = new Router({
   ]
 });
 router.beforeEach((to, from, next) => {
-  // 如果尚未登录，而且访问的是带user的路径，则跳转到登录界面
-  if (
-    !IS_LOGIN() &&
-    (to.path.startsWith('/user') || to.path == '/article/write')
-  ) {
-    Message.warning('您尚未登录，请先登录!');
+  try {
+    // 如果尚未登录，而且访问的是带user的路径，则跳转到登录界面
+    //没有登录或者登录了，但是没有用户角色切访问的是/user开头和写文章的页面
+    if (to.path.startsWith('/user') || to.path == '/article/write') {
+      if (!store.getters.isLogin) {
+        Message.warning('您尚未登录，请先登录!');
+      } else if (
+        store.state.user.userAuth.split(',').indexOf('ROLE_USER') == -1
+      ) {
+        Message.warning('您没有访问此页面的权限,请获取权限后再访问!');
+        next('/login');
+      }
+      next();
+    } else {
+      next();
+    }
+  } catch (error) {
+    console.error(error)
+    Message.error('路由出现异常!');
     next('/login');
-  } else {
-    next();
   }
 });
 // 捕获加载错误，重新加载
