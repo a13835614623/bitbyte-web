@@ -11,7 +11,8 @@
           <article-card v-for="(article,index) in articles"
                         :article="article"
                         :key="index" />
-          <div v-if="!articles[0]" class="empty-article-list">
+          <div v-if="!articles[0]"
+               class="empty-article-list">
             此用户暂未发表博客
           </div>
         </el-col>
@@ -78,7 +79,7 @@
             </el-tabs>
             <!-- 文章动态信息 -->
             <div class="news">
-              <user-news-card :articles="articles.slice(0,5)"/>
+              <user-news-card :articles="articles.slice(0,5)" />
             </div>
           </div>
         </el-col>
@@ -89,8 +90,8 @@
 
 <script>
 import articleCard from "./article-card";
-import userNewsCard from "./user-news-card"
-import {ARTICLE_STATE_MAP} from '@/utils/util.js'
+import userNewsCard from "./user-news-card";
+import { ARTICLE_STATE_MAP } from "@/utils/util.js";
 import { mapActions } from "vuex";
 export default {
   name: "user-card",
@@ -102,7 +103,7 @@ export default {
   },
   components: {
     "article-card": articleCard,
-    "user-news-card":userNewsCard
+    "user-news-card": userNewsCard
   },
   created() {
     this.getUserInfo();
@@ -121,6 +122,9 @@ export default {
       user: null,
       articles: [],
       subscribers: [],
+      subsCount: 0,
+      fansCount: 0,
+      articleCount: 0,
       fans: [],
       listRadio: "关注"
     };
@@ -130,15 +134,15 @@ export default {
       return [
         {
           name: "博客",
-          num: this.articles.length
+          num: this.articleCount
         },
         {
           name: "关注",
-          num: this.subscribers.length
+          num: this.subsCount
         },
         {
           name: "粉丝",
-          num: this.fans.length
+          num: this.fansCount
         }
       ];
     },
@@ -167,13 +171,14 @@ export default {
       this.GET_ARTICLE_LIST({
         article: {
           articleUser: this.userId,
-          articleState:ARTICLE_STATE_MAP.PUBLISHED
+          articleState: ARTICLE_STATE_MAP.PUBLISHED
         },
         start: 0,
         count: 10
       })
         .then(data => {
           this.articles = data.data;
+          this.articleCount = data.more;
         })
         .catch(error => {
           console.log(error);
@@ -181,9 +186,10 @@ export default {
         });
     },
     getSubscribers() {
-      this.GET_USER_SUBSCRIBERS(this.userId)
+      this.GET_USER_SUBSCRIBERS({ userId: this.userId, start: 0, count: 5 })
         .then(data => {
           this.subscribers = data.data;
+          this.subsCount = data.more;
         })
         .catch(error => {
           this.$message.error(error.message);
@@ -191,9 +197,10 @@ export default {
         });
     },
     getFans() {
-      this.GET_USER_FANS(this.userId)
+      this.GET_USER_FANS({ fans: this.userId, start: 0, count: 0 })
         .then(data => {
           this.fans = data.data;
+          this.fansCount = data.more;
         })
         .catch(error => {
           this.$message.error(error.message);
