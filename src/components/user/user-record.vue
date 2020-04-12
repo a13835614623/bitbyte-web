@@ -45,7 +45,7 @@ export default {
       ],
       record: [],
       curPage: 1,
-      pageSize: 8
+      pageSize: 12
     };
   },
   methods: {
@@ -96,13 +96,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.user-record{
-  position: relative;
-  height: 100%;
-  width: 100%;
+.user-record {
   .pageIndex {
-    position:absolute;
-    bottom: 0;
+    margin-top: 20px;
   }
 }
 </style>

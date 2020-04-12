@@ -22,7 +22,7 @@
           </el-menu>
         </el-col>
         <el-col :span="19"
-                style="padding:10px;height:500px;">
+                style="padding:10px;">
           <h3>{{activeTitle}}</h3>
           <router-view></router-view>
         </el-col>
@@ -64,6 +64,10 @@ export default {
         {
           title: "我的足迹",
           path: "/user/record"
+        },
+        {
+          title:"数据统计",
+          path:"/user/stats"
         },
         {
           title: "安全绑定",
@@ -114,7 +118,7 @@ export default {
 <style scoped>
 .base-user {
   width: 80%;
-  height: 620px;
+  /* height: 620px; */
   margin: 0 auto;
 }
 </style>

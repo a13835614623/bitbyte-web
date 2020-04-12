@@ -27,7 +27,7 @@
     </p>
     <scroll-list :load="loadNext"
                  :data="articles"
-                 :height="400"
+                 :height="500"
                  empty="暂无文章"
                  :noMore="noMore"
                  v-else>
