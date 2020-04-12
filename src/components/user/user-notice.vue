@@ -7,7 +7,7 @@
     <div v-infinite-scroll="getNoticeList"
          style="height:460px;overflow:auto;"
          :infinite-scroll-disabled="loading||noMore">
-      <el-card shadow="always"
+      <el-card shadow="never"
                v-for="notice in notices"
                :key="notice.noticeId"
                :body-style="cardBodyStyle">
