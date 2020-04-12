@@ -10,7 +10,7 @@ import {
   DO_COMMIT_ARTICLE,
   DO_TEMP_ARTICLE,
   DO_ADD_ARTCILE_READ,
-  DO_DELETE_ARTICLE,
+  DO_DELETE_ARTICLE
 } from '@/store/article-actions';
 import {
   GET_USER_INFO,
@@ -25,17 +25,17 @@ import {
   DO_USER_REGISTER,
   DO_USER_UPDATE,
   DO_USER_PASSWORD_UPDATE,
-  DO_USER_PASSWORD_VALIDATE,
+  DO_USER_PASSWORD_VALIDATE
 } from '@/store/user-actions.js';
 import {
   DO_ARTICLE_COMMENT,
   DO_ARTICLE_COMMENT_REPLY,
-  GET_ARTICLE_COMMENTS,
+  GET_ARTICLE_COMMENTS
 } from '@/store/comment-actions';
 import {
   DO_SUBSCRIBE_USER,
   DO_REMOVE_SUBSCRIBE,
-  GET_IS_SUBSCRIBE,
+  GET_IS_SUBSCRIBE
 } from '@/store/subscribe-actions';
 
 import { GET_NOTICE_LIST } from '@/store/message-actions.js';
@@ -49,6 +49,10 @@ import {
   GET_FAVORITE_LIST,
   GET_FAVORITE_INFO
 } from '@/store/favorite-actions.js';
+import {
+  GET_USER_FANS_STATS,
+  GET_USER_ARTICLE_STATS
+} from '@/store/stats-action';
 // store actions
 export default {
   //article-actions
@@ -97,5 +101,8 @@ export default {
   DO_DELETE_FAVORITE_GROUP,
   GET_FAVORITE_GROUP_LIST,
   GET_FAVORITE_LIST,
-  GET_FAVORITE_INFO
+  GET_FAVORITE_INFO,
+  // stats-actions
+  GET_USER_FANS_STATS,
+  GET_USER_ARTICLE_STATS
 };
