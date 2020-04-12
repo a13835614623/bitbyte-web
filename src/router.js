@@ -27,7 +27,7 @@ const router = new Router({
       path: '/ucard/:userId',
       name: 'user-card',
       props: true,
-      component: _import('user-card')
+      component: _import('base/user-card')
     },
     // 登录,注册
     ...['login','register'].map(name=>{
