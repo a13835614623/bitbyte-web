@@ -2,28 +2,27 @@ import {
   CLEAR_LOCAL_DATA,
   SAVE_LOCAL_DATA,
   IS_LOGIN,
-  GET_LOCAL_USER
+  GET_LOCAL_USER,
 } from '@/utils/util';
 const EMPTY_USER = null;
 // store mutations
 export default {
   // 保存用户信息
-  SAVE_USER(state, payload = { user: GET_LOCAL_USER() }) {
-    if (!IS_LOGIN()) {
-      SAVE_LOCAL_DATA(payload);
-    }
-    let userAuth = '';
-    if (state.user && state.user.userAuth) {
-      userAuth = state.user.userAuth;
+  SAVE_USER(state, payload) {
+    if (payload && payload.user) {
+      state.user = Object.assign(state.user,payload.user);
+      if (!IS_LOGIN()) {
+        SAVE_LOCAL_DATA(payload);
+      }
     } else {
-      userAuth = GET_LOCAL_USER().userAuth;
+      //根据localstorage获取state
+      let user = GET_LOCAL_USER();
+      state.user = user;
     }
-    state.user = payload.user;
-    state.user.userAuth = userAuth;
   },
   // 清除用户信息并删除localStorage
   CLEAR_USER(state) {
     state.user = EMPTY_USER;
     CLEAR_LOCAL_DATA();
-  }
+  },
 };
