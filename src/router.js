@@ -106,6 +106,7 @@ router.beforeEach((to, from, next) => {
     if (to.path.startsWith('/user') || to.path == '/article/write') {
       if (!store.getters.isLogin) {
         Message.warning('您尚未登录，请先登录!');
+        next('/login');
       } else if (
         store.state.user.userAuth.split(',').indexOf('ROLE_USER') == -1
       ) {
