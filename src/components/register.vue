@@ -68,17 +68,17 @@
              style="width:400px;">
       <el-form-item label="手机号码"
                     prop="mobile">
-        <el-col :span="16">
+        <el-col :span="24">
           <el-input v-model="user.mobile"
                     placeholder="请输入您的手机号"></el-input>
         </el-col>
-        <el-col :span="8">
+        <!-- <el-col :span="8">
           <el-button type="primary">获取验证码</el-button>
-        </el-col>
+        </el-col> -->
       </el-form-item>
       <el-form-item label="邮箱"
                     prop="email">
-        <el-col :span="16">
+        <el-col :span="24">
           <el-autocomplete style="display: block;"
                            v-model="user.email"
                            :fetch-suggestions="querySearch"
@@ -260,11 +260,17 @@ export default {
       this.loadMailboxOption(queryString);
       cb(this.emailOption);
     },
-    loadMailboxOption(value) {
+    loadMailboxOption(val) {
       this.emailOption = [];
-      this.emailOption.push({ value: value + "@qq.com" });
-      this.emailOption.push({ value: value + "@126.com" });
-      this.emailOption.push({ value: value + "@163.com" });
+      let index = val.indexOf("@");
+      let value = index==-1 ? val : val.slice(0, index);
+      this.emailOption.push(
+        ...["qq", "163", "126"].map(a => {
+          return {
+            value: value + "@" + a + ".com"
+          };
+        })
+      );
     },
     // 下一步
     nextStep() {
@@ -291,19 +297,19 @@ export default {
       this.$refs["user"].validate(valid => {
         if (valid) {
           this.$store
-            .dispatch("DO_USER_REGISTER",user)
+            .dispatch("DO_USER_REGISTER", user)
             .then(data => {
               this.$message({
                 showClose: true,
                 message: data.message,
                 type: data.status
               });
-              this.$router.push("/login");
+              if (data.status == "success") this.$router.push("/login");
             })
             .catch(error => {
               this.$message({
                 showClose: true,
-                message: "注册失败!\r\n"+error.message,
+                message: "注册失败!\r\n" + error.message,
                 type: "error"
               });
             });
