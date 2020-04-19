@@ -1,79 +1,80 @@
 <template>
   <div class="block login">
-    <el-form
-      :model="user"
-      :rules="userRules"
-      ref="user"
-      label-width="0"
-      hide-required-asterisk
-    >
+    <el-form :model="user"
+             :rules="userRules"
+             ref="user"
+             label-width="0"
+             hide-required-asterisk>
       <div class="title">
         <span>用户登录</span>
       </div>
       <el-form-item prop="username">
-        <el-input v-model="user.username" placeholder="手机号/邮箱">
-          <icon slot="prefix" :icon="['fas', 'user']" size="lg" />
+        <el-input v-model="user.username"
+                  placeholder="手机号/邮箱">
+          <icon slot="prefix"
+                :icon="['fas', 'user']"
+                size="lg" />
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input
-          type="password"
-          v-model="user.password"
-          @keyup.enter.native="onLogin($event)"
-          placeholder="请输入密码"
-        >
-          <icon slot="prefix" :icon="['fas', 'unlock-alt']" size="lg" />
+        <el-input type="password"
+                  v-model="user.password"
+                  @keyup.enter.native="onLogin($event)"
+                  placeholder="请输入密码">
+          <icon slot="prefix"
+                :icon="['fas', 'unlock-alt']"
+                size="lg" />
         </el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onLogin($event)" style="width:100%;"
-          >登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</el-button
-        >
+        <el-button type="primary"
+                   @click="onLogin($event)"
+                   style="width:100%;">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</el-button>
       </el-form-item>
       <el-form-item style="margin-bottom:0px;">
-        <el-button type="text" @click="onRegister" style="float:left;"
-          >现在注册</el-button
-        >
-        <el-button type="text" @click="onForgetPwd" style="float:right;"
-          >忘记密码?</el-button
-        >
+        <el-button type="text"
+                   @click="onRegister"
+                   style="float:left;">现在注册</el-button>
+        <el-button type="text"
+                   @click="onForgetPwd"
+                   style="float:right;">忘记密码?</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
-import md5 from 'crypto-js/md5';
-import { mapActions,mapMutations } from 'vuex';
+import md5 from "crypto-js/md5";
+import { mapActions, mapMutations } from "vuex";
 export default {
-  name: 'user-login',
+  name: "user-login",
   data() {
     let validateUsername = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error('用户名不能为空'));
+        return callback(new Error("用户名不能为空"));
       } else if (!this.usernameIsEmail && !this.usernameIsMobile) {
-        return callback(new Error('用户名只能为手机号或邮箱'));
+        return callback(new Error("用户名只能为手机号或邮箱"));
       }
       callback();
     };
     let validatePassword = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error('密码不能为空'));
+        return callback(new Error("密码不能为空"));
       } else if (value.length < 8) {
-        return callback(new Error('密码长度不能小于8个字符'));
+        return callback(new Error("密码长度不能小于8个字符"));
       }
       callback();
     };
     return {
       user: {
-        username: '',
-        password: '',
+        username: "",
+        password: ""
       },
       // 用户信息校验规则
       userRules: {
-        username: [{ validator: validateUsername, trigger: 'blur' }],
-        password: [{ validator: validatePassword, trigger: 'blur' }],
-      },
+        username: [{ validator: validateUsername, trigger: "blur" }],
+        password: [{ validator: validatePassword, trigger: "blur" }]
+      }
     };
   },
   computed: {
@@ -86,25 +87,25 @@ export default {
     usernameIsMobile() {
       let phoneReg = /^1[3-578]\d{9}$/;
       return phoneReg.test(this.user.username);
-    },
+    }
   },
   methods: {
-    ...mapActions(['DO_USER_LOGIN']),
-    ...mapMutations(['CLAER_USER']),
+    ...mapActions(["DO_USER_LOGIN"]),
+    ...mapMutations(["CLAER_USER"]),
     // 登录
     onLogin(event) {
       let vm = this;
-      this.$refs['user'].validate(valid => {
+      this.$refs["user"].validate(valid => {
         if (valid) {
           const loading = this.$loading({
             lock: true,
-            text: '正在登录,请稍候...',
-            spinner: 'el-icon-loading',
-            background: 'rgba(0, 0, 0, 0.7)',
+            text: "正在登录,请稍候...",
+            spinner: "el-icon-loading",
+            background: "rgba(0, 0, 0, 0.7)"
           });
           let userInfo = {
             username: vm.user.username,
-            password: md5(vm.user.password).toString(),
+            password: md5(vm.user.password).toString()
           };
           this.DO_USER_LOGIN(userInfo)
             .then(data => {
@@ -112,35 +113,35 @@ export default {
               vm.$message({
                 showClose: true,
                 message: data.message,
-                type: data.status,
+                type: data.status
               });
-              if (data.status == 'success') {
+              if (data.status == "success") {
                 event.target.disabled = true; // 设置不可点击
                 setTimeout(() => {
-                  this.$router.push('/');
+                  this.$router.push("/");
                 }, 100);
               }
             })
             .catch(error => {
-              console.error(error)
+              console.error(error);
               loading.close();
               this.$message({
                 showClose: true,
-                message: '登录失败!服务器连接异常!',
-                type: 'error',
+                message: "登录失败!服务器连接异常!",
+                type: "error"
               });
             });
         }
       });
     },
     onForgetPwd() {
-      console.log('忘记密码');
+      console.log("忘记密码");
     },
     onRegister() {
-      console.log('现在注册');
-      this.$router.push('/register');
-    },
-  },
+      console.log("现在注册");
+      this.$router.push("/register");
+    }
+  }
 };
 </script>
 
