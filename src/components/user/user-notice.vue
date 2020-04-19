@@ -5,7 +5,7 @@
       <span v-if="!loading&&!notices[0]">暂无消息</span>
     </div>
     <div v-infinite-scroll="getNoticeList"
-         style="height:500px;overflow:auto;"
+         style="height:600px;overflow:auto;"
          :infinite-scroll-disabled="loading||noMore">
       <el-card shadow="never"
                v-for="notice in notices"
