@@ -8,6 +8,7 @@
          style="height:600px;overflow:auto;"
          :infinite-scroll-disabled="loading||noMore">
       <el-card shadow="never"
+               style="margin:10px 0;"
                v-for="notice in notices"
                :key="notice.noticeId"
                :body-style="cardBodyStyle">
@@ -40,42 +41,42 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState } from 'vuex';
 export default {
-  name: "user-notice",
+  name: 'user-notice',
   data() {
     return {
       notices: [],
       cardBodyStyle: {
-        paddingLeft: "20px",
-        paddingRight: "20px",
-        paddingTop: "20px",
-        paddingBottom: "20px"
+        paddingLeft: '20px',
+        paddingRight: '20px',
+        paddingTop: '20px',
+        paddingBottom: '20px',
       },
       loading: false,
       noMore: false,
       page: 1,
-      pageSize: 5
+      pageSize: 5,
     };
   },
   computed: {
-    ...mapState(["user"]),
+    ...mapState(['user']),
     queryVo() {
       return {
         noticeTopicList: [
-          "/system/notice",
-          "/user/" + this.user.userId + "/audit/end"
+          '/system/notice',
+          '/user/' + this.user.userId + '/audit/end',
         ],
         start: (this.page - 1) * this.pageSize,
-        count: this.pageSize
+        count: this.pageSize,
       };
-    }
+    },
   },
   created() {
     this.getNoticeList();
   },
   methods: {
-    ...mapActions(["GET_NOTICE_LIST"]),
+    ...mapActions(['GET_NOTICE_LIST']),
     showLoading() {
       this.loading = true;
     },
@@ -109,16 +110,16 @@ export default {
       }
       if (noticeContent.auditState) {
         let stateMap = {
-          24: "审核通过",
-          25: "审核被拒绝"
+          24: '审核通过',
+          25: '审核被拒绝',
         };
         notice.noticeContent = `您投递的博客《${noticeContent.articleTitle}》${
           stateMap[noticeContent.auditState]
         }!`;
       }
       return notice;
-    }
-  }
+    },
+  },
 };
 </script>
 
