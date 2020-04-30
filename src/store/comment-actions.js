@@ -47,4 +47,17 @@ async function GET_ARTICLE_COMMENTS({ commit, state }, articleId) {
   console.log(`from store.js:获取文章评论成功!`);
   return data.data;
 }
-export { DO_ARTICLE_COMMENT, DO_ARTICLE_COMMENT_REPLY, GET_ARTICLE_COMMENTS };
+// 根据用户ID获取发布文章的评论总数
+async function GET_USER_COMMENT_COUNT({ commit, state }, userId) {
+  let { data } = await axios.post(base + `/user/count?userId=${userId}`);
+  if (data.status == 'error')
+    throw new Error('[GET_USER_COMMENT_COUNT]服务器状态异常!');
+  console.log(`from store.js:获取用户发布文章的评论总数成功!`);
+  return data;
+}
+export {
+  DO_ARTICLE_COMMENT,
+  DO_ARTICLE_COMMENT_REPLY,
+  GET_ARTICLE_COMMENTS,
+  GET_USER_COMMENT_COUNT,
+};

@@ -15,14 +15,13 @@ let GET_INDEX_ARTICLES = async ({ commit, state }) => {
 // 根据文章ID获取文章及其作者信息
 let GET_ARTICLE = async ({ commit }, articleId) => {
   let { data } = await axios.post(base + `/get/${articleId}`);
-  if (data.status == 'error')
-    throw new Error('[GET_ARTICLE]服务器状态异常!');
+  if (data.status == 'error') throw new Error('[GET_ARTICLE]服务器状态异常!');
   data.data.userPic = axios.$USER_PIC_PRE_URL + data.data.userPic;
   console.log(`from store.js:文章${articleId}获取成功!`);
   return data.data;
 };
 // 获取推荐文章
-let GET_RECOMMEND_ARTICLE = async ({ commit }, userId="") => {
+let GET_RECOMMEND_ARTICLE = async ({ commit }, userId = '') => {
   let { data } = await axios.post(base + `/recommend/get?userId=${userId}`);
   if (data.status == 'error')
     throw new Error('[GET_RECOMMEND_ARTICLE]服务器状态异常!');
@@ -60,6 +59,26 @@ let GET_ARTICLE_LIKE_COUNT = async ({ commit, state }, articleId) => {
   console.log(`from store.js:获取文章${articleId}点赞数量成功!`);
   return data.data;
 };
+// 根据用户ID获取文章阅读量
+let GET_USER_ARTICLE_READ_COUNT = async ({ getters, state }, userId) => {
+  if (!getters.isLogin) return;
+  let { data } = await axios.post(base + `/user/read/count?userId=${userId}`);
+  if (data.status == 'error')
+    throw new Error('[GET_USER_ARTICLE_READ_COUNT]服务器状态异常!');
+  console.log(`from store.js:获取用户文章阅读总量成功!`);
+  return data;
+};
+
+// 根据用户ID获取用户发布文章点赞量
+let GET_USER_ARTICLE_LIKE_COUNT = async ({ getters, state }, userId) => {
+  if (!getters.isLogin) return;
+  let { data } = await axios.post(base + `/user/like/count?userId=${userId}`);
+  if (data.status == 'error')
+    throw new Error('[GET_USER_ARTICLE_LIKE_COUNT]服务器状态异常!');
+  console.log(`from store.js:获取用户发布文章点赞量成功!`);
+  return data;
+};
+
 // 点赞文章
 let DO_LIKE_ARTICLE = async ({ commit, state }, articleId) => {
   let { data } = await axios.post(
@@ -105,7 +124,9 @@ let DO_TEMP_ARTICLE = async ({ commit, state }, article) => {
 let DO_DELETE_ARTICLE = async ({ commit, state }, article) => {
   let { data } = await axios.post(
     base +
-      `/delete?articleId=${article.articleId}&userId=${state.user.userId}&articleTitle=${article.articleTitle}`,
+      `/delete?articleId=${article.articleId}&userId=${
+        state.user.userId
+      }&articleTitle=${article.articleTitle}`,
   );
   if (data.status == 'error')
     throw new Error('[DO_DELETE_ARTICLE]服务器状态异常!');
@@ -114,8 +135,10 @@ let DO_DELETE_ARTICLE = async ({ commit, state }, article) => {
 };
 // 增加阅读量1
 let DO_ADD_ARTCILE_READ = async ({ getters, state }, articleId) => {
-  if(!getters.isLogin)return;
-  let { data } = await axios.post(base + `/read/add?articleId=${articleId}&userId=${state.user.userId}`);
+  if (!getters.isLogin) return;
+  let { data } = await axios.post(
+    base + `/read/add?articleId=${articleId}&userId=${state.user.userId}`,
+  );
   if (data.status == 'error')
     throw new Error('[DO_ADD_ARTCILE_READ]服务器状态异常!');
   console.log('from store.js:文章阅读量+1成功!');
@@ -127,6 +150,8 @@ export {
   GET_ARTICLE_LIST,
   GET_ARTICLE_ISLIKE,
   GET_ARTICLE_LIKE_COUNT,
+  GET_USER_ARTICLE_READ_COUNT,
+  GET_USER_ARTICLE_LIKE_COUNT,
   GET_RECOMMEND_ARTICLE,
   DO_LIKE_ARTICLE,
   DO_DISLIKE_ARTICLE,

@@ -66,6 +66,34 @@ async function GET_FAVORITE_LIST({ getters, state },{groupId,start,count}) {
   console.log(`from store.js:查询成功!`);
   return data;
 }
+//根据用户ID获取收藏总数
+async function GET_USER_FAVORITE_COUNT({state,getters },userId) {
+  if(!getters.isLogin)return;
+  let { data } = await axios.post(base + `/user/count?articleId=${userId}`);
+  if (data.status == 'error')
+    throw new Error('[GET_USER_FAVORITE_COUNT]服务器状态异常!');
+  console.log(`from store.js:查询成功!`);
+  return data;
+}
+//根据文章ID获取收藏总数
+async function GET_ARTICLE_FAVORITE_COUNT({state,getters },articleId) {
+  if(!getters.isLogin)return;
+  let userId = state.user.userId;
+  let { data } = await axios.post(base + `/article/count?articleId=${articleId}`);
+  if (data.status == 'error')
+    throw new Error('[GET_ARTICLE_FAVORITE_COUNT]服务器状态异常!');
+  console.log(`from store.js:查询成功!`);
+  return data;
+}
+//根据用户ID获取发布文章被收藏总数
+async function GET_USER_ARTICLE_FAVORITE_COUNT({state,getters },userId) {
+  if(!getters.isLogin)return;
+  let { data } = await axios.post(base + `/user/article/count?userId=${userId}`);
+  if (data.status == 'error')
+    throw new Error('[GET_USER_ARTICLE_FAVORITE_COUNT]服务器状态异常!');
+  console.log(`from store.js:查询成功!`);
+  return data;
+}
 export {
   DO_ADD_FAVORITE,
   DO_DELETE_FAVORITE,
@@ -73,5 +101,8 @@ export {
   DO_DELETE_FAVORITE_GROUP,
   GET_FAVORITE_GROUP_LIST,
   GET_FAVORITE_LIST,
-  GET_FAVORITE_INFO
+  GET_FAVORITE_INFO,
+  GET_USER_FAVORITE_COUNT,
+  GET_ARTICLE_FAVORITE_COUNT,
+  GET_USER_ARTICLE_FAVORITE_COUNT
 }
