@@ -38,7 +38,7 @@
             <div v-for="favorite in data" :key="favorite.favoriteId">
               <h3>
                 <el-row>
-                  <el-col :span="21">
+                  <el-col :span="20">
                     <icon :icon="['far','bookmark']"
                           style="margin:0 10px;"></icon>
                     <router-link target="_blank"
