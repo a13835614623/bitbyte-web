@@ -104,6 +104,7 @@ router.beforeEach((to, from, next) => {
     // 如果尚未登录，而且访问的是带user的路径，则跳转到登录界面
     //没有登录或者登录了，但是没有用户角色切访问的是/user开头和写文章的页面
     if (to.path.startsWith('/user') || to.path == '/article/write') {
+      store.commit('SAVE_USER');
       if (!store.getters.isLogin) {
         Message.warning('您尚未登录，请先登录!');
         next('/login');
