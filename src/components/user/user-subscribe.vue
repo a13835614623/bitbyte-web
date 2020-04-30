@@ -1,26 +1,29 @@
 <template>
   <div class="user-subscribe">
-    <div class="line"></div>
-    <el-row style="height:100%;">
-      <el-col :span="4"
-              style="height:100%;">
-        <el-menu mode="vertical"
+    <el-row>
+      <el-col :span="24">
+        <el-menu mode="horizontal"
                  :default-active="activeIndex"
-                 style="height:100%;"
+                 active-text-color="#409EFF"
                  @select="selectMenuItems">
           <el-menu-item index="fans">
-            我的粉丝<span class="caption"
-                  style="margin-left:10px;">{{fansCount}}</span>
+            <icon :icon="['fas', 'user']" />
+            <span style="margin-left:10px;">我的粉丝</span>
+            <span class="caption"
+                  style="margin-left:10px;margin-right:20px;">{{fansCount}}</span>
           </el-menu-item>
           <el-menu-item index="subscribe">
-            我的关注<span class="caption"
+            <icon :icon="['fas', 'heart']" />
+            <span style="margin-left:10px;">我的关注</span>
+            <span class="caption"
                   style="margin-left:10px;">{{subsCount}}</span>
           </el-menu-item>
         </el-menu>
       </el-col>
+    </el-row>
+    <el-row>
       <el-col v-if="activeIndex=='subscribe'"
-              style="height:100%;"
-              :span="20">
+              :span="24">
         <p v-if="!subscribers||subscribers.length == 0"
            class="empty-subscribe">暂无已关注用户</p>
         <ul v-else
@@ -36,7 +39,6 @@
           </li>
         </ul>
         <el-pagination layout="prev, pager, next,jumper"
-                       style="position:absolute;bottom:10px;"
                        @current-change="handleSubsPageChange"
                        hide-on-single-page
                        :page-size="pageSize"
@@ -47,8 +49,7 @@
                        :total="subsCount" />
       </el-col>
       <el-col v-else
-              style="height:100%;"
-              :span="20">
+              :span="24">
         <p v-if="!fans||fans.length == 0"
            class="empty-subscribe">暂无关注您的用户</p>
         <ul v-else
@@ -62,7 +63,6 @@
           </li>
         </ul>
         <el-pagination layout="prev, pager, next,jumper"
-                       style="position:absolute;bottom:10px;"
                        @current-change="handleFansPageChange"
                        :page-size="pageSize"
                        hide-on-single-page
@@ -77,10 +77,10 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState } from 'vuex';
 
 export default {
-  name: "user-subscribe",
+  name: 'user-subscribe',
   data() {
     return {
       subscribers: [],
@@ -90,7 +90,7 @@ export default {
       page: 1,
       fansCount: 0,
       subsCount: 0,
-      activeIndex: "subscribe"
+      activeIndex: 'subscribe',
     };
   },
   created() {
@@ -98,28 +98,28 @@ export default {
     this.getFansCount();
   },
   computed: {
-    ...mapState(["user"]),
+    ...mapState(['user']),
     queryVo() {
       return {
         userId: this.user.userId,
         start: (this.page - 1) * this.pageSize,
-        count: this.pageSize
+        count: this.pageSize,
       };
-    }
+    },
   },
   methods: {
     ...mapActions([
-      "GET_USER_SUBSCRIBERS",
-      "DO_REMOVE_SUBSCRIBE",
-      "GET_USER_FANS",
-      "GET_USER_FANS_COUNT"
+      'GET_USER_SUBSCRIBERS',
+      'DO_REMOVE_SUBSCRIBE',
+      'GET_USER_FANS',
+      'GET_USER_FANS_COUNT',
     ]),
     async getFansCount() {
       try {
         let { data } = await this.GET_USER_FANS_COUNT(this.queryVo.userId);
         this.fansCount = data;
       } catch (error) {
-        this.$message.error("粉丝数获取失败!");
+        this.$message.error('粉丝数获取失败!');
         console.error(error);
       }
     },
@@ -130,7 +130,7 @@ export default {
         this.subscribers = data;
         this.subsCount = more;
       } catch (error) {
-        this.$message.error("关注列表获取失败!");
+        this.$message.error('关注列表获取失败!');
         console.error(error);
       }
     },
@@ -141,40 +141,40 @@ export default {
         this.fans = data;
         this.fansCount = more;
       } catch (error) {
-        this.$message.error("关注列表获取失败!");
+        this.$message.error('关注列表获取失败!');
         console.error(error);
       }
     },
     // 取消关注
     onRemoveSubscribe(subscriber) {
-      this.$confirm(`确定取消关注${subscriber.userName}吗？`, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      this.$confirm(`确定取消关注${subscriber.userName}吗？`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       }).then(async () => {
         const loading = this.$loading({
           lock: true,
-          text: "loading...",
-          spinner: "el-icon-loading",
-          background: "rgba(0, 0, 0, 0.7)"
+          text: 'loading...',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)',
         });
         try {
           await this.DO_REMOVE_SUBSCRIBE(subscriber.userId);
           loading.close();
           this.$message({
-            type: "success",
-            message: "操作成功!"
+            type: 'success',
+            message: '操作成功!',
           });
         } catch (error) {
           loading.close();
-          this.$message.error("取消关注失败!");
+          this.$message.error('取消关注失败!');
           console.error(error);
         }
       });
     },
     // 查看关注者主页
     onShowIndex(subscriberId) {
-      this.$router.push("/ucard/" + subscriberId);
+      this.$router.push('/ucard/' + subscriberId);
     },
     handleSubsPageChange() {
       this.getSubscribers();
@@ -186,15 +186,15 @@ export default {
       this.page = 1;
       this.activeIndex = index;
       switch (this.activeIndex) {
-        case "subscribe":
+        case 'subscribe':
           this.getSubscribers();
           break;
-        case "fans":
+        case 'fans':
           this.getFans();
           break;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -222,10 +222,9 @@ $height: 60px;
   li {
     overflow: hidden;
     height: $height;
-    width: 95%;
     border: 1px solid $border2;
     padding: 20px 10px;
-    margin: 10px;
+    margin: 10px 0;
     span {
       margin-left: 20px;
       height: $height;
