@@ -8,7 +8,7 @@
          v-if="data.length==0">
       {{empty}}
     </div>
-    <div v-else
+    <div v-else-if="loading||noMore&&data[0]&&data.length>10"
          class="caption text-center"
          style="padding:10px;">
       <div v-if="loading">加载中...</div>
