@@ -50,7 +50,7 @@
                                size="small"
                                round
                                icon="el-icon-delete"
-                               @click="deleteFavorite(favorite.favoriteId)">取消收藏</el-button>
+                               @click="deleteFavorite(favorite)">取消收藏</el-button>
                   </el-col>
                 </el-row>
               </h3>
@@ -158,9 +158,11 @@ export default {
         start: this.start,
         count: this.count
       });
-      if (more == this.favoriteGroupMap[groupId].length) {
+      if (this.favoriteGroupMap[groupId]&&more == this.favoriteGroupMap[groupId].length) {
         this.noMore = true;
       } else {
+        console.log(this.favoriteGroupMap)
+        console.log(groupId)
         this.favoriteGroupMap[groupId].push(
           ...data.map(d => {
             d.articleId = d.favoriteArticle;
@@ -192,7 +194,7 @@ export default {
       }
     },
     // 移除收藏
-    async deleteFavorite(favoriteId) {
+    async deleteFavorite({favoriteId,favoriteGroup}) {
       let vm = this;
       this.confirm({
         async ok() {
@@ -202,7 +204,11 @@ export default {
             );
             if (status == "success") {
               vm.$message.success(message);
-              vm.getFavoriteList();
+              setTimeout(() => {
+                let favoriteList=vm.favoriteGroupMap[favoriteGroup];
+                vm.favoriteGroupMap[favoriteGroup].splice(favoriteList.indexOf(favoriteId));
+                vm.$forceUpdate();
+              }, 200);
             } else {
               vm.$message.error(message);
             }
