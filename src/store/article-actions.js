@@ -144,6 +144,21 @@ let DO_ADD_ARTCILE_READ = async ({ getters, state }, articleId) => {
   console.log('from store.js:文章阅读量+1成功!');
   return data.data;
 };
+// 上传文章图片
+let DO_UPLOAD_ARTICLE_PIC = async ({ getters, state }, file) => {
+  if (!getters.isLogin) return;
+  let params=new FormData();
+  params.append('file',file,file.name);
+  let { data } = await axios.post(
+    base + `/pic/upload`,params,{
+      headers:{'Content-Type':'multipart/form-data'}
+    }
+  );
+  if (data.status == 'error')
+    throw new Error('[DO_UPLOAD_ARTICLE_PIC]服务器状态异常!');
+  console.log('from store.js:上传文章图片成功!');
+  return data;
+};
 export {
   GET_INDEX_ARTICLES,
   GET_ARTICLE,
@@ -153,6 +168,7 @@ export {
   GET_USER_ARTICLE_READ_COUNT,
   GET_USER_ARTICLE_LIKE_COUNT,
   GET_RECOMMEND_ARTICLE,
+  DO_UPLOAD_ARTICLE_PIC,
   DO_LIKE_ARTICLE,
   DO_DISLIKE_ARTICLE,
   DO_COMMIT_ARTICLE,
