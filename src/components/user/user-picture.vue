@@ -68,7 +68,8 @@ export default {
     },
     // 上传失败
     onError(err, file, fileList) {
-      this.$message.err("上传失败");
+      console.error(err);
+      this.$message.error("上传失败");
     },
     // 上传图片
     onUpload() {
