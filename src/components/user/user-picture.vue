@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 export default {
   name: "user-picture",
   data() {
@@ -42,6 +43,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['GET_USER_INFO']),
     beforeUpload(file) {
       const isJPG = file.type === "image/jpeg";
       const isPNG = file.type === "image/png";
@@ -62,6 +64,7 @@ export default {
     // 上传成功
     onSuccess(res, file, fileList) {
       this.$message.success("上传成功");
+      this.GET_USER_INFO();
     },
     // 上传失败
     onError(err, file, fileList) {

@@ -135,6 +135,9 @@ export default {
             message: data.message,
             type: data.status
           });
+          if(data.status=='success'){
+            this.GET_USER_INFO();
+          }
         })
         .catch(err => {
           this.$message.error("更新异常!");
