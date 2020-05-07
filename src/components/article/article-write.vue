@@ -31,6 +31,8 @@
           </el-form-item>
           <el-form-item label="内容">
             <base-markdown :init-value="article.articleMdContent"
+                           @paste-image="onPasteImage"
+                           ref="md"
                            @save="onSave($event)"></base-markdown>
           </el-form-item>
           <!-- 标签 -->
@@ -120,7 +122,7 @@
 </template>
 <script>
 import baseMarkdown from '@/components/article/base-markdown';
-import { ARTICLE_PART_MAP } from '@/utils/util';
+import { ARTICLE_PART_MAP, ARTICLE_PIC_PRE_URL } from '@/utils/util';
 import { mapActions } from 'vuex';
 export default {
   name: 'article-write',
@@ -217,11 +219,19 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['GET_ARTICLE']),
+    ...mapActions(['GET_ARTICLE', 'DO_UPLOAD_ARTICLE_PIC']),
     // 保存事件
     onSave(md) {
-      this.article.articleContent = md.htmlValue;
-      this.article.articleMdContent = md.markdownValue;
+      this.article.articleContent = md.html;
+      this.article.articleMdContent = md.value;
+    },
+    async onPasteImage(files) {
+      if (!files || !files[0]) return;
+      let vm = this;
+      files.forEach(async file => {
+        let { data, status, message } = await vm.DO_UPLOAD_ARTICLE_PIC(file);
+        vm.$refs.md.insertImg(data);
+      });
     },
     // 提交文章
     onArticlePublish() {
