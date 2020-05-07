@@ -1,10 +1,14 @@
 <template>
-  <div class="block register">
-    <!-- 步骤 -->
+<el-card :body-style="{ padding: '20px',textAlign:'center' }" class="register">
+  <div slot="header">
+    <span>用户注册</span>
+  </div>
+  <!-- card body -->
+  <!-- 步骤 -->
     <el-steps :active="activeStep"
               finish-status="success"
               align-center
-              style="width:80%;margin:0 auto;">
+              style="width:60%;margin:0 auto;">
       <el-step v-for="step in steps"
                :key="step.key"
                :title="step.title"></el-step>
@@ -86,7 +90,7 @@
         </el-col>
       </el-form-item>
     </el-form>
-    <div class="step">
+    <div class="step text-center">
       <el-button v-if="activeStep==1||activeStep==2"
                  type="infor"
                  @click="previousStep">
@@ -112,31 +116,35 @@
         </span>
       </el-button>
     </div>
-  </div>
+</el-card>
+
+  <!-- <div class="block register">
+    
+  </div> -->
 </template>
 
 <script>
-import md5 from "crypto-js/md5";
+import md5 from 'crypto-js/md5';
 // 邮箱正则表达式
 let emailReg = /^([a-zA-Z]|[0-9])(\w)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
 // 手机号正则表达式
 let phoneReg = /^1[3-578]\d{9}$/;
 export default {
-  name: "user-register",
+  name: 'user-register',
   data() {
     // 校验用户名
     let validateName = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error("用户名不能为空"));
+        return callback(new Error('用户名不能为空'));
       } else if (value.length > 16) {
-        return new callback(new Error("用户名不能超过16个字符"));
+        return new callback(new Error('用户名不能超过16个字符'));
       }
       callback();
     };
     // 校验性别
     let validateSex = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error("性别不能为空"));
+        return callback(new Error('性别不能为空'));
       }
       callback();
     };
@@ -147,44 +155,44 @@ export default {
     // 校验地址
     let validateAddress = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error("地址不能为空"));
+        return callback(new Error('地址不能为空'));
       }
       callback();
     };
     // 校验邮箱
     let validateEmail = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error("邮箱不能为空"));
+        return callback(new Error('邮箱不能为空'));
       }
       if (!emailReg.test(value)) {
-        return callback(new Error("邮箱格式不正确"));
+        return callback(new Error('邮箱格式不正确'));
       }
       callback();
     };
     // 校验手机号
     let validateMobile = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error("手机号不能为空"));
+        return callback(new Error('手机号不能为空'));
       }
       if (!phoneReg.test(value)) {
-        return callback(new Error("手机号格式不正确"));
+        return callback(new Error('手机号格式不正确'));
       }
       callback();
     };
     let validatePassword = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error("密码不能为空"));
+        return callback(new Error('密码不能为空'));
       } else if (value.length < 8) {
-        return callback(new Error("密码不能小于8个字符"));
+        return callback(new Error('密码不能小于8个字符'));
       }
       callback();
     };
     let validateCheckPwd = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error("确认密码不能为空"));
+        return callback(new Error('确认密码不能为空'));
       } else if (value != this.user.password) {
         console.log(this.user.password);
-        return callback(new Error("两次密码不一致"));
+        return callback(new Error('两次密码不一致'));
       }
       callback();
     };
@@ -194,38 +202,38 @@ export default {
       steps: [
         {
           key: 1,
-          title: "基本信息"
+          title: '基本信息',
         },
         {
           key: 2,
-          title: "设置密码"
+          title: '设置密码',
         },
         {
           key: 3,
-          title: "验证信息"
-        }
+          title: '验证信息',
+        },
       ],
       //用户对象
       user: {
-        name: "",
-        sex: "",
+        name: '',
+        sex: '',
         birthday: new Date(),
-        address: "",
-        email: "",
-        mobile: "",
-        password: "",
-        checkPwd: ""
+        address: '',
+        email: '',
+        mobile: '',
+        password: '',
+        checkPwd: '',
       },
       //用户信息校验规则
       userRules: {
-        name: [{ validator: validateName, trigger: "blur" }],
-        sex: [{ require: true, validator: validateSex, trigger: "change" }],
-        birthday: [{ validator: validateBirthday, trigger: "blur" }],
-        address: [{ validator: validateAddress, trigger: "blur" }],
-        email: [{ validator: validateEmail, trigger: "blur" }],
-        mobile: [{ validator: validateMobile, trigger: "blur" }],
-        password: [{ validator: validatePassword, trigger: "blur" }],
-        checkPwd: [{ validator: validateCheckPwd, trigger: "blur" }]
+        name: [{ validator: validateName, trigger: 'blur' }],
+        sex: [{ require: true, validator: validateSex, trigger: 'change' }],
+        birthday: [{ validator: validateBirthday, trigger: 'blur' }],
+        address: [{ validator: validateAddress, trigger: 'blur' }],
+        email: [{ validator: validateEmail, trigger: 'blur' }],
+        mobile: [{ validator: validateMobile, trigger: 'blur' }],
+        password: [{ validator: validatePassword, trigger: 'blur' }],
+        checkPwd: [{ validator: validateCheckPwd, trigger: 'blur' }],
       },
       //日期选择器option
       pickerOption: {
@@ -235,23 +243,23 @@ export default {
         },
         shortcuts: [
           {
-            text: "十年前",
+            text: '十年前',
             onClick(picker) {
               let date = new Date();
               date.setFullYear(date.getFullYear() - 10);
-              picker.$emit("pick", date);
-            }
+              picker.$emit('pick', date);
+            },
           },
           {
-            text: "昨天",
+            text: '昨天',
             onClick(picker) {
               let date = new Date();
               date.setDate(date.getDate() - 1);
-              picker.$emit("pick", date);
-            }
-          }
-        ]
-      }
+              picker.$emit('pick', date);
+            },
+          },
+        ],
+      },
     };
   },
   methods: {
@@ -262,19 +270,19 @@ export default {
     },
     loadMailboxOption(val) {
       this.emailOption = [];
-      let index = val.indexOf("@");
-      let value = index==-1 ? val : val.slice(0, index);
+      let index = val.indexOf('@');
+      let value = index == -1 ? val : val.slice(0, index);
       this.emailOption.push(
-        ...["qq", "163", "126"].map(a => {
+        ...['qq', '163', '126'].map(a => {
           return {
-            value: value + "@" + a + ".com"
+            value: value + '@' + a + '.com',
           };
-        })
+        }),
       );
     },
     // 下一步
     nextStep() {
-      this.$refs["user"].validate(valid => {
+      this.$refs['user'].validate(valid => {
         if (valid) this.activeStep++;
       });
     },
@@ -292,41 +300,38 @@ export default {
         userAddress: u.address,
         userEmail: u.email,
         userMobile: u.mobile,
-        userPassword: md5(u.password).toString()
+        userPassword: md5(u.password).toString(),
       };
-      this.$refs["user"].validate(valid => {
+      this.$refs['user'].validate(valid => {
         if (valid) {
           this.$store
-            .dispatch("DO_USER_REGISTER", user)
+            .dispatch('DO_USER_REGISTER', user)
             .then(data => {
               this.$message({
                 showClose: true,
                 message: data.message,
-                type: data.status
+                type: data.status,
               });
-              if (data.status == "success") this.$router.push("/login");
+              if (data.status == 'success') this.$router.push('/login');
             })
             .catch(error => {
               this.$message({
                 showClose: true,
-                message: "注册失败!\r\n" + error.message,
-                type: "error"
+                message: '注册失败!\r\n' + error.message,
+                type: 'error',
               });
             });
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style scoped>
 .register {
-  height: 500px;
-  border: 1px solid #ebebeb;
-  border-radius: 3px;
-  padding: 20px;
-  text-align: center;
+  width: 80%;
+  margin: 0 auto;
 }
 .el-form {
   width: 300px;
