@@ -39,11 +39,6 @@ export default {
       stompClient: null
     };
   },
-  created() {
-    if (!this.isLogin) {
-      this.SAVE_USER();
-    }
-  },
   mounted() {
     if (this.isLogin) this.initWebSocket();
     else {
@@ -54,7 +49,6 @@ export default {
     this.disconnect();
   },
   methods: {
-    ...mapMutations(["SAVE_USER"]),
     initWebSocket() {
       // 建立连接对象
       let socket = new SockJS(WEBSOCKET_URL);

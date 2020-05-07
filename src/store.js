@@ -15,7 +15,7 @@ export default new Vuex.Store({
     },
     // 用户头像全路径
     userPicPath(state) {
-      return state.user ? state.user.userPic : null;
+      return state.user ? state.user.userPic : '/api/user/pic/get?name=user.png';
     },
   },
   mutations: mutations,
