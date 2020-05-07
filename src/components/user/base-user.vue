@@ -54,7 +54,7 @@ export default {
           path: "/user/article"
         },
         {
-          title: "消息管理",
+          title: "消息通知",
           path: "/user/notice"
         },
         {

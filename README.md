@@ -20,7 +20,7 @@ graph TB
     s --- user[用户管理];
     s --- com[评论管理];
     user --- sub[关注管理];
-    user --- 消息管理;
+    user --- 消息通知;
     user --- 信息管理;
     user --- 密码管理;
     user --- 安全管理;
