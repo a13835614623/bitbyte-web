@@ -130,12 +130,12 @@
     <el-dialog title="选择收藏夹"
                :visible.sync="showFavoriteDialog"
                width="30%">
-      <el-checkbox-group v-model="favoriteGroupCheckList">
-        <el-checkbox v-for="item in favoriteGroupList"
+      <el-radio-group v-model="checkedFavoriteGroup">
+        <el-radio v-for="item in favoriteGroupList"
                      style="display:block;padding:10px 0;"
                      :key="item.favoriteGroupId"
-                     :label="item.favoriteGroupId">{{item.favoriteGroupName}}</el-checkbox>
-      </el-checkbox-group>
+                     :label="item.favoriteGroupId">{{item.favoriteGroupName}}</el-radio>
+      </el-radio-group>
       <div class="text-center">
         <el-button @click="showAddFavoriteGroupDialog=true"
                    style="width:100%;"
@@ -240,7 +240,7 @@ export default {
       addFavoriteGroupName: "",
       favoriteGroupList: [],
       favoriteGroupMap: {},
-      favoriteGroupCheckList: [],
+      checkedFavoriteGroup: '',
       isAddingFavoriteGroup: false,
       shareObj: { title: "", desc: "", summary: "" },
       ARTICLE_PART_MAP
@@ -314,10 +314,8 @@ export default {
       this.favoriteGroupList = data;
     },
     async commitFavorite() {
-      this.favoriteGroupCheckList.map(favoriteGroupId => {
-        this.addFavorite(favoriteGroupId);
-      });
-      this.favoriteGroupCheckList = [];
+      this.addFavorite(this.checkedFavoriteGroup)
+      this.checkedFavoriteGroup='';
     },
     // 添加收藏
     async addFavorite(groupId) {
