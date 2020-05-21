@@ -147,6 +147,22 @@ let GET_USER_RECORD = async ({ commit, state }) => {
   console.log('from store.js:用户操作记录获取成功!');
   return data;
 };
+// 发送验证码
+let DO_SEND_VERIFY = async ({ commit, state },email) => {
+  let { data } = await axios.get(`/user/verify/send?email=${email}`);
+  if (data.status == 'error'&&data.message)
+    throw new Error('[DO_SEND_VERIFY]服务器状态异常!');
+  console.log('from store.js:验证码发送成功!');
+  return data;
+};
+// 验证验证码
+let DO_CHECK_VERIFY = async ({ commit, state },{email,code}) => {
+  let { data } = await axios.get(`/user/verify/check?email=${email}&code=${code}`);
+  if (data.status == 'error'&&data.message)
+    throw new Error('[DO_CHECK_VERIFY]服务器状态异常!');
+  console.log('from store.js:验证码验证成功!');
+  return data;
+};
 export {
   GET_USER_INFO,
   GET_USER_SUBSCRIBERS,
@@ -160,5 +176,7 @@ export {
   DO_USER_REGISTER,
   DO_USER_UPDATE,
   DO_USER_PASSWORD_UPDATE,
-  DO_USER_PASSWORD_VALIDATE
+  DO_USER_PASSWORD_VALIDATE,
+  DO_SEND_VERIFY,
+  DO_CHECK_VERIFY
 };
