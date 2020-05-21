@@ -247,11 +247,14 @@ export default {
     },
     // 是否允许编辑
     isEnableEdit(article) {
-      return article.articleState == ARTICLE_STATE_MAP.CREATED;
+      return (
+        article.articleState == ARTICLE_STATE_MAP.CREATED ||
+        article.articleState == ARTICLE_STATE_MAP.REFUSE
+      );
     },
     // 是否允许删除
     isEnableDelete(article) {
-      return this.isPublished(article);
+      return this.isPublished(article)||this.isEnableEdit(article);
     },
     // 是否允许查看
     isEnableView(article) {
