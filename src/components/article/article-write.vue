@@ -144,7 +144,7 @@ export default {
     try {
       let article = await this.GET_ARTICLE(this.articleId);
       this.article = article;
-      this.articlePart = this.partMap[this.article.articlePart];
+      this.article.articlePart = this.article.articlePart+'';
       this.article.articleTags = this.article.articleTags.split('-');
     } catch (e) {
       this.$message.error('文章加载失败!');
