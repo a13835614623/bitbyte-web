@@ -190,7 +190,7 @@ export default {
     // 获取推荐文章
     getRecommendArticles() {
       this.recommendArticlesLoading = true;
-      this.GET_RECOMMEND_ARTICLE()
+      this.GET_RECOMMEND_ARTICLE(this.user?this.user.userId:'')
         .then(data => {
           this.recommendArticlesLoading = false;
           this.recommendArticles = data;
@@ -227,6 +227,9 @@ export default {
   computed: {
     isLogin() {
       return this.$store.getters.isLogin;
+    },
+    user(){
+      return this.$store.state.user;
     }
   }
 };
