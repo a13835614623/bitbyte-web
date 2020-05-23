@@ -277,6 +277,10 @@ export default {
     // 正式提交文章
     async commitArticle() {
       let article = this.article;
+      if(article.articleMdContent.length>20000||article.articleContent.length>20000){
+        this.$message.error("文字内容字符数不能超过20000！");
+        return;
+      }
       article.articleTags = article.articleTags.reduce(
         (pre, cur, curIndex, array) => {
           return pre + '-' + cur;
