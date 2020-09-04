@@ -38,7 +38,7 @@
     "eslint-plugin-vue": "^5.0.0-0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "happypack": "^5.0.1",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.13.1",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
     "vue-cli-plugin-element": "^1.0.0",
